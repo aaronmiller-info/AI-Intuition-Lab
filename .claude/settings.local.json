@@ -5,7 +5,8 @@
       "Bash(gh auth switch:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)"
     ]
   }
 }

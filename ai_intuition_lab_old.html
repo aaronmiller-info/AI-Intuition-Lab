@@ -27,9 +27,10 @@
       --glow-accent: rgba(0, 212, 170, 0.2);
       --positive: #22c55e;
       --negative: #ef4444;
-      --radius: 12px;
-      --radius-sm: 6px;
-      --shadow-crisp: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --radius: 0px; /* Swiss design uses sharp corners */
+      --radius-sm: 0px;
+      --swiss-border: 2px solid var(--text-primary);
+      --swiss-thick: 4px solid var(--text-primary);
     }
 
     /* Utilities */
@@ -56,8 +57,8 @@
     .h-full { height: 100%; }
     .flex-1 { flex: 1; }
     .mono { font-family: 'JetBrains Mono', monospace; }
-    .text-sm { font-size: 0.8rem; }
-    .text-xs { font-size: 0.7rem; }
+    .text-sm { font-size: 0.85rem; }
+    .text-xs { font-size: 0.75rem; }
     .text-muted { color: var(--text-muted); }
     .text-secondary { color: var(--text-secondary); }
     .text-accent { color: var(--accent-primary); }
@@ -67,14 +68,14 @@
     .text-positive { color: var(--positive); }
     .text-negative { color: var(--negative); }
     .bold { font-weight: 700; }
-    .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+    .uppercase { text-transform: uppercase; letter-spacing: 0.1em; }
     .h-900 { height: 900px; }
     .max-w-600 { max-width: 600px; }
     .mt-125 { margin-top: 1.25rem; }
     .mb-125 { margin-bottom: 1.25rem; }
     .overflow-y-auto { overflow-y: auto; }
     .hidden { display: none; }
-    .card-sm { background: var(--bg-elevated); padding: 0.75rem; border-radius: var(--radius-sm); }
+    .card-sm { border: 1px solid var(--border-subtle); padding: 0.75rem; background: var(--bg-card); }
     .grid { display: grid; }
     .grid-2-col { grid-template-columns: 1fr 1fr; }
     .text-center { text-align: center; }
@@ -98,24 +99,17 @@
       background: var(--bg-deep);
       color: var(--text-primary);
       min-height: 100vh;
-      line-height: 1.5;
+      line-height: 1.4;
       overflow-x: hidden;
     }
 
-    /* Ambient background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.02) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: -1;
+    h1, h2, h3, h4, h5, h6 {
+      word-spacing: 0.15em;
+    }
+
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
     }
 
     /* Layout: Sidebar + Content */
@@ -126,384 +120,321 @@
 
     /* Sidebar */
     .sidebar {
-      width: 220px;
+      width: 240px;
       flex-shrink: 0;
-      background: var(--bg-panel);
-      border-right: 1px solid var(--border-subtle);
+      background: var(--bg-deep);
+      border-right: var(--swiss-border);
       position: sticky;
       top: 0;
       height: 100vh;
       overflow-y: auto;
-      padding: 1.25rem 0;
+      padding: 1rem 0;
     }
 
     .sidebar-header {
-      padding: 0 1rem 1rem;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 0.75rem;
+      padding: 0 1rem 1.5rem;
+      border-bottom: var(--swiss-border);
+      margin-bottom: 1.5rem;
     }
 
     .sidebar-header h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.3rem;
+      font-weight: 900;
       letter-spacing: -0.02em;
-      margin-bottom: 0.2rem;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      word-spacing: 0.25em;
+      text-transform: uppercase;
+      line-height: 0.9;
+      margin-bottom: 0.4rem;
+      color: var(--text-primary);
     }
 
     .sidebar-header p {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+      font-weight: 700;
     }
 
     /* Navigation Tabs */
     .tab-nav {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
-      padding: 0 0.5rem;
+      gap: 0;
+      padding: 0;
     }
 
     .tab-group {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .tab-group-label {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
       font-size: 0.6rem;
-      font-weight: 700;
+      font-weight: 900;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.4rem 0.5rem 0.25rem;
+      letter-spacing: 0.1em;
+      word-spacing: 0.1em;
+      padding: 0.4rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .tab-group-label .group-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      background: var(--accent-primary);
-      color: var(--bg-deep);
-      border-radius: 50%;
-      font-size: 0.55rem;
-      font-weight: 700;
+      color: var(--accent-primary);
     }
 
     .tab-group-buttons {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .tab-divider {
-      display: none;
     }
 
     .tab-btn {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.6rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-subtle);
       color: var(--text-secondary);
       font-family: inherit;
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s;
       text-align: left;
       width: 100%;
     }
 
     .tab-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: var(--border-subtle);
+      background: var(--bg-panel);
       color: var(--text-primary);
-      transform: translateX(2px);
     }
 
     .tab-btn.active {
-      background: var(--bg-elevated);
-      color: var(--accent-primary);
-      border-color: var(--border-accent);
-      box-shadow: var(--shadow-crisp);
+      background: var(--text-primary);
+      color: var(--bg-deep);
     }
 
     .tab-btn .icon {
       font-size: 0.9rem;
       width: 1.1rem;
       text-align: center;
-      opacity: 0.7;
-    }
-
-    .tab-btn.active .icon {
-      opacity: 1;
     }
 
     /* Main Content */
     .main-content {
       flex: 1;
-      padding: 1.5rem 2.5rem;
+      padding: 2rem 3rem;
       width: 100%;
       min-width: 0;
       overflow-y: auto;
     }
 
-    /* Sidebar scrollbar */
-    .sidebar::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background: var(--border-subtle);
-      border-radius: 2px;
-    }
-
-    /* Responsive: Collapse sidebar on small screens */
-    @media (max-width: 900px) {
-      .app-layout {
-        flex-direction: column;
-      }
-      
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border-subtle);
-        padding: 0.75rem 0;
-      }
-      
-      .sidebar-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0 1rem 0.75rem;
-      }
-      
-      .sidebar-header p {
-        display: none;
-      }
-      
-      .tab-nav {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-        padding: 0 0.75rem;
-        justify-content: center;
-      }
-      
-      .tab-group {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-bottom: 0;
-      }
-      
-      .tab-group-label {
-        padding: 0.2rem 0.3rem;
-      }
-      
-      .tab-group-buttons {
-        flex-direction: row;
-        gap: 0.25rem;
-      }
-      
-      .tab-btn {
-        padding: 0.35rem 0.5rem;
-        font-size: 0.7rem;
-      }
-      
-      .tab-btn span:not(.icon) {
-        display: none;
-      }
-      
-      .tab-btn .icon {
-        margin: 0;
-      }
-      
-      .tab-btn.active {
-        box-shadow: 0 0 8px rgba(0, 212, 170, 0.3);
-      }
-      
-      .main-content {
-        padding: 1rem;
-      }
-    }
-
-    /* Tab Sections */
-    .tab-section {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .tab-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     /* Section Header */
     .section-header {
-      text-align: center;
       margin-bottom: 2rem;
+      border-bottom: var(--swiss-thick);
+      padding-bottom: 1rem;
     }
 
     .section-header h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
+      font-size: 3.5rem;
+      font-weight: 900;
       letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
+      word-spacing: 0.2em;
+      text-transform: uppercase;
+      line-height: 0.85;
+      margin-bottom: 1rem;
     }
 
     .section-header p {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
+      font-weight: 700;
       color: var(--text-secondary);
-      max-width: 800px;
-      margin: 0 auto;
+      max-width: 700px;
+      border-left: 6px solid var(--accent-primary);
+      padding-left: 1rem;
     }
 
-    /* Sub-panel for controls inside a workbench */
-    .control-panel-well {
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: var(--radius-sm);
-      padding: 1.25rem;
-      margin: 0;
-      border: 1px solid var(--border-subtle);
-    }
-
-    /* Cards */
-    .card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow-crisp);
-    }
-
-    /* Interactive Well */
-    .interactive-well {
-      background: var(--bg-well);
-      border: 1px solid var(--border-subtle);
-      border-left: 4px solid var(--accent-primary);
-      border-radius: var(--radius-sm);
+    /* Cards & Concepts */
+    .concept-card {
+      border: var(--swiss-border);
       padding: 1.5rem;
-      margin: 1.5rem 0;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+      margin-bottom: 1.5rem;
+      background: var(--bg-card);
+    }
+
+    .concept-card h4 {
+      text-transform: uppercase;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      word-spacing: 0.15em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-primary);
+    }
+
+    /* Interactive Well / Workbench */
+    .interactive-well {
+      background: var(--bg-panel);
+      border: var(--swiss-thick);
+      padding: 1.5rem;
+      margin: 2rem 0;
       position: relative;
     }
 
     .interactive-well::before {
-      content: 'DEMO / WORKBENCH';
+      content: 'WORKBENCH';
       position: absolute;
-      top: -10px;
+      top: -12px;
       left: 1rem;
       background: var(--accent-primary);
       color: var(--bg-deep);
-      font-size: 0.6rem;
-      font-weight: 800;
+      font-size: 0.65rem;
+      font-weight: 900;
       padding: 2px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+      word-spacing: 0.1em;
     }
 
-    /* Informational Cards */
-    .concept-card {
-      background: rgba(124, 58, 237, 0.03);
-      border: 1px solid rgba(124, 58, 237, 0.1);
-      border-radius: var(--radius-sm);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .concept-card h4 {
-      color: var(--accent-secondary);
-      font-size: 1rem;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .concept-card h4::before {
-      content: '📖';
+    /* Forms & Inputs */
+    textarea, select, input {
+      width: 100%;
+      background: var(--bg-deep);
+      border: var(--swiss-border);
+      color: var(--text-primary);
+      padding: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.9rem;
+      outline: none;
     }
 
-    .card-header h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
+    .action-btn {
+      background: var(--text-primary);
+      color: var(--bg-deep);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-family: inherit;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.1s;
     }
 
-    .card-header .badge {
-      padding: 0.35rem 0.75rem;
-      background: var(--bg-elevated);
-      border-radius: 100px;
-      font-size: 0.85rem;
-      color: var(--accent-primary);
-      font-weight: 500;
+    .action-btn:active {
+      transform: scale(0.98);
     }
 
-    /* Layout helpers */
+    /* Grid Layouts */
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     @media (max-width: 1200px) {
       .grid-2, .grid-3 {
         grid-template-columns: 1fr;
       }
+      .main-content {
+        padding: 1.5rem 2rem;
+      }
+      .section-header h2 {
+        font-size: 2.5rem;
+      }
     }
 
-    /* Neural Network Intro */
-    .nn-intro {
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
+    @media (max-width: 900px) {
+      .app-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: var(--swiss-border);
+      }
+      .tab-btn {
+        border-right: 1px solid var(--border-subtle);
+      }
+      .main-content {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Tab Animation */
+    .tab-section {
+      display: none;
+      animation: swissFadeIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    @keyframes swissFadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--text-muted); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+    /* Force Swiss Sharp Corners Everywhere */
+    * { border-radius: 0px !important; }
+
+
+    /* Sub-panel for controls inside a workbench */
+    .control-panel-well {
+      background: var(--bg-deep);
       padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      margin: 0;
+      border: var(--swiss-border);
     }
 
     .nn-intro-flow {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+      gap: 0.75rem;
+      flex-wrap: nowrap;
       margin-bottom: 1rem;
     }
 
     .nn-intro-box {
+      flex: 1;
       background: var(--bg-card);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1rem;
+      padding: 0.75rem;
       text-align: center;
-      min-width: 160px;
+      min-width: 0;
+      border: var(--swiss-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100px;
     }
 
     .nn-intro-box.input-box {
@@ -512,7 +443,7 @@
 
     .nn-intro-box.network-box {
       border: 1px solid var(--accent-secondary);
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(124, 58, 237, 0.05));
+      background: rgba(124, 58, 237, 0.1);
     }
 
     .nn-intro-box.output-box {
@@ -520,39 +451,46 @@
     }
 
     .intro-box-label {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 0.25rem;
+      word-spacing: 0.1em;
+      margin-bottom: 0.2rem;
     }
 
     .intro-box-content {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-primary);
+      line-height: 1.2;
     }
 
     .intro-box-content strong {
       display: block;
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.1rem;
+      font-size: 0.85rem;
     }
 
     .intro-example {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
+      display: block;
+      margin-top: 0.2rem;
     }
 
     .nn-intro-arrow {
-      font-size: 1.25rem;
+      font-size: 1rem;
       color: var(--text-muted);
+      flex-shrink: 0;
     }
 
     .nn-intro-note {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       text-align: center;
-      margin: 0;
+      margin: 0.5rem 0 0;
+      line-height: 1.4;
     }
 
     /* Neural Network Visualization Canvas */
@@ -564,38 +502,38 @@
     .nn-canvas-wrapper {
       background: var(--bg-card);
       border-radius: var(--radius);
-      padding: 1.5rem;
+      padding: 1rem;
       border: 1px solid var(--border-subtle);
     }
 
     .controls-note {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .nn-output-display {
       background: var(--bg-card);
       border-radius: var(--radius-sm);
-      padding: 0.5rem;
+      padding: 0.4rem;
     }
 
     .nn-output-display .output-row {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0;
+      gap: 0.35rem;
+      padding: 0.25rem 0;
     }
 
     .nn-output-display .output-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      min-width: 50px;
+      font-size: 0.7rem;
+      min-width: 45px;
     }
 
     .output-bar-container {
       flex: 1;
-      height: 6px;
+      height: 5px;
       background: var(--bg-elevated);
       border-radius: 3px;
       overflow: hidden;
@@ -611,14 +549,14 @@
 
     .nn-output-display .output-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      min-width: 35px;
+      font-size: 0.7rem;
+      min-width: 30px;
       text-align: right;
     }
 
     .nn-try-this {
-      margin-top: 0.75rem;
-      padding: 0.5rem 0.6rem;
+      margin-top: 0.6rem;
+      padding: 0.4rem 0.5rem;
       background: var(--bg-elevated);
       border-radius: var(--radius-sm);
       font-size: 0.75rem;
@@ -632,11 +570,11 @@
     }
 
     .legend-circle {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50% !important;
       background: var(--accent-primary);
-      box-shadow: 0 0 8px var(--accent-primary);
+      box-shadow: 0 0 6px var(--accent-primary);
     }
 
     .legend-circle.active {
@@ -645,57 +583,57 @@
 
     #nn-canvas {
       width: 100%;
-      height: 380px;
+      height: 340px;
       display: block;
     }
 
     .nn-legend {
       display: flex;
       justify-content: center;
-      gap: 2rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
       border-top: 1px solid var(--border-subtle);
     }
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
+      gap: 0.4rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
     }
 
     .legend-line {
-      width: 30px;
-      height: 4px;
+      width: 25px;
+      height: 3px;
       border-radius: 2px;
     }
 
     .legend-line.positive { background: var(--positive); }
     .legend-line.negative { background: var(--negative); }
-    .legend-line.thick { height: 8px; }
+    .legend-line.thick { height: 6px; }
     .legend-line.thin { height: 2px; }
 
     /* Controls Panel */
     .controls-panel {
       background: var(--bg-panel);
       border-radius: var(--radius);
-      padding: 1rem;
+      padding: 0.75rem;
       border: 1px solid var(--border-subtle);
     }
 
     .controls-panel h3 {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .control-group {
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .control-group:last-child {
@@ -703,59 +641,60 @@
     }
 
     .control-group-title {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: var(--accent-primary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
+      word-spacing: 0.1em;
+      margin-bottom: 0.4rem;
     }
 
     .slider-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
     }
 
     .slider-row label {
-      flex: 0 0 60px;
-      font-size: 0.85rem;
+      flex: 0 0 75px;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       font-weight: 500;
     }
 
     .slider-row input[type="range"] {
       flex: 1;
-      height: 6px;
+      height: 5px;
       -webkit-appearance: none;
       appearance: none;
       background: var(--bg-elevated);
       border-radius: 4px;
       outline: none;
-      min-width: 80px;
+      min-width: 70px;
     }
 
     .slider-row input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       background: var(--accent-primary);
       border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 0 8px var(--glow-accent);
+      box-shadow: 0 0 6px var(--glow-accent);
     }
 
     .slider-value {
-      flex: 0 0 45px;
+      flex: 0 0 40px;
       text-align: right;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-primary);
       background: var(--bg-elevated);
-      padding: 0.35rem 0.6rem;
+      padding: 0.25rem 0.5rem;
       border-radius: var(--radius-sm);
     }
 
@@ -763,8 +702,8 @@
     .output-display {
       background: var(--bg-card);
       border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-top: 1.5rem;
+      padding: 1rem;
+      margin-top: 1rem;
       border: 2px solid var(--border-accent);
     }
 
@@ -772,7 +711,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 0;
+      padding: 0.5rem 0;
       border-bottom: 1px solid var(--border-subtle);
     }
 
@@ -786,19 +725,19 @@
     }
 
     .output-label {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
     }
 
     .output-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 600;
     }
 
     .output-value.highlight {
       color: var(--accent-primary);
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
     /* Tokenizer Section */
@@ -904,34 +843,34 @@
     .tokens-display {
       background: var(--bg-card);
       border-radius: var(--radius);
-      padding: 2rem;
-      margin-top: 1.5rem;
+      padding: 1rem;
+      margin-top: 1rem;
       border: 1px solid var(--border-subtle);
     }
 
     .tokens-display h4 {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       color: var(--text-secondary);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       font-weight: 500;
     }
 
     .tokens-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .token-chip {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0.8rem;
+      gap: 0.4rem;
+      padding: 0.3rem 0.6rem;
       background: var(--bg-deep);
       border: 1px solid var(--border-subtle);
       border-left: 3px solid var(--accent-secondary);
       border-radius: var(--radius-sm);
-      font-size: 1rem;
+      font-size: 0.9rem;
       transition: all 0.2s ease;
     }
 
@@ -942,7 +881,7 @@
 
     .token-chip .index {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--accent-primary);
       font-weight: 600;
     }
@@ -953,14 +892,14 @@
     }
 
     .ids-display {
-      margin-top: 1.5rem;
-      padding: 1.25rem;
+      margin-top: 1rem;
+      padding: 1rem;
       background: var(--bg-deep);
       border-radius: var(--radius-sm);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      line-height: 1.8;
+      line-height: 1.6;
       overflow-x: auto;
     }
 
@@ -1334,13 +1273,13 @@
     .pred-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 1rem;
       font-size: 0.75rem;
     }
 
     .pred-token {
       font-family: 'JetBrains Mono', monospace;
-      width: 55px;
+      width: 75px;
       flex-shrink: 0;
     }
 
@@ -1372,7 +1311,8 @@
     .pred-feedback {
       font-size: 0.65rem;
       color: var(--accent-warm);
-      width: 60px;
+      width: 110px;
+      flex-shrink: 0;
     }
 
     .loss-display {
@@ -1432,7 +1372,7 @@
 
     .train-loop-btn {
       padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      background: var(--accent-primary);
       border: none;
       border-radius: var(--radius-sm);
       color: var(--bg-deep);
@@ -1689,13 +1629,13 @@
     .layer-col {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 1.25rem;
       align-items: center;
     }
 
     .connection-col {
       width: 40px;
-      height: 60px;
+      height: 80px;
     }
 
     .conn-svg {
@@ -1706,7 +1646,7 @@
     .mini-node {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
+      border-radius: 50% !important;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1741,10 +1681,11 @@
 
     .mini-node .blame-amount {
       position: absolute;
-      top: -16px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.55rem;
+      font-weight: 700;
       color: #f59e0b;
       white-space: nowrap;
     }
@@ -1789,10 +1730,10 @@
     .weight-update-row {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.25rem;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem;
-      padding: 0.25rem 0.4rem;
+      padding: 0.2rem 0.4rem;
       background: var(--bg-card);
       border-radius: 4px;
     }
@@ -2897,8 +2838,8 @@
 
     /* Explanation boxes */
     .explanation {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-      border: 1px solid var(--border-accent);
+      background: var(--bg-card);
+      border: 2px solid var(--accent-primary);
       border-radius: var(--radius);
       padding: 1.5rem;
       margin-top: 1.5rem;
@@ -2998,8 +2939,8 @@
     }
 
     .concept-list li::before {
-      content: counter(list-item);
-      counter-increment: list-item;
+      content: counter(concept-step);
+      counter-increment: concept-step;
       position: absolute;
       left: 0;
       width: 1.5rem;
@@ -3015,7 +2956,7 @@
     }
 
     .concept-list {
-      counter-reset: list-item;
+      counter-reset: concept-step;
     }
 
     .analogy-box {
@@ -3217,8 +3158,8 @@
 
     /* Experiment Box */
     .experiment-box {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-      border: 1px solid var(--border-accent);
+      background: var(--bg-card);
+      border: 2px solid var(--accent-secondary);
       border-radius: var(--radius);
       padding: 1.5rem;
       margin: 1rem 0;
@@ -3332,15 +3273,15 @@
     .vocab-table {
       background: var(--bg-card);
       border-radius: var(--radius);
-      padding: 1rem;
-      margin: 1rem 0;
+      padding: 0.75rem;
+      margin: 0.75rem 0;
     }
 
     .vocab-row {
       display: grid;
-      grid-template-columns: 80px 1fr 1fr;
-      gap: 1rem;
-      padding: 0.5rem 0;
+      grid-template-columns: 70px 1fr 1fr;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
       border-bottom: 1px solid var(--border-subtle);
       align-items: center;
     }
@@ -3352,14 +3293,16 @@
     .vocab-id {
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent-primary);
+      font-size: 0.85rem;
     }
 
     .vocab-token {
       font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
     }
 
     .vocab-note {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
@@ -4055,7 +3998,8 @@
 
     .mountain-scene {
       height: 120px;
-      background: linear-gradient(to bottom, var(--bg-card) 0%, var(--bg-elevated) 100%);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
       position: relative;
       overflow: hidden;
@@ -4067,23 +4011,30 @@
       left: 10%;
       right: 10%;
       height: 80%;
-      background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-panel) 50%, var(--bg-elevated) 100%);
-      clip-path: polygon(0% 100%, 20% 40%, 35% 70%, 50% 20%, 65% 60%, 80% 30%, 100% 100%);
+      background: var(--bg-panel);
+      clip-path: polygon(0% 100%, 20% 40%, 45% 85%, 65% 30%, 85% 60%, 100% 100%);
     }
 
     #hiker-icon {
       position: absolute;
       font-size: 1.5rem;
-      top: 30%;
-      left: 25%;
+      top: 12%;
+      left: 65%;
+      z-index: 5;
+      transform: scaleX(-1);
     }
 
     .valley-marker {
       position: absolute;
-      bottom: 10px;
-      right: 20%;
-      font-size: 0.85rem;
+      bottom: 8px;
+      left: 46%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--accent-primary);
+      z-index: 10;
     }
 
     /* Gradient Visual */
@@ -4237,43 +4188,43 @@
     .backprop-chain {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      padding: 1.5rem;
+      gap: 0.4rem;
+      padding: 1rem;
       background: var(--bg-card);
       border-radius: var(--radius);
-      margin: 1rem 0;
+      margin: 0.75rem 0;
     }
 
     .chain-step {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 0.5rem;
+      gap: 0.75rem;
+      padding: 0.4rem;
     }
 
     .chain-label {
-      width: 80px;
+      width: 70px;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent-primary);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
     .chain-arrow {
       color: var(--negative);
-      font-size: 1.25rem;
+      font-size: 1.1rem;
     }
 
     .chain-content {
       color: var(--text-secondary);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     /* Loss Examples */
     .loss-examples {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 1rem 0;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
     }
 
     @media (max-width: 768px) {
@@ -4285,13 +4236,14 @@
     .loss-example {
       background: var(--bg-card);
       border-radius: var(--radius);
-      padding: 1rem;
+      padding: 0.75rem;
     }
 
     .loss-type {
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
     }
 
     .loss-formula {
@@ -4374,8 +4326,8 @@
       width: 32px;
       height: 32px;
       min-width: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 50% !important;
+      background: var(--accent-primary);
       color: var(--bg-deep);
       display: flex;
       align-items: center;
@@ -4424,7 +4376,7 @@
     }
 
     .word-bubble {
-      background: linear-gradient(135deg, var(--accent-cool), var(--accent-secondary));
+      background: var(--accent-cool);
       color: white;
       padding: 0.4rem 0.75rem;
       border-radius: 20px;
@@ -4580,8 +4532,8 @@
     }
 
     .intro-summary {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(124, 58, 237, 0.1));
-      border: 1px solid var(--border-accent);
+      background: var(--bg-card);
+      border: 2px solid var(--accent-cool);
       border-radius: var(--radius-sm);
       padding: 1rem 1.25rem;
       font-size: 0.95rem;
@@ -4593,6 +4545,47 @@
       color: var(--accent-primary);
     }
 
+    /* Intuition Callout - The key takeaway for each tab */
+    .intuition-callout {
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .intuition-callout::before {
+      content: '💡 THE INTUITION';
+      position: absolute;
+      top: -10px;
+      left: 1rem;
+      background: var(--bg-deep);
+      color: var(--accent-primary);
+      font-size: 0.6rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      letter-spacing: 0.1em;
+    }
+
+    .intuition-callout .intuition-main {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .intuition-callout .intuition-main em {
+      color: var(--accent-primary);
+      font-style: normal;
+    }
+
+    .intuition-callout .intuition-detail {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
     /* ============ INFERENCE TAB STYLES ============ */
     .inference-container {
       margin-bottom: 2rem;
@@ -4600,7 +4593,7 @@
 
     .inference-grid {
       display: grid;
-      grid-template-columns: 1fr 380px;
+      grid-template-columns: 1fr 300px;
       gap: 2rem;
     }
 
@@ -4620,27 +4613,27 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
     .inference-prompt-label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .inference-prompt-display {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1.5;
       color: var(--text-primary);
-      padding: 1rem;
+      padding: 0.75rem;
       background: var(--bg-card);
       border-radius: var(--radius-sm);
-      min-height: 60px;
+      min-height: 50px;
     }
 
     .inference-prompt-display .generated {
@@ -4665,13 +4658,13 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
-      padding: 2rem;
+      padding: 1.5rem;
     }
 
     .inference-flow-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-align: center;
     }
 
@@ -4679,7 +4672,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
     }
 
@@ -4687,40 +4680,40 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .pipeline-box {
-      padding: 1rem 1.25rem;
+      padding: 0.75rem 1rem;
       border-radius: var(--radius-sm);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 500;
       text-align: center;
-      min-width: 100px;
+      min-width: 90px;
       transition: all 0.3s ease;
     }
 
     .pipeline-box.input {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+      background: rgba(59, 130, 246, 0.1);
       border: 2px solid var(--accent-cool);
       color: var(--accent-cool);
     }
 
     .pipeline-box.model {
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(124, 58, 237, 0.1));
+      background: rgba(124, 58, 237, 0.1);
       border: 2px solid var(--accent-secondary);
       color: var(--text-primary);
-      min-width: 140px;
-      padding: 1.25rem;
+      min-width: 120px;
+      padding: 1rem;
     }
 
     .pipeline-box.model .model-icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.25rem;
+      font-size: 1.25rem;
+      margin-bottom: 0.2rem;
     }
 
     .pipeline-box.output {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(0, 212, 170, 0.1));
+      background: rgba(0, 212, 170, 0.1);
       border: 2px solid var(--accent-primary);
       color: var(--accent-primary);
       font-family: 'JetBrains Mono', monospace;
@@ -4732,12 +4725,12 @@
     }
 
     .pipeline-arrow {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       color: var(--text-muted);
     }
 
     .pipeline-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
 
@@ -4746,36 +4739,36 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
     .token-probs-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .token-prob-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .token-prob-item {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0.75rem;
+      gap: 0.6rem;
+      padding: 0.4rem 0.6rem;
       background: var(--bg-card);
       border-radius: var(--radius-sm);
       transition: all 0.2s ease;
     }
 
     .token-prob-item.selected {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(0, 212, 170, 0.1));
+      background: rgba(0, 212, 170, 0.1);
       border: 1px solid var(--accent-primary);
     }
 
@@ -4784,24 +4777,24 @@
     }
 
     .token-prob-rank {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      width: 20px;
+      width: 18px;
     }
 
     .token-prob-token {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text-primary);
-      padding: 0.25rem 0.5rem;
+      padding: 0.2rem 0.4rem;
       background: var(--bg-elevated);
       border-radius: 4px;
-      min-width: 60px;
+      min-width: 50px;
     }
 
     .token-prob-bar-container {
       flex: 1;
-      height: 8px;
+      height: 6px;
       background: var(--bg-elevated);
       border-radius: 4px;
       overflow: hidden;
@@ -4820,9 +4813,9 @@
 
     .token-prob-percent {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
-      width: 50px;
+      width: 45px;
       text-align: right;
     }
 
@@ -4831,34 +4824,34 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
     .inference-controls h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1.25rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .temp-viz {
-      margin: 1rem 0;
-      padding: 1rem;
+      margin: 0.75rem 0;
+      padding: 0.75rem;
       background: var(--bg-card);
       border-radius: var(--radius-sm);
     }
 
     .temp-viz-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       text-align: center;
     }
 
     .temp-viz-bar {
       display: flex;
-      height: 40px;
+      height: 32px;
       border-radius: var(--radius-sm);
       overflow: hidden;
       gap: 2px;
@@ -4869,18 +4862,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
       color: var(--text-primary);
       transition: all 0.3s ease;
     }
 
     .temp-description {
-      margin-top: 1rem;
-      padding: 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.6rem;
       background: var(--bg-elevated);
       border-radius: var(--radius-sm);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-secondary);
       text-align: center;
     }
@@ -4889,78 +4882,73 @@
     .generation-buttons {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
+      gap: 0.6rem;
+      margin-top: 1rem;
     }
 
     .gen-btn {
-      padding: 0.75rem 1.25rem;
-      border-radius: var(--radius-sm);
-      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 0px;
+      border: 2px solid var(--text-primary);
       font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 900;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.1s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.1em;
     }
 
     .gen-btn.primary {
-      background: var(--accent-primary);
+      background: var(--text-primary);
       color: var(--bg-deep);
-      border-bottom: 3px solid rgba(0, 0, 0, 0.2);
     }
 
     .gen-btn.primary:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.1);
-      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.2);
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
     }
 
     .gen-btn.secondary {
-      background: var(--bg-elevated);
+      background: transparent;
       color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
     }
 
     .gen-btn.secondary:hover {
-      background: var(--bg-card);
-      border-color: var(--text-muted);
-      transform: translateY(-1px);
+      background: var(--bg-elevated);
     }
 
     .gen-btn:active {
-      transform: translateY(1px);
+      transform: scale(0.98);
     }
 
     .gen-btn:disabled {
-      opacity: 0.4;
+      opacity: 0.3;
       cursor: not-allowed;
       transform: none !important;
-      box-shadow: none !important;
     }
 
     /* Autoregressive Loop Visualization */
     .autoregressive-section {
       background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius);
+      border: var(--swiss-border);
       padding: 1.5rem;
       margin-top: 1.5rem;
     }
 
     .autoregressive-title {
       font-size: 1.1rem;
-      font-weight: 600;
+      font-weight: 900;
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
     }
 
     .loop-visualization {
@@ -4975,24 +4963,23 @@
       gap: 1rem;
       padding: 1rem;
       background: var(--bg-card);
-      border-radius: var(--radius-sm);
-      border-left: 3px solid var(--border-subtle);
+      border: var(--swiss-border);
       transition: all 0.3s ease;
     }
 
     .loop-step.active {
-      border-left-color: var(--accent-primary);
-      background: linear-gradient(90deg, rgba(0, 212, 170, 0.1), transparent);
+      border-color: var(--accent-primary);
+      background: rgba(0, 212, 170, 0.05);
     }
 
     .loop-step.completed {
-      border-left-color: var(--positive);
+      border-color: var(--positive);
     }
 
     .loop-step-number {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
+      border-radius: 50% !important;
       background: var(--bg-elevated);
       display: flex;
       align-items: center;
@@ -6235,22 +6222,22 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h1>AI Intuition Lab</h1>
-        <p>Build mental models of how Large Language Models work</p>
+        <h1>AI Intuition<br>Lab</h1>
+        <p>Expert Mental Models</p>
       </div>
 
       <nav class="tab-nav">
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">0</span> Introduction</span>
+          <span class="tab-group-label"><span class="group-num">00</span> INTRODUCTION</span>
           <div class="tab-group-buttons">
             <button class="tab-btn active" data-tab="welcome">
               <span class="icon">🏠</span>
-              <span>Welcome</span>
+              <span>Overview</span>
             </button>
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">1</span> Input & Output</span>
+          <span class="tab-group-label"><span class="group-num">01-03</span> INPUT & OUTPUT</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="tokens">
               <span class="icon">🔤</span>
@@ -6267,7 +6254,7 @@
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">2</span> Architecture</span>
+          <span class="tab-group-label"><span class="group-num">04-05</span> ARCHITECTURE</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="nn">
               <span class="icon">🧠</span>
@@ -6280,7 +6267,7 @@
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">3</span> Training LLMs</span>
+          <span class="tab-group-label"><span class="group-num">06-07</span> TRAINING LLMS</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="training">
               <span class="icon">🎓</span>
@@ -6293,7 +6280,7 @@
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">4</span> In Practice</span>
+          <span class="tab-group-label"><span class="group-num">08-09</span> IN PRACTICE</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="prompting">
               <span class="icon">💡</span>
@@ -6317,13 +6304,13 @@
         <p>Moving from a "black box" view of AI to becoming an expert user</p>
       </div>
 
-      <div class="concept-card p-15">
+      <div class="concept-card">
         <h4>The Goal: Expert User, Not Researcher</h4>
         <p>This lab isn’t about turning you into a computer scientist or an AI researcher. It’s about helping you understand the "physics" of how Large Language Models (LLMs) work so you can use them more effectively.</p>
-        <p class="mt-1">By grasping the underlying concepts, you'll develop a <strong>intuition</strong> for why models succeed, why they fail, and how to steer them toward the results you want.</p>
+        <p class="mt-1">By grasping the underlying concepts, you'll develop an <strong>intuition</strong> for why models succeed, why they fail, and how to steer them toward the results you want.</p>
       </div>
 
-      <div class="concept-card mt-15 p-15">
+      <div class="concept-card">
         <h4>📸 The Metaphor: The Pro vs. The Point-and-Shoot</h4>
         <div class="grid grid-2-col gap-15 mt-1">
           <div class="card-sm">
@@ -6338,9 +6325,9 @@
         <p class="mt-15 text-secondary"><strong>Your Journey:</strong> You don't need to know how to build the digital sensor from scratch, but knowing how it <em>reacts</em> to the world makes you a professional. This lab is your training ground for mastering those manual controls.</p>
       </div>
 
-      <div class="concept-card mt-15 p-15">
+      <div class="concept-card">
         <h4>🗺️ The Roadmap to Intuition</h4>
-        <div class="hierarchy-container mt-1" style="background: var(--bg-card);">
+        <div class="hierarchy-container mt-1" style="background: var(--bg-card); border: var(--swiss-border); padding: 2rem;">
           <div class="hierarchy-level">
             <div class="level-icon">📦</div>
             <div class="level-content">
@@ -6379,8 +6366,13 @@
     <!-- TOKENIZATION TAB -->
     <section id="tab-tokens" class="tab-section">
       <div class="section-header">
-        <h2>🔤 Tokenization</h2>
+        <h2>01: Tokenization</h2>
         <p>AI models don't use raw text. Instead, they use sequences of numbers called tokens.</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand tokens, you understand <em>why AI has context limits, why some prompts cost more, and why word choice at boundaries matters.</em></div>
+        <div class="intuition-detail">AI doesn't process words—it processes tokens, which are pieces of text converted into numbers. Tokens are the basic unit of everything in AI: how usage is measured, why there are context limits, and why some inputs cost more than others.</div>
       </div>
 
       <div class="intro-summary mb-2">
@@ -6579,8 +6571,13 @@
     <!-- EMBEDDINGS TAB -->
     <section id="tab-embed" class="tab-section">
       <div class="section-header">
-        <h2>📍 Embedding Space</h2>
+        <h2>02: Embedding Space</h2>
         <p>How do we turn words into something a computer can understand? We give each word a list of numbers.</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand embeddings, you understand <em>how AI "knows" that king relates to queen without being told—meaning lives in geometric space.</em></div>
+        <div class="intuition-detail">AI represents tokens as coordinates in a high-dimensional space, where position encodes meaning. Embeddings are how AI "knows" that words are related—not through definitions, but through learned proximity.</div>
       </div>
 
       <!-- Pedagogical Introduction -->
@@ -6716,7 +6713,7 @@
             </div>
 
             <div class="embed-sidebar">
-              <div class="concept-card h-900 flex flex-col p-15" style="margin: 0;">
+              <div class="concept-card h-900 flex flex-col" style="margin: 0;">
                 <h4 class="mb-125" style="font-size: 1.1rem;">Similarity Scores</h4>
                 
                 <div class="control-panel-well mb-15">
@@ -6946,8 +6943,13 @@
     <!-- INFERENCE TAB -->
     <section id="tab-inference" class="tab-section">
       <div class="section-header">
-        <h2>💬 LLM Inference</h2>
+        <h2>03: Inference</h2>
         <p>Watch how language models generate text one token at a time, predicting the most likely next word</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand inference, you understand <em>why AI sometimes contradicts itself mid-paragraph—each token only sees what came before.</em></div>
+        <div class="intuition-detail">When you use AI, it generates one token at a time by predicting what should come next. Inference is how AI produces responses—each token choice shapes what follows, which is why prompting well matters.</div>
       </div>
 
       <div class="intro-summary mb-2">
@@ -7030,7 +7032,7 @@
               
               <div class="control-panel-well">
                 <div class="control-group">
-                  <div class="control-group-title">Temperature</div>
+                  <div class="control-group-title">Temperature:<br>(Move the Slider)</div>
                   <div class="slider-row">
                     <input type="range" id="inf-temperature" min="0" max="2" step="0.1" value="0.7">
                     <span class="slider-value" id="inf-temp-val">0.7</span>
@@ -7242,8 +7244,13 @@
     <!-- NEURAL NETWORK TAB -->
     <section id="tab-nn" class="tab-section">
       <div class="section-header">
-        <h2>🧠 Neural Network Forward Pass</h2>
+        <h2>04: Neural Networks</h2>
         <p>See inside the "black box" — how embedding numbers flow through layers and become next-token predictions</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand neural networks, you understand <em>that AI is math, not magic—billions of multiplications that find patterns.</em></div>
+        <div class="intuition-detail">Neural networks are the engine—layers of simple math that transform embeddings into predictions. Every pattern the model recognizes, every connection it makes, happens through these calculations.</div>
       </div>
 
       <!-- Context Introduction -->
@@ -7552,8 +7559,13 @@
     <!-- ATTENTION TAB -->
     <section id="tab-attention" class="tab-section">
       <div class="section-header">
-        <h2>🎯 Self-Attention</h2>
+        <h2>05: Attention</h2>
         <p>Each word looks at every other word to decide what information to gather</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand attention, you understand <em>why transformers revolutionized AI—they let any word "see" any other word instantly.</em></div>
+        <div class="intuition-detail">Attention lets every token directly access every other token, regardless of distance. This is the mechanism that enabled the transformer revolution—it's why "it" can connect to "cat" across 500 words without losing the signal.</div>
       </div>
 
       <div class="attention-container">
@@ -7562,7 +7574,7 @@
             <div class="att-main">
               <div class="card-header">
                 <h3>Attention Flow</h3>
-                <span class="badge">Visual connections</span>
+                <span class="badge">Visual connections (Click on the words to see how attention works)</span>
               </div>
               <canvas id="attention-canvas"></canvas>
             </div>
@@ -7698,7 +7710,7 @@
               <div class="head-pattern">"cat" → "mat" (rhyme? location?)</div>
             </div>
           </div>
-          <p>GPT-3 uses <strong>96 attention heads</strong> per layer, across <strong>96 layers</strong>. Each head can learn different patterns!</p>
+          <p>Modern LLMs use <strong>dozens of attention heads</strong> per layer, across <strong>dozens of layers</strong>. Each head can learn different patterns!</p>
         </div>
 
         <div class="concept-card">
@@ -7861,8 +7873,13 @@
     <!-- TRAINING TAB -->
     <section id="tab-training" class="tab-section">
       <div class="section-header">
-        <h2>🎓 Pre-Training</h2>
+        <h2>06: Pre-Training</h2>
         <p>How billions of random numbers become a language model that understands the world</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand pre-training, you understand <em>that AI capabilities come from data—what it learned, how much, and when.</em></div>
+        <div class="intuition-detail">AI starts as billions of random numbers, then learns by predicting the next word across trillions of examples. Training is where all capabilities and limitations originate—every strength and blind spot traces back to what was (or wasn't) in the training data.</div>
       </div>
 
       <!-- Context Introduction -->
@@ -8252,7 +8269,7 @@
           <div class="hiking-visual">
             <div class="mountain-scene">
               <div class="mountain"></div>
-              <div class="hiker" id="hiker-icon">🧗</div>
+              <div class="hiker" id="hiker-icon">🏃</div>
               <div class="valley-marker">🏁 Goal: lowest loss</div>
             </div>
           </div>
@@ -8310,19 +8327,19 @@
               <div class="concept-card p-125">
                 <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem;">Training Controls</h4>
                 
-                <div class="control-panel-well">
-                  <div class="mini-metrics grid grid-2-col gap-05 mb-1">
-                    <div class="mini-metric card-sm text-center" style="background: rgba(0,0,0,0.3);">
-                      <div class="text-xs uppercase text-muted">Weight</div>
-                      <div id="train-w" class="mono text-accent bold">0.50</div>
+                <div class="control-panel-well" style="padding: 0.75rem;">
+                  <div class="mini-metrics mb-1" style="display: flex; gap: 0.25rem; justify-content: center; align-items: stretch;">
+                    <div class="mini-metric card-sm text-center" style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                      <div class="text-xs uppercase text-muted" style="font-size: 0.55rem;">Weight</div>
+                      <div id="train-w" class="mono text-accent bold" style="font-size: 0.8rem;">0.50</div>
                     </div>
-                    <div class="mini-metric card-sm text-center" style="background: rgba(0,0,0,0.3);">
-                      <div class="text-xs uppercase text-muted">Bias</div>
-                      <div id="train-b" class="mono text-accent bold">0.50</div>
+                    <div class="mini-metric card-sm text-center" style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                      <div class="text-xs uppercase text-muted" style="font-size: 0.55rem;">Bias</div>
+                      <div id="train-b" class="mono text-accent bold" style="font-size: 0.8rem;">0.50</div>
                     </div>
-                    <div class="mini-metric loss card-sm text-center" style="grid-column: span 2; background: rgba(0,0,0,0.3);">
-                      <div class="text-xs uppercase text-muted">Total Loss</div>
-                      <div id="train-loss" class="mono text-warm bold">0.00</div>
+                    <div class="mini-metric loss card-sm text-center" style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.1rem; flex: 1.2; display: flex; flex-direction: column; justify-content: space-between;">
+                      <div class="text-xs uppercase text-muted" style="font-size: 0.55rem;">Total Loss</div>
+                      <div id="train-loss" class="mono text-warm bold" style="font-size: 0.8rem;">0.00</div>
                     </div>
                   </div>
 
@@ -8397,8 +8414,13 @@
     <!-- FINE-TUNING TAB -->
     <section id="tab-finetuning" class="tab-section">
       <div class="section-header">
-        <h2>🎯 Fine-Tuning & Alignment</h2>
+        <h2>07: Fine-Tuning</h2>
         <p>How a text predictor becomes a helpful, harmless, and honest assistant</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand fine-tuning, you understand <em>why ChatGPT is helpful but GPT-3 was chaotic—same brain, different training.</em></div>
+        <div class="intuition-detail">Pre-training gives the model knowledge; fine-tuning gives it behavior. Fine-tuning is how a text completion engine becomes a helpful assistant—one that follows instructions, refuses harmful requests, and maintains a consistent persona.</div>
       </div>
 
       <!-- Why Fine-Tuning Introduction -->
@@ -8847,8 +8869,13 @@
     <!-- CONTEXT & PROMPTING TAB -->
     <section id="tab-prompting" class="tab-section">
       <div class="section-header">
-        <h2>💡 Context & Prompting</h2>
+        <h2>08: Prompting</h2>
         <p>How what you say shapes what the model does — and why context windows matter</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand prompting, you understand <em>that you're not "asking"—you're setting up a probability landscape.</em></div>
+        <div class="intuition-detail">Your prompt is literally the only input the model sees for each conversation. Every word you include shifts probabilities, activates patterns, and fills precious context window space. What you include (or exclude) determines what the model "knows."</div>
       </div>
 
       <!-- Why Prompts Matter Introduction -->
@@ -9143,8 +9170,13 @@
     <!-- LIMITATIONS & HALLUCINATIONS TAB -->
     <section id="tab-limitations" class="tab-section">
       <div class="section-header">
-        <h2>⚠️ Limitations & Hallucinations</h2>
+        <h2>09: Limitations</h2>
         <p>Understanding why models confidently produce incorrect information — and how to mitigate it</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand limitations, you understand <em>that confidence ≠ correctness—AI is a pattern-matcher, not a fact-checker.</em></div>
+        <div class="intuition-detail">AI generates plausible text, not verified truth. The model has no internal fact-checker, no "I don't know" signal, and no knowledge of anything after its training cutoff. Understanding this is how you avoid being fooled.</div>
       </div>
 
       <!-- Introduction -->

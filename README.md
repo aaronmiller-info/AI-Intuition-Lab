@@ -10,7 +10,7 @@ AI Intuition Lab is an interactive educational resource designed to help people 
 
 1. **Tokenization** – How text gets broken into pieces the model can process
 2. **Embedding Space** – How tokens become meaningful numbers
-3. **Inference** – How models generate text step by step
+3. **Inference** – How models generate text step-by-step
 4. **Neural Networks** – The computational building blocks
 5. **Attention** – How models focus on relevant context
 6. **Pre-Training** – How models learn from massive datasets
@@ -23,7 +23,7 @@ AI Intuition Lab is an interactive educational resource designed to help people 
 
 - **Instructors** looking for resources to help students understand AI and LLMs
 - **Self-learners** wanting to understand the basics so they can use AI more effectively
-- Anyone curious about what's actually happening "under the hood"
+- **The Curious** wondering about what's actually happening "under the hood"
 
 ## Getting Started
 
@@ -44,7 +44,6 @@ If you'd like to propose changes to the main project:
 
 1. [Open a GitHub Issue](https://github.com/aaronmiller-info/AI-Intuition-Lab/issues) describing your idea
 2. Discuss the change before submitting a pull request
-3. This helps ensure your contribution aligns with the project's direction
 
 ### Fork and make it your own
 

@@ -1,6 +1,6 @@
 # AI Intuition Lab
 
-A hands-on interactive guide to understanding how AI language models work.
+A hands-on interactive guide to understanding how AI and Large Language Models work.
 
 **[View Live Demo →](https://aaronmiller-info.github.io/AI-Intuition-Lab/ai_intuition_lab.html)**
 
@@ -48,7 +48,7 @@ If you'd like to propose changes to the main project:
 
 ### Fork and make it your own
 
-You're also very welcome to fork this repository and create your own version with whatever design or content changes you'd like. That's the beauty of open source! The CC BY 4.0 license just asks that you provide attribution.
+You're also very welcome to fork this repository and create your own version with whatever design or content changes you'd like. The CC BY 4.0 license just asks that you provide attribution.
 
 ## Author
 

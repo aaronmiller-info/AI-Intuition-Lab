@@ -219,6 +219,8 @@
       height: 100vh;
       overflow-y: auto;
       padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar-header {
@@ -245,6 +247,29 @@
       letter-spacing: 0.05em;
       word-spacing: 0.1em;
       font-weight: 700;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem;
+      border-top: var(--swiss-border);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .sidebar-footer a:hover {
+      color: var(--accent-primary);
+    }
+
+    .sidebar-footer .copyright {
+      margin-top: 0.5rem;
+      font-size: 0.65rem;
     }
 
     /* Navigation Tabs */
@@ -2572,21 +2597,23 @@
     /* Deep Dive: Training Stages */
     .training-stages {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       margin: 1rem 0;
     }
 
     .stage-block {
       display: flex;
+      flex-direction: column;
       gap: 0.5rem;
-      padding: 0.75rem;
+      padding: 1rem;
       background: var(--bg-card);
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-subtle);
-      min-width: 160px;
+      flex: 1;
+      max-width: 253px;
     }
 
     .stage-num {
@@ -2594,7 +2621,7 @@
       height: 24px;
       background: var(--accent-secondary);
       color: white;
-      border-radius: 50%;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2604,25 +2631,29 @@
     }
 
     .stage-info h5 {
-      margin: 0 0 0.2rem 0;
-      font-size: 0.8rem;
+      margin: 0 0 0.3rem 0;
+      font-size: 0.85rem;
     }
 
     .stage-info p {
       margin: 0;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
+      line-height: 1.4;
     }
 
     .stage-data {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: auto;
+      padding-top: 0.5rem;
     }
 
     .stage-arrow {
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 1.25rem;
+      align-self: center;
+      flex-shrink: 0;
     }
 
     /* Approaches Grid */
@@ -4092,7 +4123,7 @@
       width: 20px;
       height: 20px;
       background: var(--accent-primary);
-      color: var(--bg-main);
+      color: #FFFFFF;
       border-radius: 50%;
       font-size: 0.7rem;
       font-weight: bold;
@@ -4123,37 +4154,62 @@
     }
 
     .mountain-scene {
-      height: 120px;
-      background: var(--bg-card);
+      height: 180px;
+      background: linear-gradient(
+        to bottom,
+        var(--bg-card) 0%,
+        var(--bg-panel) 100%
+      );
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius);
       position: relative;
       overflow: hidden;
     }
 
-    .mountain {
+    .mountain-back {
       position: absolute;
       bottom: 0;
-      left: 10%;
-      right: 10%;
-      height: 80%;
+      left: 0;
+      right: 0;
+      height: 70%;
+      background: var(--bg-elevated);
+      opacity: 0.6;
+      clip-path: polygon(
+        0% 100%, 25% 50%, 50% 75%, 75% 40%, 100% 100%
+      );
+    }
+
+    .mountain-front {
+      position: absolute;
+      bottom: 0;
+      left: 5%;
+      right: 5%;
+      height: 85%;
       background: var(--bg-panel);
-      clip-path: polygon(0% 100%, 20% 40%, 45% 85%, 65% 30%, 85% 60%, 100% 100%);
+      clip-path: polygon(
+        0% 100%,
+        15% 35%,
+        30% 60%,
+        50% 100%,
+        65% 45%,
+        80% 70%,
+        90% 55%,
+        100% 100%
+      );
     }
 
     #hiker-icon {
       position: absolute;
       font-size: 1.5rem;
-      top: 12%;
-      left: 65%;
+      top: 40%;
+      left: 61%;
       z-index: 5;
-      transform: scaleX(-1);
     }
 
     .valley-marker {
       position: absolute;
-      bottom: 8px;
-      left: 46%;
+      bottom: 12px;
+      left: 50%;
       transform: translateX(-50%);
       font-size: 0.75rem;
       font-weight: 900;
@@ -4664,7 +4720,7 @@
       padding: 1rem 1.25rem;
       font-size: 0.95rem;
       color: var(--text-primary);
-      text-align: center;
+      text-align: left;
     }
 
     .intro-summary strong {
@@ -4685,12 +4741,13 @@
       position: absolute;
       top: -10px;
       left: 1rem;
-      background: var(--bg-deep);
+      background: #C5DCF0;
       color: var(--accent-primary);
       font-size: 0.6rem;
       font-weight: 900;
       padding: 2px 8px;
       letter-spacing: 0.1em;
+      border-radius: 3px;
     }
 
     .intuition-callout .intuition-main {
@@ -4799,7 +4856,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .pipeline-stage {
@@ -6360,7 +6417,6 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <h1>AI Intuition<br>Lab</h1>
-        <p>Expert Mental Models</p>
       </div>
 
       <nav class="tab-nav">
@@ -6417,11 +6473,15 @@
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">08-09</span> IN PRACTICE</span>
+          <span class="tab-group-label"><span class="group-num">08-10</span> IN PRACTICE</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="prompting">
               <span class="icon">💡</span>
               <span>Prompting</span>
+            </button>
+            <button class="tab-btn" data-tab="multimodal">
+              <span class="icon">🖼️</span>
+              <span>Images & Sound</span>
             </button>
             <button class="tab-btn" data-tab="limitations">
               <span class="icon">⚠️</span>
@@ -6430,6 +6490,10 @@
           </div>
         </div>
       </nav>
+      <div class="sidebar-footer">
+        <a href="https://github.com/aaronmiller-info/AI-Intuition-Lab" target="_blank">View on GitHub</a>
+        <div class="copyright">© 2025 Aaron Miller<br>CC BY 4.0</div>
+      </div>
     </aside>
 
     <!-- Main Content -->
@@ -6438,65 +6502,32 @@
     <section id="tab-welcome" class="tab-section active">
       <div class="section-header">
         <h2>Developing Your AI Intuition</h2>
-        <p>Moving from a "black box" view of AI to becoming an expert user</p>
+        <p>Learning to use LLMs like an expert</p>
       </div>
 
       <div class="concept-card">
         <h4>The Goal: Expert User, Not Researcher</h4>
         <p>This lab isn’t about turning you into a computer scientist or an AI researcher. It’s about helping you understand the "physics" of how Large Language Models (LLMs) work so you can use them more effectively.</p>
-        <p class="mt-1">By grasping the underlying concepts, you'll develop an <strong>intuition</strong> for why models succeed, why they fail, and how to steer them toward the results you want.</p>
+        <p class="mt-1">By grasping the underlying concepts, you'll develop an <strong>intuition</strong> for why models succeed, why they fail, and how to steer them towards usefulness.</p>
       </div>
 
       <div class="concept-card">
-        <h4>📸 The Metaphor: The Pro vs. The Point-and-Shoot</h4>
+        <h4>📸 It's like the difference between the Point-and-Shoot vs the Pro</h4>
         <div class="grid grid-2-col gap-15 mt-1">
           <div class="card-sm">
             <div class="text-accent bold mb-05">The Point-and-Shoot User</div>
-            <p class="text-sm">Most people use AI like an iPhone camera on "Auto" mode. It works 80% of the time, but when the lighting is weird or the subject is moving fast, they don't know how to fix the blurry result. They are limited by the model's default behavior.</p>
+            <p class="text-sm">Most people use AI like an iPhone camera on <strong>"Auto" mode</strong>. It works 80% of the time, but when the lighting is weird or the subject is moving fast, they don't know how to fix the blurry result. They're limited by not understanding how it works.</p>
           </div>
           <div class="card-sm">
             <div class="text-accent bold mb-05">The Expert User (The Pro)</div>
-            <p class="text-sm">A professional photographer understands how <strong>light</strong> (data) interacts with the <strong>lens</strong> (attention) and the <strong>sensor</strong> (weights). They know how to adjust the <strong>aperture</strong> (temperature) and <strong>focus</strong> (context) to get the perfect shot every time.</p>
+            <p class="text-sm">A professional photographer understands how <strong>light</strong> interacts with the <strong>lens</strong> and the <strong>sensor</strong>. They know how to adjust the <strong>aperture</strong>, <strong>shutter speed</strong>, <strong>ISO</strong>, and <strong>focus</strong> to get beautiful photos.</p>
+            <p class="text-sm">They don't know to build a camera, but they know how it works.</p>
           </div>
         </div>
-        <p class="mt-15 text-secondary"><strong>Your Journey:</strong> You don't need to know how to build the digital sensor from scratch, but knowing how it <em>reacts</em> to the world makes you a professional. This lab is your training ground for mastering those manual controls.</p>
       </div>
-
       <div class="concept-card">
-        <h4>🗺️ The Roadmap to Intuition</h4>
-        <div class="hierarchy-container mt-1" style="background: var(--bg-card); border: var(--swiss-border); padding: 2rem;">
-          <div class="hierarchy-level">
-            <div class="level-icon">📦</div>
-            <div class="level-content">
-              <div class="level-title">1. The Material (Input & Output)</div>
-              <div class="level-desc">Understand <strong>Tokens</strong> and <strong>Embeddings</strong> — the fundamental "atoms" that AI uses to represent human meaning.</div>
-            </div>
-          </div>
-          <div class="hierarchy-arrow">↓</div>
-          <div class="hierarchy-level">
-            <div class="level-icon">⚙️</div>
-            <div class="level-content">
-              <div class="level-title">2. The Engine (Architecture)</div>
-              <div class="level-desc">See how <strong>Neural Networks</strong> and <strong>Attention</strong> mechanisms process those atoms to find relationships and patterns.</div>
-            </div>
-          </div>
-          <div class="hierarchy-arrow">↓</div>
-          <div class="hierarchy-level">
-            <div class="level-icon">🎓</div>
-            <div class="level-content">
-              <div class="level-title">3. The Schooling (Training)</div>
-              <div class="level-desc">Learn how <strong>Pre-Training</strong> and <strong>Fine-Tuning</strong> turn random math into helpful assistants by training on trillions of words.</div>
-            </div>
-          </div>
-          <div class="hierarchy-arrow">↓</div>
-          <div class="hierarchy-level">
-            <div class="level-icon">💡</div>
-            <div class="level-content">
-              <div class="level-title">4. The Craft (In Practice)</div>
-              <div class="level-desc">Apply your intuition to <strong>Prompting</strong> and navigate the <strong>Limitations</strong> (like hallucinations) of these systems.</div>
-            </div>
-          </div>
-        </div>
+        <h4>Building Your Intuition</h4>
+        <p class="mt-15 text-secondary">Just like learning how a camera works, going through each of the concepts in the sidebar will help you understand how LLMs work and how to use them effectively. Concepts like tokens, embeddings, neural networks, and attention are the foundation of how LLMs work. If you understand these concepts, you'll be able to use LLMs in a way that avoids common pitfalls and maximizes their potential.</p>
       </div>
     </section>
 
@@ -6504,16 +6535,16 @@
     <section id="tab-tokens" class="tab-section">
       <div class="section-header">
         <h2>01: Tokenization</h2>
-        <p>AI models don't use raw text. Instead, they use sequences of numbers called tokens.</p>
+        <p>LLMs don't use raw text. Instead, they use sequences of numbers called tokens.</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand tokens, you understand <em>why AI has context limits, why some prompts cost more, and why word choice at boundaries matters.</em></div>
-        <div class="intuition-detail">AI doesn't process words—it processes tokens, which are pieces of text converted into numbers. Tokens are the basic unit of everything in AI: how usage is measured, why there are context limits, and why some inputs cost more than others.</div>
+        <div class="intuition-main">If you understand tokens, you understand <em>the basic unit in how an LLM works, like understanding how atoms work in molecules, cells, and organisms.</em></div>
+        <div class="intuition-detail">AI doesn't process words—it processes tokens, which are pieces of information like text, converted into numbers. Tokens are the basic unit of everything in LLMs.</div>
       </div>
 
       <div class="intro-summary mb-2">
-        Before an AI can understand text, it must break it down into smaller units called <strong>tokens</strong>. This demo simulates a <strong>Subword Tokenizer</strong>, showing how words are split into meaningful chunks and assigned numerical IDs that the model can process.
+        Before an LLM can understand text, it must break it down into smaller units called <strong>tokens</strong>. This demo simulates a <strong>Subword Tokenizer</strong>, showing how words are split into meaningful chunks and assigned numerical IDs that the model can process.
       </div>
 
       <div class="tokenizer-container">
@@ -6544,7 +6575,7 @@
 
       <div class="explanation">
         <h4>Why subword tokenization matters</h4>
-        <p>Real models like GPT-4 use ~100k tokens. Words are broken into meaningful pieces: "unhappiness" → ["un", "happiness"] or ["un", "happ", "iness"]. This lets the model understand prefixes like "un-" (negation) and suffixes like "-ness" (noun form). Try typing "unhappy", "happiness", and "unhappiness" to see how they share pieces — this is how models generalize to words they've rarely seen.</p>
+        <p>Real models like GPT-4 use ~100k tokens. Words are broken into meaningful pieces: "unhappiness" → ["un", "happiness"] or ["un", "happ", "iness"]. This lets the model understand prefixes like "un-" (negation) and suffixes like "-ness" (noun form). Try typing "unhappy", "happiness", and "unhappiness" to see how they share pieces—this is how models generalize to words they've rarely seen.</p>
         <div class="note-box mt-1 p-075 p-1 text-sm" style="background: var(--bg-elevated); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cool);">
           <strong>📝 Note:</strong> This is a simplified tokenizer for educational purposes. Real tokenizers use larger vocabularies (~100k tokens) and make different splitting decisions. 
           <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" rel="noopener" class="text-primary" style="text-decoration: underline;">Try a real tokenizer →</a>
@@ -6567,7 +6598,7 @@
             <div class="comparison-row">
               <div><strong>Characters</strong></div>
               <div>"hello world" → 11 tokens</div>
-              <div>Too granular — hard to learn word meanings</div>
+              <div>Too granular—hard to learn word meanings</div>
             </div>
             <div class="comparison-row">
               <div><strong>Whole words</strong></div>
@@ -6586,10 +6617,10 @@
           <h4>How BPE (Byte Pair Encoding) Works</h4>
           <p>The most common tokenization method builds a vocabulary by finding frequent patterns:</p>
           <ol class="concept-list">
-            <li><strong>Start with characters</strong> — Begin with just letters and punctuation</li>
-            <li><strong>Find frequent pairs</strong> — Look for character pairs that appear often together (like "th" or "ing")</li>
-            <li><strong>Merge them</strong> — Add "th" as a single token, repeat with next most frequent pair</li>
-            <li><strong>Keep going</strong> — After ~50,000 merges, you have a vocabulary</li>
+            <li><strong>Start with characters</strong>—Begin with just letters and punctuation</li>
+            <li><strong>Find frequent pairs</strong>—Look for character pairs that appear often together (like "th" or "ing")</li>
+            <li><strong>Merge them</strong>—Add "th" as a single token, repeat with next most frequent pair</li>
+            <li><strong>Keep going</strong>—After ~50,000 merges, you have a vocabulary</li>
           </ol>
           <div class="token-evolution">
             <div class="evolution-step">
@@ -6632,7 +6663,7 @@
 
         <div class="concept-card">
           <h4>Why Token IDs Are Just Numbers</h4>
-          <p>The model never sees the actual text "hello" — it sees a number like <code>15339</code>. This number is just an index into a lookup table:</p>
+          <p>The model never sees the actual text "hello"—it sees a number like <code>15339</code>. This number is just an index into a lookup table, like if the words in a dictionary were numbered so you could look for word #15339 and find "hello":</p>
           <div class="vocab-table">
             <div class="vocab-row">
               <span class="vocab-id">0</span>
@@ -6665,23 +6696,23 @@
               <span class="vocab-note">Special: end marker</span>
             </div>
           </div>
-          <p>Common words often get lower IDs because BPE builds vocabulary starting with the most frequent patterns. The actual numbers don't mean anything — they're just indices into a lookup table.</p>
+          <p>Common words often get lower IDs because BPE builds vocabulary starting with the most frequent patterns. The actual numbers don't mean anything about the words being more important or easier to find.</p>
         </div>
 
         <div class="concept-card">
-          <h4>Try These Experiments</h4>
+          <h4>Try These Experiments in the Tokenizer</h4>
           <div class="experiment-box">
-            <p><strong>Experiment 1:</strong> Type "unhappiness" — watch it split into "un" + "happiness" or "un" + "happ" + "iness"</p>
-            <p><strong>Experiment 2:</strong> Type "unfortunately" — see how prefixes (un-) and suffixes (-ly) get separated</p>
-            <p><strong>Experiment 3:</strong> Type "antidisestablishmentarianism" — watch it recursively break into: anti + dis + establish + ment + arian + ism</p>
-            <p><strong>Experiment 4:</strong> Type "computerization" — see how technical words get split at meaningful boundaries</p>
+            <p><strong>Experiment 1:</strong> Type "unhappiness"—watch it split into "un" + "happiness" or "un" + "happ" + "iness"</p>
+            <p><strong>Experiment 2:</strong> Type "unfortunately"—see how prefixes (un-) and suffixes (-ly) get separated</p>
+            <p><strong>Experiment 3:</strong> Type "antidisestablishmentarianism"—watch it recursively break into: anti + dis + establish + ment + arian + ism</p>
+            <p><strong>Experiment 4:</strong> Type "computerization"—see how technical words get split at meaningful boundaries</p>
             <p><strong>What you're learning:</strong> Tokenization breaks words into reusable pieces. The prefix "un-" appears in thousands of words, so learning it once helps the model understand all of them.</p>
           </div>
         </div>
 
         <div class="concept-card">
           <h4>The Cost of Tokens</h4>
-          <p>When you use ChatGPT or Claude, you're often charged by tokens. Now you know why!</p>
+          <p>Whether you are using a free service or a paid one, all model providers calculate costs by the token. Now you know why!</p>
           <div class="token-cost-example">
             <div class="cost-item">
               <div class="cost-text">"Hi"</div>
@@ -6709,12 +6740,12 @@
     <section id="tab-embed" class="tab-section">
       <div class="section-header">
         <h2>02: Embedding Space</h2>
-        <p>How do we turn words into something a computer can understand? We give each word a list of numbers.</p>
+        <p>How do we turn words into something a computer can calculate?</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand embeddings, you understand <em>how AI "knows" that king relates to queen without being told—meaning lives in geometric space.</em></div>
-        <div class="intuition-detail">AI represents tokens as coordinates in a high-dimensional space, where position encodes meaning. Embeddings are how AI "knows" that words are related—not through definitions, but through learned proximity.</div>
+        <div class="intuition-main">If you understand embeddings, you understand <em>how AI "knows" what words mean by using coordinates in geometric space.</em></div>
+        <div class="intuition-detail">AI represents tokens as vectors of numbers, which are like positions in a high-dimensional space, where the position encodes meaning. Embeddings are how AI "knows" that words are related—not through definitions, but through learned proximity.</div>
       </div>
 
       <!-- Pedagogical Introduction -->
@@ -6739,7 +6770,7 @@
             <div class="step-number">2</div>
             <div class="step-content">
               <h4>The Solution: A List of Numbers</h4>
-              <p>We represent each word as a <strong>vector</strong> — which is essentially a list of numbers. Each number captures something about the word's meaning.</p>
+              <p>We represent each word as a <strong>vector</strong>—which is essentially a list of numbers. Each number captures something about the word's meaning.</p>
               <div class="step-visual vector-visual">
                 <span class="word-bubble">"king"</span>
                 <span class="arrow-icon">→</span>
@@ -6765,7 +6796,7 @@
                   </div>
                 </div>
               </div>
-              <p class="step-note">💡 In reality, dimensions don't have labels like "royalty" — the model learns abstract patterns that spread across all the numbers. But the idea is the same: each number captures <em>something</em> about meaning.</p>
+              <p class="step-note">💡 In reality, dimensions don't have labels like "royalty"—the model learns abstract patterns that spread across all the numbers. But the idea is the same: each number captures <em>something</em> about meaning.</p>
             </div>
           </div>
 
@@ -6825,13 +6856,13 @@
                   </div>
                 </div>
               </div>
-              <p>This is an <strong>embedding</strong> — we've "embedded" the meaning of words into a geometric space where distance = similarity.</p>
+              <p>This is an <strong>embedding</strong>—we've "embedded" the meaning of words into a geometric space where distance = similarity.</p>
             </div>
           </div>
         </div>
 
         <div class="intro-summary">
-          <strong>Now explore below:</strong> We've compressed thousands of dimensions down to 2D so you can see how words cluster. Click on words to see their similarity scores — which are calculated from how close their vectors are in the full high-dimensional space.
+          <strong>Now explore below:</strong> We've compressed thousands of dimensions down to 2D so you can see how words cluster. Click on words to see their similarity scores—which are calculated from how close their vectors are in the full high-dimensional space.
         </div>
       </div>
 
@@ -6876,7 +6907,7 @@
                 </div>
                 
                 <p class="mt-15 text-sm text-muted" style="line-height: 1.5;">
-                  <strong>Note:</strong> This is a "tall" projection. The grid cells are perfect squares. Because the chart is taller than it is wide, you can see more vertical relationships clearly.
+                  <strong>Note:</strong> This is a conceptual projection. The calculations are not the same that would be used in a real model.
                 </p>
               </div>
             </div>
@@ -6895,18 +6926,18 @@
         
         <div class="concept-card">
           <h4>From Tokens to Vectors</h4>
-          <p>Remember from the Tokenization tab: text gets split into tokens, and each token gets an ID number. But a single ID (like 15339 for "hello") doesn't capture meaning — it's just an address.</p>
-          <p>The <strong>embedding layer</strong> is like a giant lookup table that converts each token ID into a full vector:</p>
+          <p>Remember from the <b>Tokenization</b> tab: text gets split into tokens, and each token gets an ID number. But a single ID (like 15339 for "hello") doesn't capture meaning—it's just an address.</p>
+          <p>The <strong>embedding layer</strong> gives each token ID a full vector of numbers:</p>
           <div class="vector-example">
             <div class="vector-visual">
               <div class="vector-label">Token ID → Embedding Vector</div>
               <div class="vector-numbers">15339 → [ 0.23, -0.87, 1.45, -0.12, ... ] (thousands of numbers)</div>
               <div class="vector-meaning">
-                <span>This lookup table is <em>learned</em> during training</span>
+                <span>Embeddings are <em>refined</em> during pre-training to capture meaning</span>
               </div>
             </div>
           </div>
-          <p>The model learns which numbers to assign to each token so that similar-meaning tokens end up with similar vectors. This is the foundation of everything the model does.</p>
+          <p>The model learns which numbers to assign to each token so that similar-meaning tokens end up with similar vectors.</p>
         </div>
 
         <div class="concept-card">
@@ -6981,12 +7012,12 @@
               <div class="dim-examples-list">"joy" scores high, "grief" scores low</div>
             </div>
           </div>
-          <p><strong>Important:</strong> The model learns these dimensions automatically — nobody programs "dimension 47 = animacy". The structure emerges from seeing billions of sentences.</p>
+          <p><strong>Important:</strong> The model learns these dimensions automatically—nobody programs "dimension 47 = animacy". The structure emerges from seeing billions of sentences during training.</p>
         </div>
 
         <div class="concept-card">
           <h4>How "Similarity" Works</h4>
-          <p>When we say two words are "similar", we mean their vectors point in similar directions. Imagine standing at the origin and pointing toward each word:</p>
+          <p>When we say two words are "similar", we mean their vectors (shown here as arrows) point in similar directions. Imagine standing at the origin and pointing toward each word:</p>
           <div class="similarity-visual">
             <div class="sim-example">
               <div class="sim-arrows high-sim">
@@ -7022,7 +7053,7 @@
               </div>
             </div>
           </div>
-          <p>This is called <strong>cosine similarity</strong> — it measures the angle between vectors, ignoring their length.</p>
+          <p>This is called <strong>cosine similarity</strong>—it measures the angle between vectors, ignoring their length.</p>
         </div>
 
         <div class="concept-card">
@@ -7059,7 +7090,7 @@
         <div class="concept-card">
           <h4>Try This Mental Exercise</h4>
           <div class="experiment-box">
-            <p><strong>Imagine a 3D embedding space</strong> where:</p>
+            <p><strong>Imagine a 3D space</strong> where:</p>
             <ul>
               <li>X-axis = size (small → big)</li>
               <li>Y-axis = danger (safe → dangerous)</li>
@@ -7081,12 +7112,12 @@
     <section id="tab-inference" class="tab-section">
       <div class="section-header">
         <h2>03: Inference</h2>
-        <p>Watch how language models generate text one token at a time, predicting the most likely next word</p>
+        <p>Watch how LLMs generate text one token at a time</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand inference, you understand <em>why AI sometimes contradicts itself mid-paragraph—the model generates each token based on probabilities, without ability to revise earlier choices or plan the full response in advance.</em></div>
-        <div class="intuition-detail">When you use AI, it generates one token at a time by predicting what should come next. Inference is how AI produces responses—each token choice shapes what follows, which is why prompting well matters.</div>
+        <div class="intuition-main">If you understand inference, you understand <em> how an AI model predicts each next token based on probabilities, in other words "inferring" the next token based on the previous tokens.</em></div>
+        <div class="intuition-detail">When you use AI, you're having it do what's called "inference." It generates one token at a time by predicting what should come next. Inference is how AI produces responses—each token choice shapes what follows.</div>
       </div>
 
       <div class="intro-summary mb-2">
@@ -7224,7 +7255,7 @@
           <span>🔄</span> The Autoregressive Loop
         </div>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-          LLMs don't generate entire sentences at once. They predict one token, add it to the context, then predict the next — looping until they output a stop token.
+          LLMs don't generate entire sentences at once. They predict one token, add it to the list of tokens (the "context"), then predict the next—looping until they output a stop token.
         </p>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
           <strong>What you see below is what you produced with the text generator tool above. Do it again with different settings and this will change.</strong>
@@ -7295,11 +7326,11 @@
           <h4>The Core Loop</h4>
           <p>When you chat with an AI, you're watching this loop happen incredibly fast:</p>
           <ol class="concept-list">
-            <li><strong>Tokenize</strong> — Convert your text into numbers the model understands</li>
-            <li><strong>Forward pass</strong> — Push tokens through billions of neural network parameters</li>
-            <li><strong>Predict</strong> — Output a probability for every possible next token</li>
-            <li><strong>Sample</strong> — Pick one token based on those probabilities + temperature</li>
-            <li><strong>Repeat</strong> — Add the new token and go again until done</li>
+            <li><strong>Tokenize</strong>—Convert your text into numbers the model understands</li>
+            <li><strong>Forward pass</strong>—Push tokens through billions of neural network parameters</li>
+            <li><strong>Predict</strong>—Output a probability for every possible next token</li>
+            <li><strong>Sample</strong>—Pick one token based on those probabilities + temperature</li>
+            <li><strong>Repeat</strong>—Add the new token and go again until done</li>
           </ol>
           <p>Most Large Language Models (LLMs) do this loop about 20-100 times per second!</p>
         </div>
@@ -7312,7 +7343,7 @@
               <span class="analogy-icon">🧊</span>
               <div>
                 <strong>Temperature = 0</strong>
-                <p>Always picks the highest probability token (called "greedy decoding"). Deterministic — the same prompt always produces the same response. "Safe" here means predictable and consistent, not safer in terms of content.</p>
+                <p>Always picks the highest probability token (called "greedy decoding"). Deterministic—the same prompt always produces the same response. At this temperature, the model is perfectly consistent.</p>
               </div>
             </div>
             <div class="analogy-item">
@@ -7330,7 +7361,7 @@
               </div>
             </div>
           </div>
-          <p>Mathematically, temperature divides the "logits" (raw scores) before converting to probabilities. Higher temperature → flatter distribution → more randomness.</p>
+          <p>If you're interested in the math, temperature divides the "logits" (raw scores) before converting to probabilities. Higher temperature → flatter distribution → more randomness.</p>
         </div>
 
         <div class="concept-card">
@@ -7338,13 +7369,13 @@
           <p>Without a stop token, the model would generate text forever! The stop token (like <code>&lt;|endoftext|&gt;</code> or <code>&lt;|end|&gt;</code>) is a special token that means "I'm done responding."</p>
           <div class="experiment-box">
             <p><strong>Fun fact:</strong> Early chatbots sometimes got stuck in loops because they didn't handle stop tokens well. The model would just keep generating, often repeating itself endlessly.</p>
-            <p><strong>In practice:</strong> APIs also let you set a "max tokens" limit as a safety net, so even if the model doesn't stop naturally, it won't run forever.</p>
+            <p><strong>In practice:</strong> some AI tools also let you set a "max tokens" limit as a safety net, so even if the model doesn't stop naturally, it won't run forever.</p>
           </div>
         </div>
 
         <div class="concept-card">
           <h4>The Context Window</h4>
-          <p>The model can only "see" a limited amount of text at once — this is the <strong>context window</strong>:</p>
+          <p>The model can only "see" a maximum amount of text at once—this is the <strong>context window</strong>:</p>
           <div class="scale-comparison">
             <div class="scale-item">
               <div class="scale-number">400K</div>
@@ -7359,19 +7390,19 @@
               <div class="scale-label">Gemini 3 Flash</div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">256K</div>
+              <div class="scale-number">Up to 2M</div>
               <div class="scale-label">Grok 4.1</div>
             </div>
           </div>
-          <p>Each inference step processes the <em>entire</em> context. That's why longer conversations are slower and more expensive — more tokens to process each step!</p>
+          <p>Each inference step processes the <em>entire</em> context, all those tokens with their embedding vectors. It's a massive amount of math for each pass. That's why longer conversations are more expensive for model providers—more tokens to process each step!</p>
         </div>
 
         <div class="concept-card">
           <h4>Try This Experiment</h4>
           <div class="experiment-box">
             <p><strong>Challenge:</strong> Use the controls above to see how temperature affects generation:</p>
-            <p>1. Set temperature to <strong>0</strong> and generate several times — notice you always get the same output</p>
-            <p>2. Set temperature to <strong>1.5</strong> and generate — watch how the output becomes more varied (and sometimes weird!)</p>
+            <p>1. Set temperature to <strong>0</strong> and generate several times—notice you always get the same output</p>
+            <p>2. Set temperature to <strong>1.5</strong> and generate—watch how the output becomes more varied (and sometimes weird!)</p>
             <p><strong>What you're learning:</strong> The same prompt can produce different outputs depending on sampling settings. This is why AI responses can vary even when you ask the same question.</p>
           </div>
         </div>
@@ -7382,12 +7413,12 @@
     <section id="tab-nn" class="tab-section">
       <div class="section-header">
         <h2>04: Neural Networks</h2>
-        <p>See inside the "black box" — how embedding numbers flow through layers and become next-token predictions</p>
+        <p>See inside the "black box"—how vectors flow through layers and become predictions</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand neural networks, you understand <em>that AI is math, not magic—billions of multiplications that find patterns.</em></div>
-        <div class="intuition-detail">Neural networks are the engine—layers of simple math that transform embeddings into predictions. Every pattern the model recognizes, every connection it makes, happens through these calculations.</div>
+        <div class="intuition-main">If you understand neural networks, you understand <em>that AI is math, not intelligence in a human sense but rather billions of calculations that find patterns.</em></div>
+        <div class="intuition-detail">Neural networks are the engine—layers of simple math that transform embedding vectors into predictions. Every pattern the model recognizes, every connection it makes, happens through these calculations.</div>
       </div>
 
       <!-- Context Introduction -->
@@ -7417,7 +7448,11 @@
             </div>
           </div>
         </div>
-        <p class="nn-intro-note"><strong>Example prompt:</strong> "The messenger bowed to the ___." The network predicts which word fits best based on context. Below is a tiny network (4→4→3 nodes) — real LLMs have billions of parameters, but the core idea is the same.</p>
+      </div>
+
+      <div class="intro-summary mb-2">
+        <strong>Example prompt:</strong> "The messenger bowed to the ___."<br>
+        The network predicts which word fits best based on context. Below is a tiny network (4→4→3 nodes)—real LLMs have billions of parameters, but the core idea is the same.
       </div>
 
       <div class="nn-container">
@@ -7503,7 +7538,7 @@
 
       <div class="explanation">
         <h4>What's happening?</h4>
-        <p>Each connection has a <strong>weight</strong> that multiplies the incoming signal — these are the "parameters" that get learned during training. The hidden layer neurons combine inputs to detect patterns: one might activate for "royalty + masculine," another for "military context." The output layer combines these patterns to predict which token comes next. Line thickness shows weight magnitude (green = positive, red = negative). Node brightness shows activation strength.</p>
+        <p>Each connection has a <strong>weight</strong> that multiplies the incoming signal—these are a big share of the "parameters" that get learned during training. The hidden layer neurons combine their inputs to detect patterns: one might activate for "royalty + masculine," another for "military context." The output layer combines these patterns to predict which token comes next. Line thickness shows weight magnitude (green = positive, red = negative). Node brightness shows activation strength.</p>
       </div>
 
       <!-- Deep Dive Section -->
@@ -7514,9 +7549,9 @@
           <h4>The Big Picture</h4>
           <p>A neural network is just a series of simple math operations chained together. Each "neuron" does three things:</p>
           <ol class="concept-list">
-            <li><strong>Multiply</strong> — Each input gets multiplied by a weight (a number that says "how important is this input?")</li>
-            <li><strong>Add</strong> — Sum up all those multiplied values, plus a "bias" (a starting point)</li>
-            <li><strong>Squash</strong> — Apply an activation function to keep the output in a reasonable range</li>
+            <li><strong>Multiply</strong>—Each input gets multiplied by a weight (a number that says "how important is this input?")</li>
+            <li><strong>Add</strong>—Sum up all those multiplied values, plus a "bias" (a starting point)</li>
+            <li><strong>Squash</strong>—Apply an activation function to keep the output in a reasonable range</li>
           </ol>
           <p>That's it! The "intelligence" comes from finding the right weights through training.</p>
         </div>
@@ -7529,21 +7564,21 @@
               <span class="analogy-icon">🔊</span>
               <div>
                 <strong>Positive weight (+1.5)</strong>
-                <p>Turns up that input — "this matters, pay attention to it"</p>
+                <p>Turns up that input—"this matters, pay attention to it"</p>
               </div>
             </div>
             <div class="analogy-item">
               <span class="analogy-icon">🔇</span>
               <div>
                 <strong>Negative weight (-1.5)</strong>
-                <p>Inverts the signal — "when this goes up, push the output down"</p>
+                <p>Inverts the signal—"when this goes up, push the output down"</p>
               </div>
             </div>
             <div class="analogy-item">
               <span class="analogy-icon">⏸️</span>
               <div>
                 <strong>Zero weight (0.0)</strong>
-                <p>Ignores that input entirely — "this doesn't matter"</p>
+                <p>Ignores that input entirely—"this doesn't matter"</p>
               </div>
             </div>
           </div>
@@ -7551,7 +7586,7 @@
 
         <div class="concept-card">
           <h4>The Mystery of the Black Box</h4>
-          <p>Traditional software is written by humans using clear, step-by-step logic. But nobody "writes" an LLM. We design the architecture, but the model <strong>learns the logic</strong> itself through trillions of mathematical adjustments. This creates a "Black Box" problem:</p>
+          <p>Traditional software is written by humans using clear, step-by-step logic. But nobody "writes" an LLM. People design the architecture, but the model <strong>learns the logic</strong> itself through trillions of mathematical adjustments. This creates a "Black Box" problem:</p>
           
           <div class="black-box-container">
             <div class="box-side">
@@ -7577,7 +7612,7 @@
                 <div class="weight-dot active-neg"></div><div class="weight-dot"></div><div class="weight-dot active-pos"></div><div class="weight-dot"></div>
                 <div class="weight-dot"></div><div class="weight-dot active-neg"></div><div class="weight-dot"></div><div class="weight-dot active-pos"></div>
               </div>
-              <p class="mt-1 text-xs text-muted">Opaque: The logic is buried in billions of floating-point numbers.</p>
+              <p class="mt-1 text-xs text-muted">Opaque: The logic is buried in billions of numbers.</p>
             </div>
           </div>
           
@@ -7616,7 +7651,7 @@
               </div>
             </div>
           </div>
-          <p>Nobody programs these detectors — they <em>emerge</em> from training on text. The network discovers which patterns predict which words.</p>
+          <p>Nobody programs these detectors—they <em>emerge</em> from training on text. The network discovers which patterns predict which words.</p>
         </div>
 
         <div class="concept-card">
@@ -7655,15 +7690,15 @@
         </div>
 
         <div class="concept-card">
-          <h4>Try This Experiment</h4>
+          <h4>Try This Experiment in the Neural Network Workbench</h4>
           <div class="experiment-box">
             <p><strong>Challenge 1:</strong> Make "king" the top prediction</p>
             <p><strong>Hint:</strong> Royalty high + gender positive (masculine)</p>
             <p><strong>Challenge 2:</strong> Now make "queen" win instead</p>
             <p><strong>Hint:</strong> Keep royalty high but flip gender negative (feminine)</p>
             <p><strong>Challenge 3:</strong> Make "general" dominate</p>
-            <p><strong>Hint:</strong> Crank up military — it overrides royalty and gender</p>
-            <p><strong>What you're learning:</strong> The network combines multiple input signals to make predictions. It's not just "royalty = king" — it's "royalty + masculine = king", "royalty + feminine = queen", and "military = general" regardless of other signals.</p>
+            <p><strong>Hint:</strong> Crank up military—it overrides royalty and gender</p>
+            <p><strong>What you're learning:</strong> The network combines multiple input signals to make predictions. It's not just "royalty = king"—it's "royalty + masculine = king", "royalty + feminine = queen", and "military = general" regardless of other signals.</p>
           </div>
         </div>
 
@@ -7685,10 +7720,10 @@
             </div>
             <div class="scale-item">
               <div class="scale-number">500B–1T+</div>
-              <div class="scale-label">Frontier models (MoE)</div>
+              <div class="scale-label">Frontier models like ChatGPT 5.2</div>
             </div>
           </div>
-          <p>Same basic idea — multiply, add, activate — just repeated trillions of times with carefully tuned weights across hundreds of layers. Note: Exact sizes for closed-source frontier models aren't disclosed; the largest confirmed dense models are ~500B parameters, while sparse MoE models can exceed 1T total parameters.</p>
+          <p>Same basic idea—multiply, add, activate—just repeated trillions of times with carefully tuned weights across hundreds of layers. Note: Exact sizes for closed-source frontier models aren't disclosed; the largest confirmed dense models are ~500B parameters, while sparse MoE models can exceed 1T total parameters.</p>
         </div>
       </div>
     </section>
@@ -7697,12 +7732,12 @@
     <section id="tab-attention" class="tab-section">
       <div class="section-header">
         <h2>05: Attention</h2>
-        <p>Each word looks at every other word to decide what information to gather</p>
+        <p>Each word looks at every other word to decide what matters</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand attention, you understand <em>why transformers revolutionized AI—they let any word "see" any other word instantly.</em></div>
-        <div class="intuition-detail">Attention lets every token directly access every other token, regardless of distance. This is the mechanism that enabled the transformer revolution—it's why "it" can connect to "cat" across 500 words without losing the signal.</div>
+        <div class="intuition-main">If you understand attention, you understand <em>why a special kind of neural network called a transformer revolutionized AI—they let any word "see" any other word instantly.</em></div>
+        <div class="intuition-detail">Attention lets every token directly access every other token, regardless of distance. This is the mechanism that enabled the transformer revolution.</div>
       </div>
 
       <div class="attention-container">
@@ -7711,7 +7746,7 @@
             <div class="att-main">
               <div class="card-header">
                 <h3>Attention Flow</h3>
-                <span class="badge">Visual connections (Click on the words to see how attention works)</span>
+                <span class="badge">Click on any of the words below to see how attention works</span>
               </div>
               <canvas id="attention-canvas"></canvas>
             </div>
@@ -7743,7 +7778,7 @@
 
       <div class="explanation">
         <h4>Why attention is powerful</h4>
-        <p>Traditional neural networks process words in fixed order, passing information step by step. <strong>Attention</strong> lets every word directly access every other word, regardless of distance. When processing "it" in "The cat sat on the mat because it was tired", attention connects "it" directly back to "cat" — no information lost in between. This is what makes <strong>transformers</strong> (attention-based networks) so effective at understanding language.</p>
+        <p>Traditional neural networks process words in fixed order, passing information step by step. <strong>Attention</strong> lets every word directly access every other word, regardless of distance. When processing "it" in "The cat sat on the mat because it was tired", attention connects "it" directly back to "cat"—no information lost in between. This is what makes <strong>transformers</strong> (attention-based networks) so effective at understanding language.</p>
       </div>
 
       <!-- Deep Dive Section -->
@@ -7765,7 +7800,7 @@
             <span class="att-word">was</span>
             <span class="att-word">tired."</span>
           </div>
-          <p>Your brain automatically "attends" back to "cat" to understand "it". Attention mechanisms let neural networks do the same thing!</p>
+          <p>Your brain automatically "attends" back to "cat" to understand "it". Attention mechanisms let neural networks do the same thing, but by using math.</p>
         </div>
 
         <div class="concept-card">
@@ -7791,7 +7826,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Query, Key, Value — The Three Roles</h4>
+          <h4>Query, Key, Value—The Three Roles</h4>
           <p>Every word plays three roles simultaneously:</p>
           <div class="qkv-explanation">
             <div class="qkv-role">
@@ -7824,7 +7859,7 @@
 
         <div class="concept-card">
           <h4>Multi-Head Attention</h4>
-          <p>Real transformers don't use just one attention pattern — they use many in parallel:</p>
+          <p>Real transformers don't use just one attention pattern—they use many in parallel:</p>
           <div class="multihead-visual">
             <div class="head-example">
               <div class="head-label">Head 1</div>
@@ -7847,14 +7882,14 @@
               <div class="head-pattern">"cat" → "mat" (rhyme? location?)</div>
             </div>
           </div>
-          <p>Modern LLMs use <strong>dozens of attention heads</strong> per layer, across <strong>dozens of layers</strong>. Each head can learn different patterns!</p>
+          <p>Modern LLMs use <strong>dozens of attention heads</strong> per layer, across <strong>dozens of layers</strong>. Each head can learn different patterns during training, like grammatical relationships, coreference, position, and semantic similarity.</p>
         </div>
 
         <div class="concept-card">
           <h4>Try This Thought Experiment</h4>
           <div class="experiment-box">
             <p><strong>Sentence:</strong> "The trophy doesn't fit in the suitcase because it is too big."</p>
-            <p><strong>Question:</strong> What does "it" refer to — the trophy or the suitcase?</p>
+            <p><strong>Question:</strong> What does "it" refer to—the trophy or the suitcase?</p>
             <p><strong>Answer:</strong> The trophy (it's too big to fit)</p>
             <p><strong>Now try:</strong> "The trophy doesn't fit in the suitcase because it is too small."</p>
             <p><strong>Now "it" refers to:</strong> The suitcase! Same structure, different meaning.</p>
@@ -7864,19 +7899,19 @@
 
         <div class="concept-card">
           <h4>Attention Is All You Need</h4>
-          <p>Before 2017, language models used complex recurrent structures. The famous paper "Attention Is All You Need" showed you could build state-of-the-art models using <em>only</em> attention.</p>
+          <p>Before 2017, language models used complex recurrent structures. The famous paper <a href="https://en.wikipedia.org/wiki/Attention_Is_All_You_Need" target="_blank">"Attention Is All You Need"</a> showed you could build state-of-the-art models using <em>only</em> attention.</p>
           <div class="timeline-mini">
             <div class="timeline-item">
               <span class="timeline-year">Pre-2017</span>
-              <span class="timeline-desc">RNNs, LSTMs — process words one by one, slow</span>
+              <span class="timeline-desc">Recurrent Neural Networks (RNNs), Long Short-Term Memory (LSTMs) models—process words one by one, slow</span>
             </div>
             <div class="timeline-item highlight">
               <span class="timeline-year">2017</span>
-              <span class="timeline-desc">Transformer — attention only, processes all words at once, fast</span>
+              <span class="timeline-desc">Transformer—attention only, processes all words at once, fast</span>
             </div>
             <div class="timeline-item">
               <span class="timeline-year">2018+</span>
-              <span class="timeline-desc">BERT, GPT, and everything since = transformers</span>
+              <span class="timeline-desc">Big Language Models (BLMs) like BERT, GPT, and everything since = transformers</span>
             </div>
           </div>
         </div>
@@ -7927,11 +7962,6 @@
                 </div>
               </div>
             </div>
-            
-            <div class="transformer-repeat-arrow">
-              <span>Repeat N times</span>
-              <div class="repeat-arrow-line"></div>
-            </div>
           </div>
 
           <div class="transformer-full-stack">
@@ -7964,13 +7994,13 @@
               <div class="stack-arrow">↓</div>
               <div class="stack-layer output-layer">
                 <span>Token Probabilities</span>
-                <span class="layer-ref">(to Inference tab)</span>
+                <span class="layer-ref">(see <strong>Inference</strong> tab)</span>
               </div>
             </div>
           </div>
 
           <div class="transformer-scale-note">
-            <strong>Real scale:</strong> Modern LLMs have anywhere from 40–120 layers. Each layer has billions of parameters in its attention and feed-forward components.
+            <strong>Real scale:</strong> Modern LLMs have anywhere from 40–120 layers, with billions of parameters in each layer.
           </div>
         </div>
 
@@ -8011,12 +8041,12 @@
     <section id="tab-training" class="tab-section">
       <div class="section-header">
         <h2>06: Pre-Training</h2>
-        <p>How billions of random numbers become a language model that understands the world</p>
+        <p>How billions of random numbers become an LLM that reflects the world</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand pre-training, you understand <em>that AI capabilities come from data—what it learned, how much, and when.</em></div>
-        <div class="intuition-detail">AI starts as billions of random numbers, then learns by predicting the next word across trillions of examples. Training is where all capabilities and limitations originate—every strength and blind spot traces back to what was (or wasn't) in the training data.</div>
+        <div class="intuition-main">If you understand pre-training, you understand <em>how AI use data to learn complex things like grammar, facts about the world, and computer programming.</em></div>
+        <div class="intuition-detail">AI starts as billions of random numbers, then learns by predicting the next token across trillions of examples. Pre-training is where AI starts to make sense of the world by finding patterns in the data.</div>
       </div>
 
       <!-- Context Introduction -->
@@ -8025,8 +8055,8 @@
           <div class="mindblown-icon">🤯</div>
           <div class="mindblown-content">
             <h4>The Mind-Blowing Part</h4>
-            <p>Remember all those weights in the Neural Network tab? The embedding dimensions? The attention scores? <strong>They all start as random numbers.</strong> Completely random. The model begins knowing absolutely nothing.</p>
-            <p>Yet through pre-training, those billions of random values transform into a system that understands grammar, knows facts about the world, can reason about problems, and generates coherent text. <em>That</em> is what pre-training accomplishes.</p>
+            <p>Remember all those weights in the Neural Network tab? The embedding vectors? The attention scores? <strong>They all start as random numbers.</strong> Completely random. The model begins knowing absolutely nothing.</p>
+            <p>Yet through pre-training, those billions of random values transform into a system that understands grammar, knows facts about the world, can write computer code, and generates coherent text. <em>That</em> is what pre-training accomplishes.</p>
           </div>
         </div>
         
@@ -8054,7 +8084,7 @@
       <!-- The Training Data Section -->
       <div class="training-data-section">
         <h3>📚 The Training Data</h3>
-        <p>Pre-training uses massive amounts of text where <strong>we already know what comes next</strong>. The model learns by predicting words it can then check against the real answer.</p>
+        <p>Pre-training uses massive amounts of text where <strong>we already know what comes next</strong>. The model learns by predicting words then checking against the real answer to see how close it was.</p>
         
         <div class="training-examples">
           <div class="training-example">
@@ -8072,14 +8102,14 @@
         </div>
         
         <div class="data-scale-note">
-          <strong>Scale:</strong> Modern LLMs are trained on trillions of tokens — essentially a significant fraction of all text ever written and published on the internet. This is a source of controversy because not every creator of the text being used gave permission for it to be used in pre-training. <em>Note: These token counts represent total tokens processed during training, which may include the same documents multiple times (called "epochs"). The actual unique training data is smaller.</em>
+          <strong>Scale:</strong> Modern LLMs are trained on trillions of tokens—essentially a significant fraction of all text ever written and published on the internet. This is a source of controversy because not everyone wrote the text gave permission for it to be used in pre-training.
         </div>
       </div>
 
       <!-- The Training Loop Demo -->
       <div class="training-loop-section">
         <h3>🔄 The Training Loop</h3>
-        <p>Watch how a single training step works. The model predicts the next token, sees how wrong it was, and adjusts its weights to do better.</p>
+        <p>Watch how a single training step works. The model predicts the next token, sees how wrong it was, and adjusts its weights to do better. <strong>The amount by which it was wrong is called the "loss."</strong> Each training step makes a change that slightly reduces the loss.</p>
         
         <div class="interactive-well">
           <div class="inference-grid"> <!-- Consistency with other labs -->
@@ -8134,17 +8164,6 @@
                       <div class="loss-formula">Loss = -log(<span id="loss-prob">0.15</span>) =</div>
                       <div class="loss-value" id="loss-value">1.90</div>
                       <div class="loss-interpretation" id="loss-interp">High loss = very wrong</div>
-                    </div>
-                  </div>
-
-                  <div class="loop-adjust-card">
-                    <div class="loop-step-label">Weight Adjustment</div>
-                    <div class="adjust-explanation">
-                      <p>Model sees it predicted "floor" when it should have been "king".</p>
-                      <div class="adjust-visual">
-                        <div class="weight-change">king weights: <span class="text-accent">↑ increase</span></div>
-                        <div class="weight-change">floor weights: <span class="text-negative">↓ decrease</span></div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -8285,13 +8304,13 @@
               <div class="stage-desc">Nudge each weight to reduce loss</div>
               <div class="weight-updates">
                 <div class="weight-update-row">
-                  <span class="weight-name">Embedding[42]</span>
+                  <span class="weight-name">Emb[42]</span>
                   <span class="weight-old">0.342</span>
                   <span class="weight-arrow">→</span>
                   <span class="weight-new">0.347</span>
                 </div>
                 <div class="weight-update-row">
-                  <span class="weight-name">Attention.Q[103]</span>
+                  <span class="weight-name">AttnQ[103]</span>
                   <span class="weight-old">-0.156</span>
                   <span class="weight-arrow">→</span>
                   <span class="weight-new">-0.151</span>
@@ -8311,13 +8330,13 @@
         </div>
 
         <div class="backprop-key-insight">
-          <strong>The key insight:</strong> Every single weight in the network — in the embeddings, the attention layers, the feed-forward layers — gets a tiny adjustment. Each adjustment is calculated to make the correct answer slightly more likely next time. Do this trillions of times, and random numbers become understanding.
+          <strong>The key insight:</strong> Every single weight in the network—in the embeddings, the attention layers, the feed-forward layers—gets a tiny adjustment. Each adjustment is calculated to make the correct answer slightly more likely next time. Do this trillions of times, and random numbers become the AI version of understanding.
         </div>
       </div>
 
       <div class="explanation">
         <h4>The Training Process</h4>
-        <p>Pre-training is remarkably simple in concept: <strong>predict the next word, check if you were right, adjust weights to do better, repeat.</strong> Do this trillions of times across massive text datasets, and the random initial weights gradually transform into a model that has "learned" language — grammar, facts, reasoning patterns, and more — all from the single objective of predicting what comes next.</p>
+        <p>Pre-training is remarkably simple in concept: <strong>predict the next word, check if you were right, adjust weights to do better, repeat.</strong> Do this trillions of times across massive text datasets, and the random initial weights gradually transform into a model that has "learned" language—grammar, facts, reasoning patterns, and more—all from the single objective of predicting what comes next.</p>
       </div>
 
       <!-- Deep Dive Section -->
@@ -8402,11 +8421,12 @@
 
         <div class="concept-card">
           <h4>The Hiking Analogy for Gradient Descent</h4>
-          <p>Imagine you're lost in foggy mountains with billions of dimensions, trying to find the lowest valley (lowest loss):</p>
+          <p>Imagine you're lost in foggy mountains, trying to find the lowest valley (lowest loss):</p>
           <div class="hiking-visual">
             <div class="mountain-scene">
-              <div class="mountain"></div>
-              <div class="hiker" id="hiker-icon">🏃</div>
+              <div class="mountain-back"></div>
+              <div class="mountain-front"></div>
+              <div class="hiker" id="hiker-icon">🚶</div>
               <div class="valley-marker">🏁 Goal: lowest loss</div>
             </div>
           </div>
@@ -8444,7 +8464,7 @@
               <div class="math-answer">= (how much did the output change the loss) × (how much did w₁ change the output)</div>
             </div>
           </div>
-          <p>This calculation propagates backward through every layer, assigning a "gradient" (direction and magnitude of blame) to every weight. The genius is that it's computationally efficient — you don't need to test each weight individually.</p>
+          <p>This calculation propagates backward through every layer, assigning a "gradient" (direction and magnitude of blame) to every weight. The genius is that it's computationally efficient—you don't need to test each weight individually.</p>
         </div>
 
         <div class="interactive-well">
@@ -8493,7 +8513,7 @@
               </div>
             </div>
           </div>
-          <p class="mini-demo-note" style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary); text-align: center;">The red dashed lines show prediction errors. Training minimizes these errors by adjusting the line's slope (weight) and position (bias).</p>
+          <p class="mini-demo-note" style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary); text-align: center;">Note: The red dashed lines show prediction errors. Training minimizes these errors by adjusting the line's slope (weight) and position (bias).</p>
         </div>
 
         <div class="concept-card">
@@ -8517,7 +8537,7 @@
               <div class="scale-label">GPUs for months</div>
             </div>
           </div>
-          <p>Same fundamental algorithm — predict, measure error, adjust weights — just at staggering scale.</p>
+          <p>Same fundamental algorithm—predict, measure error, adjust weights—just at staggering scale.</p>
         </div>
 
         <div class="concept-card">
@@ -8533,8 +8553,8 @@
                 <li>Writing styles</li>
               </ul>
             </div>
-            <div class="doesnt">
-              <div class="doesnt-header">✗ Requires Additional Training</div>
+            <div class="doesnt" style="background: var(--secondary-10); border-color: var(--secondary-30);">
+              <div class="doesnt-header" style="color: var(--accent-secondary);">✗ Requires Additional Training</div>
               <ul>
                 <li>Following instructions</li>
                 <li>Being helpful and harmless</li>
@@ -8543,7 +8563,7 @@
               </ul>
             </div>
           </div>
-          <p>That's why pre-training is just the first step. Models like ChatGPT and Claude undergo additional training (fine-tuning, RLHF) to become useful assistants — which is exactly what we cover in the <strong>Fine-Tuning</strong> tab.</p>
+          <p>That's why pre-training is just the first step. Models like ChatGPT and Claude undergo additional training (fine-tuning, RLHF) to become useful assistants—which is exactly what we cover in the <strong>Fine-Tuning</strong> tab.</p>
         </div>
       </div>
     </section>
@@ -8556,7 +8576,7 @@
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand fine-tuning, you understand <em>why ChatGPT is helpful but GPT-3 was chaotic—same brain, different training.</em></div>
+        <div class="intuition-main">If you understand fine-tuning, you understand <em>why models differ in their abilities and personalities even when built on the same architecture and trained on the same data.</em></div>
         <div class="intuition-detail">Pre-training gives the model knowledge; fine-tuning gives it behavior. Fine-tuning is how a text completion engine becomes a helpful assistant—one that follows instructions, refuses harmful requests, and maintains a consistent persona.</div>
       </div>
 
@@ -8608,7 +8628,7 @@
               <div class="response-text">
                 "First, you'll need a tension wrench and pick. Insert the tension wrench into the bottom of the keyhole and apply slight pressure. Then insert the pick and feel for the pins..."
               </div>
-              <div class="response-note">Just continues the most likely text — no judgment about appropriateness</div>
+              <div class="response-note">Just continues the most likely text—no judgment about appropriateness</div>
             </div>
             <div class="ft-response after">
               <div class="response-header">
@@ -8617,7 +8637,7 @@
               <div class="response-text">
                 "I can help with legitimate locksmith questions! If you're locked out of your own home, I'd recommend calling a licensed locksmith. If you're interested in lockpicking as a hobby, there are legal practice locks designed for learning. What's your situation?"
               </div>
-              <div class="response-note">Helpful while considering safety — offers alternatives and asks clarifying questions</div>
+              <div class="response-note">Helpful while considering safety—offers alternatives and asks clarifying questions</div>
             </div>
           </div>
         </div>
@@ -8633,7 +8653,7 @@
             <div class="teaches-icon">📋</div>
             <div class="teaches-content">
               <h4>Instruction Following</h4>
-              <p>Understanding "summarize this" vs "translate this" vs "explain like I'm 5" — and doing what's asked.</p>
+              <p>Understanding "summarize this" vs "translate this" vs "explain like I'm 5"—and doing what's asked.</p>
             </div>
           </div>
           <div class="teaches-card">
@@ -8661,14 +8681,14 @@
             <div class="teaches-icon">📐</div>
             <div class="teaches-content">
               <h4>Format Awareness</h4>
-              <p>Using markdown appropriately. Structuring long responses. Knowing when lists vs prose work better.</p>
+              <p>Using coding languages appropriately. Structuring long responses. Knowing when lists vs prose work better.</p>
             </div>
           </div>
           <div class="teaches-card">
             <div class="teaches-icon">🪞</div>
             <div class="teaches-content">
               <h4>Self-Awareness</h4>
-              <p>Knowing it's an AI. Not pretending to have experiences it doesn't have. Appropriate epistemic humility.</p>
+              <p>Knowing it's an AI. Not pretending to have experiences it doesn't have. Knowing its limitations.</p>
             </div>
           </div>
         </div>
@@ -8737,7 +8757,7 @@
         </div>
         
         <div class="rlhf-repeat">
-          <span>↻ Repeat thousands of times across diverse prompts</span>
+          <span>This is repeated thousands of times across diverse prompts.</span>
         </div>
       </div>
 
@@ -8778,7 +8798,7 @@
 
       <div class="explanation">
         <h4>How This Differs from Pre-Training</h4>
-        <p>Pre-training optimizes for "predict the next token correctly." Fine-tuning optimizes for "produce responses humans prefer." Both use backpropagation to update weights, but the signal is different: <strong>statistical correctness</strong> vs <strong>human judgment of quality</strong>.</p>
+        <p>Pre-training optimizes for "predict the next token correctly." Fine-tuning optimizes for "produce responses humans prefer." Both use backpropagation to update weights, but the signal is different: <strong>a massive pile of training text</strong> vs <strong>human judgment of quality</strong>.</p>
       </div>
 
       <!-- Deep Dive Section -->
@@ -8825,7 +8845,7 @@
             <div class="approach-card">
               <div class="approach-name">RLHF</div>
               <div class="approach-full">Reinforcement Learning from Human Feedback</div>
-              <div class="approach-desc">Humans rank responses. Train reward model. Optimize with PPO.</div>
+              <div class="approach-desc">Humans rank responses. Then train a reward model to reinforce at scale.</div>
               <div class="approach-used">Pioneered by: OpenAI (ChatGPT)</div>
             </div>
             <div class="approach-card">
@@ -8843,15 +8863,17 @@
             <div class="approach-card">
               <div class="approach-name">DPO</div>
               <div class="approach-full">Direct Preference Optimization</div>
-              <div class="approach-desc">Skip reward model. Train directly on preference pairs. Simpler, often equally effective.</div>
+              <div class="approach-desc">Skip using a reward model. Train directly on preference pairs. Simpler, often equally effective.</div>
               <div class="approach-used">Examples: Llama 2+, many open models</div>
             </div>
           </div>
         </div>
 
         <div class="concept-card">
-          <h4>The Reward Model</h4>
-          <p>A key innovation: "bottling" human judgment into a neural network:</p>
+          <h4>Reward Models</h4>
+          <p><strong>The problem:</strong> You can't have humans rate every single response during training—there are millions of them. So how do you scale human judgment?</p>
+          <p><strong>The solution:</strong> Train a separate neural network to <em>predict</em> what humans would prefer. This "reward model" learns from the comparison data collected from human raters.</p>
+          
           <div class="reward-model-visual">
             <div class="rm-input">
               <div class="rm-label">Input</div>
@@ -8860,7 +8882,7 @@
             <div class="rm-arrow">→</div>
             <div class="rm-model">
               <div class="rm-label">Reward Model</div>
-              <div class="rm-content">(Another neural network)</div>
+              <div class="rm-content">(Trained on human comparisons)</div>
             </div>
             <div class="rm-arrow">→</div>
             <div class="rm-output">
@@ -8868,11 +8890,13 @@
               <div class="rm-content">Score: 0.73</div>
             </div>
           </div>
-          <p>The reward model is trained on thousands of human comparisons. It learns to predict "would a human prefer this response?" This score then guides the main model's training.</p>
+          
+          <p><strong>How it works:</strong> The reward model takes any prompt+response pair and outputs a score predicting how much humans would like it. Higher scores mean "humans would prefer this." During training, this score becomes the feedback signal—the main model learns to generate responses that score highly.</p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.75rem;"><strong>Why this matters:</strong> Humans only need to label thousands of comparisons, but the reward model can then score millions of responses during training. It's how you scale human preferences to AI scale.</p>
         </div>
 
         <div class="concept-card">
-          <h4>Why Not Just Maximize Reward?</h4>
+          <h4>The Risk of Overfitting to Rewards</h4>
           <p>A naive approach would be: "generate responses that score as high as possible." But this leads to problems:</p>
           <div class="analogy-box">
             <div class="analogy-item">
@@ -8897,7 +8921,7 @@
               </div>
             </div>
           </div>
-          <p><strong>Solution:</strong> Use KL divergence constraint — "don't drift too far from the base model." This keeps the model capable while adding alignment.</p>
+          <p><strong>Solution:</strong> During training, penalize the model if it strays too far from its original behavior. Think of it as "improve your responses, but don't forget everything you learned in pre-training." This prevents the model from gaming the reward signal at the cost of its general capabilities.</p>
         </div>
 
         <div class="concept-card">
@@ -8942,19 +8966,19 @@
           <div class="challenges-list">
             <div class="challenge-item">
               <strong>Jailbreaks</strong>
-              <p>Creative prompts that bypass safety training. Shows alignment isn't perfectly robust.</p>
+              <p>People can give the model creative prompts that bypass safety training. Alignment can be fragile.</p>
             </div>
             <div class="challenge-item">
               <strong>Generalization</strong>
-              <p>Will alignment hold for situations very different from training? Unknown.</p>
+              <p>Alignment may not hold for situations outside the training patterns. It's hard to predict every use case.</p>
             </div>
             <div class="challenge-item">
               <strong>Scalable Oversight</strong>
-              <p>As models get smarter, can humans still evaluate if they're behaving well?</p>
+              <p>As models get smarter, humans may no longer be able to evaluate if they're behaving well.</p>
             </div>
             <div class="challenge-item">
               <strong>Value Lock-in</strong>
-              <p>Whose values are we aligning to? How do we handle disagreement?</p>
+              <p>Whose values are we aligning to? How do we handle disagreement about what values are important?</p>
             </div>
           </div>
         </div>
@@ -8963,11 +8987,11 @@
           <h4>Model Differences Across Versions and Providers</h4>
           <p>Fine-tuning is why different models behave so differently from each other, even when built on similar base architectures:</p>
           <ul style="margin: 0.75rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
-            <li><strong>Different providers, different behavior:</strong> Claude, GPT, and Gemini all have distinct "personalities" because of their different fine-tuning data and alignment approaches</li>
-            <li><strong>Version changes matter:</strong> Even models from the same provider (e.g., GPT-4 vs GPT-4o vs GPT-5) can behave quite differently due to updated fine-tuning</li>
+            <li><strong>Different providers, different behavior:</strong> Claude, ChatGPT, Gemini, and Grok all have distinct "personalities" because of their different fine-tuning data and alignment approaches</li>
+            <li><strong>Version changes matter:</strong> Even models from the same provider (e.g., GPT-3.5 vs GPT-4o vs GPT-5) can behave quite differently due to updated fine-tuning</li>
             <li><strong>Prompts may need adjustment:</strong> A prompt that works well on one model may need tweaking for another</li>
           </ul>
-          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;"><strong>Professional tip:</strong> When building production applications, always test your prompts across model versions and consider how model updates might affect your system's behavior.</p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;"><strong>Professional tip:</strong> When building production applications that use AI, always test your prompts across model versions and consider how model updates might affect your system's behavior.</p>
         </div>
 
         <div class="concept-card">
@@ -8989,7 +9013,7 @@
             <div class="pipeline-stage">
               <div class="pipe-icon">🧠</div>
               <div class="pipe-name">Transformer</div>
-              <div class="pipe-desc">Attention + FFN × N</div>
+              <div class="pipe-desc">Attention + FFN</div>
             </div>
             <div class="pipe-arrow">→</div>
             <div class="pipeline-stage">
@@ -9003,12 +9027,6 @@
               <div class="pipe-name">Fine-Tuning</div>
               <div class="pipe-desc">Capable → Aligned</div>
             </div>
-            <div class="pipe-arrow">→</div>
-            <div class="pipeline-stage">
-              <div class="pipe-icon">💬</div>
-              <div class="pipe-name">Inference</div>
-              <div class="pipe-desc">Your conversation</div>
-            </div>
           </div>
         </div>
       </div>
@@ -9018,18 +9036,18 @@
     <section id="tab-prompting" class="tab-section">
       <div class="section-header">
         <h2>08: Prompting</h2>
-        <p>How what you say shapes what the model does — and why context windows matter</p>
+        <p>How a user shapes what the model does—and why context windows matter</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand prompting, you understand <em>that you're not "asking"—you're setting up a probability landscape.</em></div>
-        <div class="intuition-detail">Your prompt is literally the only input the model sees for each conversation. Every word you include shifts probabilities, activates patterns, and fills precious context window space. What you include (or exclude) determines what the model "knows."</div>
+        <div class="intuition-main">If you understand prompting, you understand <em>that you're not "asking"—you're giving AI a context for predictions.</em></div>
+        <div class="intuition-detail">A prompt is the input you give to an AI model during inference. Every word you include shifts probabilities, activates patterns, and fills precious context window space. What you include (or exclude) shapes how the model responds.</div>
       </div>
 
       <!-- Why Prompts Matter Introduction -->
       <div class="context-intro">
         <h3>🎯 Why Prompting Matters</h3>
-        <p>You've seen how LLMs work: tokens flow through attention layers, each token influencing what comes next. This is why <strong>what you say</strong> — and <strong>how you say it</strong> — directly shapes the model's output.</p>
+        <p>You've seen how LLMs work: tokens flow through attention layers, each token influencing what comes next. This is why <strong>what you say</strong>—and <strong>how you say it</strong>—directly shapes the model's output.</p>
         
         <div class="why-prompts-matter">
           <div class="prompt-reason">
@@ -9046,7 +9064,7 @@
           </div>
           <div class="prompt-reason">
             <strong>📏 Limited Space</strong>
-            <p>Context windows have finite capacity. What you include (or exclude) determines what the model "knows."</p>
+            <p>Context windows (see below) have finite capacity. What you include (or exclude) determines what the model "thinks" about for the conversation.</p>
           </div>
         </div>
       </div>
@@ -9100,9 +9118,10 @@
             <h4>What They Are</h4>
             <ul>
               <li>Instructions placed at the <strong>beginning</strong> of the context window</li>
-              <li>Usually hidden from users in chat interfaces</li>
+              <li><strong>Usually hidden from users</strong> in chat interfaces</li>
               <li>Set personality, rules, and constraints for the conversation</li>
-              <li>Persist throughout the entire conversation</li>
+              <li><strong>Persist throughout</strong> the entire conversation</li>
+              <li>In custom AI software, you can <strong>add your own system prompt</strong> to the one written by the model provider.</li>
             </ul>
           </div>
           <div class="system-why">
@@ -9125,7 +9144,7 @@
       <!-- Input vs Output Tokens -->
       <div class="token-economics">
         <h3>💰 Input Tokens vs Output Tokens</h3>
-        <p>API pricing distinguishes between tokens you send in and tokens the model generates. Here's why:</p>
+        <p>Most people use free or subscription AI products. But you can also use AI as a service (through something called an API, or "application programming interface") and pay per token used. API pricing distinguishes between tokens you send in and tokens the model generates. Here's why:</p>
         
         <div class="token-types-grid">
           <div class="token-type-card input">
@@ -9156,16 +9175,16 @@
         
         <div class="cost-comparison">
           <div class="cost-row">
-            <span class="cost-label">Typical input token cost (GPT-5.2)</span>
-            <span class="cost-value">~$0.00175 / 1K tokens</span>
+            <span class="cost-label">Input token cost (GPT-5.2)</span>
+            <span class="cost-value">~$1.75 / 1 Million tokens</span>
           </div>
           <div class="cost-row">
             <span class="cost-label">Typical output token cost (GPT-5.2)</span>
-            <span class="cost-value">~$0.014 / 1K tokens (8x more!)</span>
+            <span class="cost-value">~$14.00 / 1 Million tokens (8x more!)</span>
           </div>
           <div class="cost-row">
             <span class="cost-label">Why the difference?</span>
-            <span class="cost-value">Sequential generation is compute-intensive</span>
+            <span class="cost-value">Output tokens are generated one at a time, so they are more compute-intensive</span>
           </div>
         </div>
       </div>
@@ -9173,7 +9192,7 @@
       <!-- Prompt Comparison Demo -->
       <div class="prompt-comparison-section">
         <h3>🔬 Interactive: Good vs Bad Prompts</h3>
-        <p>See how prompt quality affects responses. The same underlying question can get vastly different results.</p>
+        <p>Click to see how prompt quality affects responses. The same underlying question can get vastly different results.</p>
         
         <div class="prompt-comparison-demo">
           <div class="comparison-toggle">
@@ -9235,18 +9254,18 @@
         </div>
         
         <div class="forgetting-note">
-          <strong>Key insight:</strong> Models don't "forget" — they never had the information in the first place. The context window is like a whiteboard that gets erased. Previous messages that don't fit are simply not there. New conversations start with a completely clean context.
+          <strong>Key insight:</strong> Models don't "forget" the way a person does—the only things they "think" about are what's in the context window. The context window is like a whiteboard that gets erased. Previous messages that don't fit are simply not there. New conversations start with a fresh context.
         </div>
       </div>
 
       <!-- Explanation -->
       <div class="explanation">
         <h3>Understanding Context in Practice</h3>
-        <p>Now that you understand the architecture (tokenization → embeddings → attention → generation), you can see why prompting is so important:</p>
+        <p>Now that you understand the architecture (tokenization → embeddings → attention → inference), you can see why prompting is so important:</p>
         <ul>
           <li><strong>Tokens are the only input:</strong> The model has no other way to know what you want</li>
-          <li><strong>Attention is learned:</strong> Good prompts leverage patterns the model learned during pre-training</li>
-          <li><strong>Earlier = influential:</strong> System prompts at the start affect everything that follows</li>
+          <li><strong>Learned patterns activate:</strong> Good prompts leverage patterns the model learned during pre-training</li>
+          <li><strong>Early tokens are influential:</strong> The start of the context window affects everything that follows</li>
           <li><strong>Space is finite:</strong> What fits in the context window is all the model can consider</li>
         </ul>
       </div>
@@ -9254,6 +9273,8 @@
       <!-- Deep Dive -->
       <div class="deep-dive">
         <h3 class="deep-dive-title">🔬 Prompt Engineering Techniques</h3>
+        
+        <p style="margin-bottom: 1.5rem;"><strong>Prompt engineering</strong> is the craft of writing effective inputs to get better outputs from AI models.</p>
         
         <div class="concept-card">
           <h4>Zero-Shot vs Few-Shot Prompting</h4>
@@ -9272,14 +9293,14 @@
 
         <div class="concept-card">
           <h4>Chain-of-Thought Prompting</h4>
-          <p>For complex problems, asking the model to "think step by step" often improves results. The phrase "Let's think step by step" has been shown in research to significantly improve performance on math and reasoning problems — it's one of the most studied prompt engineering techniques. Why does it work?</p>
+          <p>For complex problems, asking the model to "think step by step" often improves results. The phrase "Let's think step by step" has been shown in research to significantly improve performance on math and reasoning problems—it's one of the most studied prompt engineering techniques. Why does it work?</p>
           <ul style="margin: 0.75rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
             <li>Each reasoning step becomes input for the next step</li>
             <li>More tokens in context = more "working memory"</li>
             <li>Intermediate steps can be attended to for final answer</li>
             <li>Reduces the need to compute complex answers in a single forward pass</li>
           </ul>
-          <p style="font-size: 0.85rem; color: var(--text-secondary);">This is why reasoning models (covered in the next tab) are so effective — they generate extensive chain-of-thought automatically.</p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">This is why reasoning models (covered in the next tab) are so effective—they generate extensive chain-of-thought automatically.</p>
         </div>
 
         <div class="concept-card">
@@ -9309,8 +9330,263 @@
 
         <div class="concept-card">
           <h4>The Role of Personas</h4>
-          <p>"Act as a senior Python developer" isn't magic — it shifts probability distributions toward patterns associated with that expertise in the training data.</p>
+          <p>You can tell an AI model to take the perspective of someone, like a user of your service, a character in a book, or an expert in a field. "Act like a senior developer" shifts probability distributions toward patterns associated with that expertise in the training data.</p>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">The model learned correlations like "senior developers" → "best practices, error handling, type hints, documentation." Invoking the persona activates these associations.</p>
+        </div>
+
+        <h3 class="deep-dive-title" style="margin-top: 2rem;">🏗️ Context Engineering Techniques</h3>
+        
+        <p style="margin-bottom: 1.5rem;">Context engineering focuses on <em>what information the AI model "sees"</em>. In production AI tools, much of the context window is filled programmatically—not typed by users.</p>
+
+        <div class="concept-card">
+          <h4>Retrieval-Augmented Generation (RAG)</h4>
+          <p>Instead of hoping the model "knows" something from training, <strong>you can retrieve (or ask it to retrieve) relevant information</strong> and include it in the context window.</p>
+          <div class="system-example">
+            <div class="system-example-label">RAG Flow</div>
+            User asks: "What's our refund policy?"<br>
+            ↓ System searches company knowledge base<br>
+            ↓ Retrieves: "Refunds within 30 days with receipt..."<br>
+            ↓ Injects into context before model responds<br>
+            → Model answers using the retrieved policy
+          </div>
+          <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-secondary);">RAG grounds responses in real, up-to-date information rather than relying on potentially outdated or hallucinated "knowledge" from training. RAG can even use AI technology with vector embeddings to find relevant information.</p>
+        </div>
+
+        <div class="concept-card">
+          <h4>Dynamic Context Assembly</h4>
+          <p>Production systems don't use static prompts. They assemble context dynamically based on:</p>
+          <ul style="margin: 0.75rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
+            <li><strong>User state:</strong> Who is this user? What permissions do they have? What's their history?</li>
+            <li><strong>Conversation history:</strong> What's been discussed? (Often summarized to save tokens)</li>
+            <li><strong>Retrieved documents:</strong> What knowledge is relevant to this specific query?</li>
+            <li><strong>Tool results:</strong> What did the calculator/search/API return?</li>
+            <li><strong>Time and context:</strong> Current date, user's timezone, session metadata</li>
+          </ul>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">The "prompt" a production model sees might be 10,000+ tokens assembled from dozens of sources—far more than what the user typed.</p>
+        </div>
+
+        <div class="concept-card">
+          <h4>Context Window Management</h4>
+          <p>Context windows are large but finite. Smart systems manage this space carefully:</p>
+          <div class="grid grid-2-col gap-1 mt-075">
+            <div class="card-sm">
+              <strong class="text-sm">Summarization</strong>
+              <p class="mt-05 text-xs">Compress older conversation history into summaries to preserve key information while freeing up tokens.</p>
+            </div>
+            <div class="card-sm">
+              <strong class="text-sm">Selective Retrieval</strong>
+              <p class="mt-05 text-xs">Only include documents/chunks that are actually relevant to the current query.</p>
+            </div>
+            <div class="card-sm">
+              <strong class="text-sm">Priority Ordering</strong>
+              <p class="mt-05 text-xs">Put most important information at the start and end of context to avoid the "lost in the middle" problem.</p>
+            </div>
+            <div class="card-sm">
+              <strong class="text-sm">Token Budgeting</strong>
+              <p class="mt-05 text-xs">Allocate portions of the context window to different purposes (system prompt, history, retrieval, user input).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGES & SOUND TAB -->
+    <section id="tab-multimodal" class="tab-section">
+      <div class="section-header">
+        <h2>09: Images & Sound</h2>
+        <p>How AI models see, hear, and generate media beyond text</p>
+      </div>
+
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand multimodal AI, you understand that <em>images, audio, and video are just different ways to fill the same context window</em>—the AI model doesn't care what the tokens originally were.</div>
+        <div class="intuition-detail">Everything that goes into the context window gets converted to tokens and embeddings. An image becomes a grid of patches, each patch becomes a vector. Audio becomes segments, each segment becomes a vector. Once in embedding space, attention works the same way it does for text.</div>
+      </div>
+
+      <!-- What Multimodal Means -->
+      <div class="concept-card">
+        <h3>🎭 What "Multimodal" Means</h3>
+        <p><strong>Multimodal</strong> means a model can work with multiple types of data—not just text, but also images, audio, or video. Some models only support text, but many models can work with multiple types of data. There's a spectrum of capabilities:</p>
+        <div class="scale-comparison" style="margin: 1rem 0; grid-template-columns: repeat(5, 1fr); gap: 0.75rem;">
+          <div class="scale-item" style="padding: 1rem;">
+            <div class="scale-number" style="font-size: 1.5rem;">📝</div>
+            <div class="scale-label" style="font-size: 0.85rem;">Text Only</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">Early models, or specialized text models</div>
+          </div>
+          <div class="scale-item" style="padding: 1rem;">
+            <div class="scale-number" style="font-size: 1.5rem;">👁️</div>
+            <div class="scale-label" style="font-size: 0.85rem;">Text + Image Input</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">ChatGPT, Gemini, Claude</div>
+          </div>
+          <div class="scale-item" style="padding: 1rem;">
+            <div class="scale-number" style="font-size: 1.5rem;">🎨</div>
+            <div class="scale-label" style="font-size: 0.85rem;">Image Generation</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">NanoBanana & GPT Image-Gen 1.5</div>
+          </div>
+          <div class="scale-item" style="padding: 1rem;">
+            <div class="scale-number" style="font-size: 1.5rem;">🎙️</div>
+            <div class="scale-label" style="font-size: 0.85rem;">Voice Conversation</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">GPT-5.2, Gemini Live</div>
+          </div>
+          <div class="scale-item" style="padding: 1rem;">
+            <div class="scale-number" style="font-size: 1.5rem;">🎬</div>
+            <div class="scale-label" style="font-size: 0.85rem;">Video</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">Sora, Runway</div>
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">Many modern services combine several of these. ChatGPT can see images, hear audio, and speak—all in one application.</p>
+      </div>
+
+      <!-- How It Works -->
+      <div class="concept-card">
+        <h3>🧠 How It Works: Everything Becomes Embeddings</h3>
+        <p>The key insight is that <strong>all data types get converted to the same format</strong>—vectors in embedding space. Once converted, the transformer processes them identically.</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.85rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--text-primary);">
+              <th style="text-align: left; padding: 0.75rem 0.5rem; font-weight: 700;">Input</th>
+              <th style="text-align: left; padding: 0.75rem 0.5rem; font-weight: 700;">Step 1: Divide</th>
+              <th style="text-align: left; padding: 0.75rem 0.5rem; font-weight: 700;">Step 2: Embed</th>
+              <th style="text-align: left; padding: 0.75rem 0.5rem; font-weight: 700;">Step 3: Process</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem 0.5rem;"><strong>🖼️ Image</strong></td>
+              <td style="padding: 1rem 0.5rem;">Split into patches<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(e.g., 16×16 pixel squares)</span></td>
+              <td style="padding: 1rem 0.5rem;">Each patch → vector<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(256 embedding vectors)</span></td>
+              <td style="padding: 1rem 0.5rem;">Attention between patches<br><span style="font-size: 0.8rem; color: var(--text-muted);">(same as text tokens)</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem 0.5rem;"><strong>🎤 Audio</strong></td>
+              <td style="padding: 1rem 0.5rem;">Split into segments<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(e.g., 25ms chunks)</span></td>
+              <td style="padding: 1rem 0.5rem;">Each segment → vector<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(N embedding vectors)</span></td>
+              <td style="padding: 1rem 0.5rem;">Attention between segments<br><span style="font-size: 0.8rem; color: var(--text-muted);">(same as text tokens)</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 1rem 0.5rem;"><strong>📝 Text</strong></td>
+              <td style="padding: 1rem 0.5rem;">Split into tokens<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(words/subwords)</span></td>
+              <td style="padding: 1rem 0.5rem;">Each token → vector<br><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">(embedding lookup)</span></td>
+              <td style="padding: 1rem 0.5rem;">Attention between tokens<br><span style="font-size: 0.8rem; color: var(--text-muted);">(the original use case)</span></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p><strong>The pattern:</strong> Divide → Embed → Attend. Once everything is vectors, the transformer doesn't know (or care) whether it started as pixels, sound waves, or words.</p>
+      </div>
+
+      <!-- What You Can Do -->
+      <div class="concept-card">
+        <h3>✨ What You Can Do With It</h3>
+        
+        <div class="grid grid-2-col gap-1 mt-1">
+          <div class="card-sm">
+            <strong>📸 Image Understanding</strong>
+            <p class="mt-05 text-sm">Drop a screenshot, photo, or diagram into the chat. The model "sees" it and can describe, analyze, or answer questions about it. Great for debugging, analyzing charts, or describing scenes.</p>
+          </div>
+          <div class="card-sm">
+            <strong>🗣️ Voice Conversation</strong>
+            <p class="mt-05 text-sm">Speech is converted to tokens, processed, then converted back to speech. This enables natural voice conversations without text as an intermediary—the model hears tone, pace, and emotion.</p>
+          </div>
+          <div class="card-sm">
+            <strong>🎨 Image Generation</strong>
+            <p class="mt-05 text-sm">Describe what you want, get an image. Models like NanoBanana & GPT Image-Gen 1.5 generate images from text prompts. Some can also edit existing images based on instructions you give them.</p>
+          </div>
+          <div class="card-sm">
+            <strong>🎬 Video Understanding</strong>
+            <p class="mt-05 text-sm">Video frames become tokens. The model can describe what's happening, answer questions about the content, or summarize long videos. Some models can generate short video clips.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Models Specialize -->
+      <div class="concept-card">
+        <h3>🎯 Why Some Models Specialize</h3>
+        <p>Not every model does everything. Here's why models often focus on specific modalities:</p>
+        
+        <div class="analogy-box">
+          <div class="analogy-item">
+            <span class="analogy-icon">📊</span>
+            <div>
+              <strong>Training Data</strong>
+              <p>Image models need billions of image-text pairs. Audio models need thousands of hours of speech. Gathering and cleaning this data is expensive and specialized.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">💻</span>
+            <div>
+              <strong>Compute Requirements</strong>
+              <p>Video requires far more compute than images, which require more than audio, which requires more than text. A minute of video might be millions of tokens.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">🎯</span>
+            <div>
+              <strong>Architecture Choices</strong>
+              <p>Understanding vs. generation often use different approaches. Image generation typically uses a different architecture called a diffusion model, while understanding uses vision transformers.</p>
+            </div>
+          </div>
+        </div>
+        
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;"><strong>Examples:</strong> Whisper specializes in audio transcription. Midjourney focuses on artistic image generation. Sora targets video generation. GPT 5.2 combines text, vision, and audio in one model.</p>
+      </div>
+
+      <!-- The Realism Warning -->
+      <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
+        <h3>⚠️ The Realism Warning</h3>
+        <p>AI-generated media has become remarkably convincing. This creates real risks:</p>
+        
+        <div class="grid grid-2-col gap-1 mt-1">
+          <div class="card-sm" style="background: var(--bg-card);">
+            <strong class="text-negative">🖼️ Generated Images</strong>
+            <p class="mt-05 text-sm">Can be indistinguishable from photographs. Fake "photos" of events that never happened, people who don't exist, or documents that were never created.</p>
+          </div>
+          <div class="card-sm" style="background: var(--bg-card);">
+            <strong class="text-negative">🎤 Voice Cloning</strong>
+            <p class="mt-05 text-sm">A few seconds of audio can clone someone's voice convincingly. Enables impersonation, fake phone calls, or fabricated audio "evidence."</p>
+          </div>
+          <div class="card-sm" style="background: var(--bg-card);">
+            <strong class="text-negative">🎬 Synthetic Video</strong>
+            <p class="mt-05 text-sm">Deepfakes can put words in people's mouths. Video generation is rapidly improving. Soon, "seeing is believing" won't apply.</p>
+          </div>
+          <div class="card-sm" style="background: var(--bg-card);">
+            <strong class="text-negative">📰 Misinformation</strong>
+            <p class="mt-05 text-sm">Convincing fake media can spread faster than fact-checks. The cost of creating disinformation has dropped dramatically.</p>
+          </div>
+        </div>
+        
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-card); border-radius: var(--radius-sm);">
+          <strong>How to stay skeptical:</strong>
+          <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.85rem;">
+            <li>Consider the source—is it from a verified account or publication?</li>
+            <li>Look for context—does this make sense? Can you find corroborating reports?</li>
+            <li>Check for artifacts—unusual hands, text, physics, backgrounds, or audio glitches</li>
+            <li>Reverse image search—has this "photo" appeared before in different contexts?</li>
+            <li>When in doubt, wait—breaking news is often corrected within hours</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Deep Dive -->
+      <div class="deep-dive">
+        <h3 class="deep-dive-title">🔬 Image and Audio Generation</h3>
+
+        <div class="concept-card">
+          <h4>Diffusion Models for Generation</h4>
+          <p>Most image generation (NanoBanana & GPT Image-Gen 1.5) uses a different approach called <strong>diffusion</strong>:</p>
+          <ol class="concept-list">
+            <li><strong>Start with noise</strong>—Pure random static</li>
+            <li><strong>Gradually denoise</strong>—A neural network predicts and removes noise, step by step</li>
+            <li><strong>Condition on text</strong>—The text prompt guides what emerges from the noise</li>
+            <li><strong>Iterate many times</strong>—Each step makes the image slightly clearer</li>
+          </ol>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.75rem;">This is why image generation takes longer than text—it requires many forward passes through the network, not just one per token.</p>
+        </div>
+
+        <div class="concept-card">
+          <h4>Audio Processing</h4>
+          <p>Audio models like Whisper convert sound waves to spectrograms (visual representations of sound), then process them similarly to images. For speech generation, the process reverses—tokens become audio waveforms.</p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Real-time voice conversation (like GPT-5.2) requires extremely fast processing—the model must listen, think, and speak with minimal delay to feel natural.</p>
         </div>
       </div>
     </section>
@@ -9318,12 +9594,12 @@
     <!-- LIMITATIONS & HALLUCINATIONS TAB -->
     <section id="tab-limitations" class="tab-section">
       <div class="section-header">
-        <h2>09: Limitations</h2>
-        <p>Understanding why models confidently produce incorrect information — and how to mitigate it</p>
+        <h2>10: Limitations</h2>
+        <p>Understanding why models confidently produce incorrect information—and how to mitigate it</p>
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand limitations, you understand <em>that confidence ≠ correctness—AI is a pattern-matcher, not a fact-checker.</em></div>
+        <div class="intuition-main">If you understand the limitations of AI, you understand <em>that confidence ≠ correctness—AI is a pattern-matcher, not a fact-checker.</em></div>
         <div class="intuition-detail">AI generates plausible text, not verified truth. The model has no internal fact-checker, no "I don't know" signal, and no knowledge of anything after its training cutoff. Understanding this is how you avoid being fooled.</div>
       </div>
 
@@ -9333,7 +9609,7 @@
         <p>LLMs are trained to predict <strong>plausible</strong> next tokens, not <strong>true</strong> ones. There's no internal fact-checker, no "I don't know" signal, and no real-time knowledge access. The model generates what <em>sounds right</em> based on patterns.</p>
         
         <div class="key-insight-box">
-          <strong>Key Insight:</strong> When a model confidently states false information, it's not lying — it's pattern-matching to what typically follows similar prompts. Plausibility ≠ Truth.
+          <strong>Key Insight:</strong> When a model confidently states false information, it's not lying—it's pattern-matching to what typically follows similar prompts. Plausibility ≠ Truth.
         </div>
       </div>
 
@@ -9364,7 +9640,7 @@
           </div>
           <div class="reason-card">
             <strong>Pattern Completion</strong>
-            <p>If "Chapter X of Book Y" is the pattern, it completes it — even with fabricated details.</p>
+            <p>If "Chapter X of Book Y" is the pattern, it completes it—even with fabricated details.</p>
           </div>
           <div class="reason-card">
             <strong>Training Data Gaps</strong>
@@ -9380,7 +9656,7 @@
       <!-- Knowledge Cutoff -->
       <div class="cutoff-section">
         <h3>📅 Knowledge Cutoffs</h3>
-        <p>Models are frozen in time. Their knowledge ends at the training data cutoff date. This isn't a bug — it's how the architecture works.</p>
+        <p>Models are frozen in time. Their knowledge ends at the training data cutoff date. This isn't a bug—it's how the architecture works.</p>
         
         <div class="cutoff-timeline">
           <div class="timeline-segment">
@@ -9510,7 +9786,7 @@
             </div>
             
             <div class="thinking-result" id="thinking-insight">
-              <strong>Why the standard model fails:</strong> The intuitive answer ($0.10) "sounds right" and has high probability. Without explicit reasoning, the model follows the path of highest probability — which is the common wrong answer humans also give. The reasoning model's thinking tokens let it catch and correct this error.
+              <strong>Why the standard model fails:</strong> The intuitive answer ($0.10) "sounds right" and has high probability. Without explicit reasoning, the model follows the path of highest probability—which is the common wrong answer humans also give. The reasoning model's thinking tokens let it catch and correct this error.
             </div>
           </div>
         </div>
@@ -9553,7 +9829,7 @@
         </div>
         
         <div class="tools-insight">
-          <strong>Key insight:</strong> These tools don't change the model's architecture — they work <em>with</em> the context window by injecting verified information <em>before</em> the model generates its response. The model is still predicting tokens; it just has better context to work with.
+          <strong>Key insight:</strong> These tools don't change the model's architecture—they work <em>with</em> the context window by injecting verified information <em>before</em> the model generates its response. The model is still predicting tokens; it just has better context to work with.
         </div>
       </div>
 
@@ -9567,8 +9843,8 @@
               <span class="limitation-icon">🔢</span>
               <strong>Math & Counting</strong>
             </div>
-            <p>Tokenization splits numbers unpredictably. "123" might be one token or multiple. The model isn't "doing math" — it's predicting likely digits.</p>
-            <div class="limitation-example">Q: How many r's in "strawberry"?<br>A: 2 (Legacy models — wrong! The correct answer is 3: st<strong>r</strong>awbe<strong>rr</strong>y) <br><em>Note: Modern reasoning models like GPT-5.2 solve this via native reasoning.</em></div>
+            <p>Tokenization splits numbers unpredictably. "123" might be one token or multiple. The model isn't "doing math"—it's predicting likely digits.</p>
+            <div class="limitation-example">Q: How many r's in "strawberry"?<br>A: 2 (Legacy models—wrong! The correct answer is 3: st<strong>r</strong>awbe<strong>rr</strong>y) <br><em>Note: Modern reasoning models like GPT-5.2 solve this via native reasoning.</em></div>
           </div>
           <div class="limitation-card">
             <div class="limitation-header">
@@ -9582,7 +9858,7 @@
               <span class="limitation-icon">🧩</span>
               <strong>Novel Reasoning</strong>
             </div>
-            <p>Problems unlike anything in training data are hard. The model relies on pattern recognition — truly novel problems have no patterns to match.</p>
+            <p>Problems unlike anything in training data are hard. The model relies on pattern recognition—truly novel problems have no patterns to match.</p>
           </div>
           <div class="limitation-card">
             <div class="limitation-header">
@@ -9597,7 +9873,7 @@
               <strong>Prompt Injection</strong>
             </div>
             <p>User input can sometimes override system instructions. Malicious users may craft inputs that cause the model to ignore its guidelines or reveal system prompts.</p>
-            <div class="limitation-example"><em>This is a security concern for production applications — always validate and sanitize user inputs when building AI-powered systems.</em></div>
+            <div class="limitation-example"><em>This is a security concern for production applications—always validate and sanitize user inputs when building AI-powered systems.</em></div>
           </div>
         </div>
       </div>
@@ -9621,14 +9897,14 @@
         
         <div class="concept-card">
           <h4>The Calibration Problem</h4>
-          <p>Ideally, when a model says "I'm 80% confident," it should be correct 80% of the time. In practice, LLMs are often <strong>overconfident</strong> — they express high certainty even for things they're wrong about.</p>
+          <p>Ideally, when a model says "I'm 80% confident," it should be correct 80% of the time. In practice, LLMs are often <strong>overconfident</strong>—they express high certainty even for things they're wrong about.</p>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">This happens because training optimized for confident-sounding text, not calibrated probabilities. The model learned that authoritative-sounding responses get positive feedback.</p>
         </div>
 
         <div class="concept-card">
           <h4>Token Probability ≠ Factual Accuracy</h4>
           <p>A critical insight: the probability of a token being generated doesn't correlate with its factual accuracy. A token can have 99% probability and still be factually wrong.</p>
-          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">This happens because the model predicts what's <em>likely to come next</em> based on training patterns, not what's <em>true</em>. If the training data contained incorrect information, or if plausible-sounding false statements were common, the model will confidently reproduce those patterns. High probability means "fits the pattern well" — not "is correct."</p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">This happens because the model predicts what's <em>likely to come next</em> based on training patterns, not what's <em>true</em>. If the training data contained incorrect information, or if plausible-sounding false statements were common, the model will confidently reproduce those patterns. High probability means "fits the pattern well"—not "is correct."</p>
         </div>
 
         <div class="concept-card">
@@ -10548,7 +10824,11 @@ function setupTokenizer() {
   
   // BPE-style tokenizer
   function tokenize(text) {
+    // Returns array of {token, isContinuation} objects
     const tokens = [];
+    
+    // Helper to add a token
+    const addToken = (t, isCont = false) => tokens.push({token: t, isContinuation: isCont});
     
     // First split on whitespace and punctuation, keeping spaces as tokens
     const rawParts = text.match(/\s+|[^\s\w]|[\w]+/g) || [];
@@ -10563,7 +10843,7 @@ function setupTokenizer() {
       
       // Handle punctuation
       if (/^[^\s\w]$/.test(part)) {
-        tokens.push(part);
+        addToken(part, false);
         return;
       }
       
@@ -10573,7 +10853,7 @@ function setupTokenizer() {
       
       // Check if whole word is in vocab first
       if (bpeVocab[word] !== undefined) {
-        tokens.push(word);
+        addToken(word, false);
         return;
       }
       
@@ -10591,7 +10871,7 @@ function setupTokenizer() {
             return p;
           }).filter(p => p && p.length > 0);
           
-          parts.forEach(p => tokens.push(p));
+          parts.forEach((p, idx) => addToken(p, idx > 0)); // First part is not continuation
           matched = true;
           break;
         }
@@ -10673,9 +10953,9 @@ function setupTokenizer() {
         // Add all suffix parts
         foundParts.push(...suffixParts);
         
-        // Add all found parts to tokens
-        foundParts.forEach(p => {
-          if (p && p.length > 0) tokens.push(p);
+        // Add all found parts to tokens - first part is not continuation, rest are
+        foundParts.forEach((p, idx) => {
+          if (p && p.length > 0) addToken(p, idx > 0);
         });
       }
     });
@@ -10703,22 +10983,22 @@ function setupTokenizer() {
   
   function render() {
     const text = input.value;
-    const tokens = tokenize(text);
+    const tokenData = tokenize(text); // Now returns [{token, isContinuation}, ...]
     
     tokensDiv.innerHTML = '';
-    tokens.forEach((token, i) => {
+    tokenData.forEach((data, i) => {
       const chip = document.createElement('span');
       chip.className = 'token-chip';
-      // Show continuation tokens (not starting a word) differently
-      const isSubword = i > 0 && !/^[A-Z]/.test(token) && /^[a-z]/.test(token) && tokens[i-1] && /[a-zA-Z]$/.test(tokens[i-1]);
-      if (isSubword) {
+      // Show continuation tokens (parts of split words) differently
+      if (data.isContinuation) {
         chip.style.borderColor = THEME.rgba(THEME.colors.blue, 0.5);
         chip.style.background = THEME.rgba(THEME.colors.blue, 0.1);
       }
-      chip.innerHTML = `<span class="index">${i}</span><span class="text">${token}</span>`;
+      chip.innerHTML = `<span class="index">${i}</span><span class="text">${data.token}</span>`;
       tokensDiv.appendChild(chip);
     });
     
+    const tokens = tokenData.map(d => d.token);
     const ids = tokens.map(t => getTokenId(t));
     
     // Format output nicely
@@ -10726,11 +11006,16 @@ function setupTokenizer() {
     let tokensLine = 'tokens: [' + tokenStrs.join(', ') + ']';
     let idsLine = 'ids:    [' + ids.join(', ') + ']';
     
+    // Only show the blue token legend if there are continuation tokens
+    const hasContinuations = tokenData.some(d => d.isContinuation);
+    const legendHtml = hasContinuations ? 
+      `<div style="color: var(--color-blue); font-size: 0.9rem;">` +
+      `<span style="display: inline-block; width: 12px; height: 12px; background: var(--secondary-20); border: 1px solid var(--color-blue); border-radius: 4px; margin-right: 6px; vertical-align: middle;"></span>` +
+      `Blue tokens are subword pieces (parts of a split word)</div>` : '';
+    
     idsDiv.innerHTML = `<div style="margin-bottom: 0.75rem; color: var(--color-red);">${tokensLine}</div>` +
                        `<div style="margin-bottom: 1rem;">${idsLine}</div>` +
-                       `<div style="color: var(--color-blue); font-size: 0.9rem;">` +
-                       `<span style="display: inline-block; width: 12px; height: 12px; background: var(--secondary-20); border: 1px solid var(--border-secondary); border-radius: 4px; margin-right: 6px; vertical-align: middle;"></span>` +
-                       `Blue tokens are subword pieces (continuations)</div>`;
+                       legendHtml;
   }
   
   btn.addEventListener('click', render);
@@ -10754,18 +11039,24 @@ function setupEmbeddings() {
   let W = 0, H = 0;
   let initialized = false;
   
-  // 2D embeddings (toy example - adjusted for tall layout)
+  // 2D embeddings - realistic layout based on semantic similarity
+  // Left side = living things, Right side = non-living/artificial
   const embeddings = {
-    king:     { x: 0.85, y: 1.2, color: THEME.colors.yellow },
-    queen:    { x: 0.95, y: 1.0, color: THEME.colors.yellow },
-    man:      { x: 0.5,  y: 1.4, color: THEME.colors.blue },
-    woman:    { x: 0.6,  y: 1.2, color: THEME.colors.blue },
-    cat:      { x: 0.2,  y: 0.4, color: THEME.colors.green },
-    dog:      { x: 0.3,  y: 0.35, color: THEME.colors.green },
-    computer: { x: 0.8,  y: 0.3, color: THEME.colors.purple },
-    phone:    { x: 0.75, y: 0.2, color: THEME.colors.purple },
-    happy:    { x: 0.15, y: 1.1, color: THEME.colors.red },
-    sad:      { x: 0.1,  y: 1.3, color: THEME.colors.red }
+    // People cluster (upper-left) - humans
+    man:      { x: 0.20, y: 1.35, color: THEME.colors.blue },
+    woman:    { x: 0.30, y: 1.25, color: THEME.colors.blue },
+    // Royalty cluster (near people - they're humans too)
+    king:     { x: 0.45, y: 1.30, color: THEME.colors.yellow },
+    queen:    { x: 0.55, y: 1.20, color: THEME.colors.yellow },
+    // Emotions cluster (below people - human experiences)
+    happy:    { x: 0.25, y: 0.85, color: THEME.colors.red },
+    sad:      { x: 0.15, y: 0.70, color: THEME.colors.red },
+    // Animals cluster (lower-left, living things)
+    cat:      { x: 0.10, y: 0.30, color: THEME.colors.green },
+    dog:      { x: 0.25, y: 0.20, color: THEME.colors.green },
+    // Tech cluster (far right, non-living - away from all living things)
+    computer: { x: 0.90, y: 0.45, color: THEME.colors.purple },
+    phone:    { x: 0.85, y: 0.30, color: THEME.colors.purple }
   };
   
   let selectedWord = 'king';
@@ -10788,18 +11079,26 @@ function setupEmbeddings() {
   
   function toCanvas(x, y) {
     const padding = 60;
-    const scale = W - 2 * padding;
+    // Scale x and y independently to fill the canvas
+    const scaleX = W - 2 * padding;
+    const scaleY = H - 2 * padding;
+    // Normalize: x coords span 0-1, y coords span 0-1.5
     return {
-      cx: padding + x * scale,
-      cy: H - padding - y * scale
+      cx: padding + x * scaleX,
+      cy: H - padding - (y / 1.5) * scaleY
     };
   }
   
-  function cosine(a, b) {
-    const dot = a.x * b.x + a.y * b.y;
-    const magA = Math.sqrt(a.x * a.x + a.y * a.y);
-    const magB = Math.sqrt(b.x * b.x + b.y * b.y);
-    return dot / (magA * magB);
+  // Use distance-based similarity so visual proximity = similarity
+  // Convert Euclidean distance to a 0-1 similarity score
+  function similarity(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    // Max possible distance in our coordinate space is ~1.8
+    // Convert to similarity: closer = higher score
+    const maxDist = 1.8;
+    return Math.max(0, 1 - distance / maxDist);
   }
   
   function render() {
@@ -10845,7 +11144,7 @@ function setupEmbeddings() {
     Object.entries(embeddings).forEach(([word, emb]) => {
       if (word === selectedWord) return;
       const pos = toCanvas(emb.x, emb.y);
-      const sim = cosine(selEmb, emb);
+      const sim = similarity(selEmb, emb);
       
       ctx.beginPath();
       ctx.moveTo(selPos.cx, selPos.cy);
@@ -10892,7 +11191,7 @@ function setupEmbeddings() {
     
     // Update similarity table
     const similarities = Object.entries(embeddings)
-      .map(([word, emb]) => ({ word, sim: cosine(selEmb, emb) }))
+      .map(([word, emb]) => ({ word, sim: similarity(selEmb, emb) }))
       .sort((a, b) => b.sim - a.sim);
     
     table.innerHTML = `
@@ -10900,15 +11199,18 @@ function setupEmbeddings() {
         <th>Word</th>
         <th style="text-align: right">Similarity</th>
       </tr>
-      ${similarities.map(({ word, sim }) => `
-        <tr style="opacity: ${word === selectedWord ? 1 : 0.7 + sim * 0.3}">
+      ${similarities.map(({ word, sim }) => {
+        const absSim = Math.abs(sim);
+        const barColor = sim >= 0 ? embeddings[word].color : THEME.colors.gray;
+        return `
+        <tr style="opacity: ${word === selectedWord ? 1 : 0.5 + absSim * 0.5}">
           <td>${word}</td>
           <td>
-            <span class="sim-bar" style="width: ${sim * 100}px; background: ${embeddings[word].color}"></span>
-            ${sim.toFixed(3)}
+            <span class="sim-bar" style="width: ${absSim * 100}px; background: ${barColor}"></span>
+            <span style="color: ${sim < 0 ? THEME.colors.gray : 'inherit'}">${sim.toFixed(3)}</span>
           </td>
-        </tr>
-      `).join('')}
+        </tr>`;
+      }).join('')}
     `;
   }
   
@@ -11176,7 +11478,7 @@ function setupTraining() {
   let autoTraining = false;
   let autoInterval = null;
   
-  const lr = 0.05;
+  const lr = 0.015;  // Tuned for ~50 steps to converge
   
   const wDisplay = document.getElementById('train-w');
   const bDisplay = document.getElementById('train-b');
@@ -11365,7 +11667,7 @@ function setupTraining() {
     
     if (autoTraining) {
       autoInterval = setInterval(() => {
-        if (computeLoss() < 0.01) {
+        if (epoch >= 50) {
           autoTraining = false;
           autoBtn.classList.remove('active');
           autoBtn.textContent = 'Auto';
@@ -11373,7 +11675,7 @@ function setupTraining() {
           return;
         }
         step();
-      }, 100);
+      }, 150);
     } else {
       clearInterval(autoInterval);
     }
@@ -11823,7 +12125,7 @@ function setupContextVisualizer() {
       const indicator = document.createElement('div');
       indicator.className = 'truncation-indicator';
       indicator.style.cssText = 'text-align: center; padding: 0.5rem; color: var(--negative); font-size: 0.75rem; border-top: 2px dashed var(--negative); order: -1; margin-bottom: 0.5rem;';
-      indicator.innerHTML = '⚠️ Context window overflow — early messages truncated';
+      indicator.innerHTML = '⚠️ Context window overflow—early messages truncated';
       contextWindow.prepend(indicator);
     }
     
@@ -11870,7 +12172,7 @@ function setupPromptComparison() {
       strong: "This Python function should return the sum of even numbers, but it returns 0 for input [1,2,3,4]. I think the bug is in the condition. Here's the code: [code]. What's wrong and how do I fix it?",
       weakResult: "Can't help without seeing the code or error",
       strongResult: "Identifies bug and explains the fix",
-      insight: "<strong>Why it's better:</strong> Debugging requires context: the code itself, expected behavior, actual behavior, and your hypothesis. The weak prompt gives the model nothing to work with — no code, no error message, no context."
+      insight: "<strong>Why it's better:</strong> Debugging requires context: the code itself, expected behavior, actual behavior, and your hypothesis. The weak prompt gives the model nothing to work with—no code, no error message, no context."
     }
   ];
 
@@ -11916,12 +12218,12 @@ function setupThinkingDemo() {
       standardAnswer: "The ball costs <span class=\"answer-incorrect\">$0.10</span>",
       thinking: "Let me work through this carefully...\n\nLet ball = x\nThen bat = x + $1.00 (bat costs $1 more than ball)\n\nTotal: x + (x + $1.00) = $1.10\n2x + $1.00 = $1.10\n2x = $0.10\nx = $0.05\n\nLet me verify: ball=$0.05, bat=$1.05\nDifference: $1.05 - $0.05 = $1.00 ✓\nTotal: $0.05 + $1.05 = $1.10 ✓",
       reasoningAnswer: "The ball costs <span class=\"answer-correct\">$0.05</span>",
-      insight: "<strong>Why the standard model fails:</strong> The intuitive answer ($0.10) \"sounds right\" and has high probability. Without explicit reasoning, the model follows the path of highest probability — which is the common wrong answer humans also give. The reasoning model's thinking tokens let it catch and correct this error."
+      insight: "<strong>Why the standard model fails:</strong> The intuitive answer ($0.10) \"sounds right\" and has high probability. Without explicit reasoning, the model follows the path of highest probability—which is the common wrong answer humans also give. The reasoning model's thinking tokens let it catch and correct this error."
     },
     {
       problem: "In a lake, there's a patch of lily pads. Every day, the patch doubles in size. If it takes 48 days for the patch to cover the entire lake, how many days would it take to cover half the lake?",
       standardAnswer: "It would take <span class=\"answer-incorrect\">24 days</span> to cover half the lake",
-      thinking: "Let me think about this...\n\nKey insight: the patch DOUBLES each day.\n\nIf the patch covers the whole lake on day 48...\nAnd it doubles each day...\nThen on day 47, it was HALF the size it is on day 48.\n\nSo on day 47, it covered half the lake.\n\nThe answer isn't 48/2 = 24 — that assumes linear growth.\nWith doubling, half coverage is just one day before full coverage.",
+      thinking: "Let me think about this...\n\nKey insight: the patch DOUBLES each day.\n\nIf the patch covers the whole lake on day 48...\nAnd it doubles each day...\nThen on day 47, it was HALF the size it is on day 48.\n\nSo on day 47, it covered half the lake.\n\nThe answer isn't 48/2 = 24—that assumes linear growth.\nWith doubling, half coverage is just one day before full coverage.",
       reasoningAnswer: "It would take <span class=\"answer-correct\">47 days</span> to cover half the lake",
       insight: "<strong>Why this is tricky:</strong> Our intuition says \"half = half the time\" (24 days). But exponential growth doesn't work linearly. The reasoning model catches this by explicitly working through the doubling logic, while the standard model follows the intuitive but wrong pattern."
     },

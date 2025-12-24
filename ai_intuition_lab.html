@@ -7495,7 +7495,7 @@
                     <span class="slider-value" id="nn-x2-val">0.20</span>
                   </div>
                   <div class="slider-row">
-                    <label>gender</label>
+                    <label>maleness</label>
                     <input type="range" id="nn-x3" min="-1" max="1" step="0.05" value="0.6">
                     <span class="slider-value" id="nn-x3-val">0.60</span>
                   </div>
@@ -7529,7 +7529,7 @@
               </div>
 
               <div class="nn-try-this" style="margin-top: 1.5rem; background: rgba(0,212,170,0.05); border-left: 3px solid var(--accent-primary); padding: 0.75rem; font-size: 0.75rem; color: var(--text-secondary);">
-                <strong>Try this:</strong> High royalty + positive gender → "king". Crank up military → "general" takes over.
+                <strong>Try this:</strong> High royalty + positive maleness → "king". Crank up military → "general" takes over.
               </div>
             </div>
           </div>
@@ -7633,7 +7633,7 @@
               <span class="analogy-icon">👑</span>
               <div>
                 <strong>A "royalty + masculine" detector</strong>
-                <p>Activates when royalty is high AND gender is masculine → boosts "king"</p>
+                <p>Activates when royalty is high AND maleness is high → boosts "king"</p>
               </div>
             </div>
             <div class="analogy-item">
@@ -7647,7 +7647,7 @@
               <span class="analogy-icon">👸</span>
               <div>
                 <strong>A "royalty + feminine" detector</strong>
-                <p>Activates when royalty is high AND gender is feminine → boosts "queen"</p>
+                <p>Activates when royalty is high AND maleness is low → boosts "queen"</p>
               </div>
             </div>
           </div>
@@ -7693,12 +7693,12 @@
           <h4>Try This Experiment in the Neural Network Workbench</h4>
           <div class="experiment-box">
             <p><strong>Challenge 1:</strong> Make "king" the top prediction</p>
-            <p><strong>Hint:</strong> Royalty high + gender positive (masculine)</p>
+            <p><strong>Hint:</strong> Royalty high + maleness high</p>
             <p><strong>Challenge 2:</strong> Now make "queen" win instead</p>
-            <p><strong>Hint:</strong> Keep royalty high but flip gender negative (feminine)</p>
+            <p><strong>Hint:</strong> Keep royalty high but set maleness low</p>
             <p><strong>Challenge 3:</strong> Make "general" dominate</p>
-            <p><strong>Hint:</strong> Crank up military—it overrides royalty and gender</p>
-            <p><strong>What you're learning:</strong> The network combines multiple input signals to make predictions. It's not just "royalty = king"—it's "royalty + masculine = king", "royalty + feminine = queen", and "military = general" regardless of other signals.</p>
+            <p><strong>Hint:</strong> Crank up military—it overrides royalty and maleness</p>
+            <p><strong>What you're learning:</strong> The network combines multiple input signals to make predictions. It's not just "royalty = king"—it's "royalty + high maleness = king", "royalty + low maleness = queen", and "military = general" regardless of other signals.</p>
           </div>
         </div>
 
@@ -10499,7 +10499,7 @@ function setupNeuralNetwork() {
   // These weights make the network respond sensibly to the semantic inputs
   const weights = {
     // Input (4) -> Hidden (4) weights
-    // Inputs: royalty, military, gender, formality
+    // Inputs: royalty, military, maleness, formality
     ih: [
       [1.5, 0.2, 1.3, 0.4],   // h0: royalty + masculine detector → king
       [0.3, 1.6, 0.2, -0.3],  // h1: military detector → general

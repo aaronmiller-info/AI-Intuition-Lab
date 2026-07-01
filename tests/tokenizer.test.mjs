@@ -18,4 +18,7 @@ for (const w of ['unhappiness', 'misunderstanding', 'disagreement', 'unfortunate
 assertEq(roundtrip('Artificial intelligence is transforming thinking.'),
          'Artificial intelligence is transforming thinking.', 'lossless sentence with spaces');
 assertTrue(bpeTokenize('unhappiness').length >= 2, 'unhappiness splits into pieces');
+assertEq(roundtrip('  leading and   multiple   spaces  '), '  leading and   multiple   spaces  ', 'lossless: multi-space runs');
+assertEq(roundtrip('tabs\tbetween\twords'), 'tabs\tbetween\twords', 'lossless: tabs');
+assertEq(roundtrip('line\nbreaks\nsurvive'), 'line\nbreaks\nsurvive', 'lossless: newlines');
 done();

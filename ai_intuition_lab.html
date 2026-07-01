@@ -6914,7 +6914,7 @@
         <h4>Why subword tokenization matters</h4>
         <p>Real models use large vocabularies — around <span data-fact="vocab.size"></span> tokens for current frontier models. Words are broken into meaningful pieces: this demo's tokenizer splits "unhappiness" into "un" + "h" + "appiness". Reusing a piece like "un" across thousands of words means the model doesn't need to learn every whole word from scratch. Try typing "unhappy", "happiness", and "unhappiness" below and compare their splits—notice the pieces don't always land where a human would put them, because BPE merges are chosen by statistics, not grammar.</p>
         <div class="note-box mt-1 p-075 p-1 text-sm" style="background: var(--bg-elevated); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cool);">
-          <strong>📝 Note:</strong> This is a simplified tokenizer for educational purposes. Real tokenizers use larger vocabularies (~100k tokens) and make different splitting decisions. 
+          <strong>📝 Note:</strong> This is a simplified tokenizer for educational purposes. Real tokenizers use much larger vocabularies (around <span data-fact="vocab.size"></span> tokens) trained on vastly more text, and make different splitting decisions.
           <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" rel="noopener" class="text-primary" style="text-decoration: underline;">Try a real tokenizer →</a>
         </div>
       </div>
@@ -11582,12 +11582,19 @@ function setupTokenizer() {
     }
     return symbols;
   }
-  // Returns [{token, isContinuation}] — lossless (join + Ġ→space rebuilds input).
+  // Returns [{token, isContinuation}] — lossless: join + Ġ→space rebuilds the
+  // input, including whitespace runs.
   function bpeTokenize(text) {
     const pieces = text.match(_bpePretok) || [];
     const out = [];
     for (const piece of pieces) {
-      if (/^\s+$/.test(piece)) continue;      // standalone spaces fold into next word
+      if (/^\s+$/.test(piece)) {
+        // Whitespace runs survive as explicit tokens: spaces as Ġ (merged by BPE
+        // where merges exist), tabs/newlines as their own single-char tokens.
+        const wsMarked = piece.replace(/ /g, 'Ġ');
+        _bpeMergeWord(wsMarked).forEach(t => out.push({ token: t, isContinuation: false }));
+        continue;
+      }
       const marked = piece.replace(/ /g, 'Ġ');
       _bpeMergeWord(marked).forEach((t, i) => out.push({ token: t, isContinuation: i > 0 }));
     }
@@ -11614,7 +11621,7 @@ function setupTokenizer() {
         chip.style.borderColor = THEME.rgba(THEME.colors.blue, 0.5);
         chip.style.background = THEME.rgba(THEME.colors.blue, 0.1);
       }
-      const displayToken = data.token.replace(/Ġ/g, '␣');
+      const displayToken = data.token.replace(/Ġ/g, '␣').replace(/\t/g, '⇥').replace(/\n/g, '⏎');
       chip.innerHTML = `<span class="index">${i}</span><span class="text">${displayToken}</span>`;
       tokensDiv.appendChild(chip);
     });
@@ -11623,7 +11630,7 @@ function setupTokenizer() {
     const ids = tokens.map(t => bpeTokenId(t));
 
     // Format output nicely
-    const tokenStrs = tokens.map(t => `"${t.replace(/Ġ/g, '␣')}"`);
+    const tokenStrs = tokens.map(t => `"${t.replace(/Ġ/g, '␣').replace(/\t/g, '⇥').replace(/\n/g, '⏎')}"`);
     let tokensLine = 'tokens: [' + tokenStrs.join(', ') + ']';
     let idsLine = 'ids:    [' + ids.join(', ') + ']';
 

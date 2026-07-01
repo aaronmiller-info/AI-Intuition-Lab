@@ -101,7 +101,7 @@ A built-in sample image sliced into patches on canvas; hovering a patch shows "p
 1. **Punchline:** thinking is just more autoregression — tokens addressed to itself before tokens addressed to you (callback to the story game).
 2. **Why it works:** thinking tokens enter context; more tokens = more forward passes = more compute per problem; written-out steps expose errors; chain-of-thought as working memory. (Relocated from Limitations.)
 3. **How reasoning models are trained:** RL on *verifiable* problems (math/code, auto-checkable answers). Explicit contrast with Fine-Tuning: RLHF = human preferences; reasoning-RL = right answers.
-4. **2026 reality:** thinking is a dial, not a model family — hybrid models decide when to think; users set budgets/effort. Practical guidance on when deep thinking is worth cost/latency.
+4. **2026 reality:** thinking is a dial, not a model family — hybrid models decide when to think; users set budgets/effort (verified provider terminology in Appendix A.5). Practical guidance on when deep thinking is worth cost/latency.
 5. **Interactive:** thinking-budget demo (§4.8).
 6. **Bridge to Limitations:** what thinking doesn't fix.
 
@@ -112,7 +112,7 @@ Prompting's chain-of-thought section handoff becomes literal ("covered in the ne
 1. **Intuition:** a model that can only talk becomes a system that can act — without ever leaving the token loop.
 2. **Tool calling mechanics:** model emits a formatted token sequence; *surrounding software* executes; result pasted back into context as more tokens. Tools = context engineering the model requests for itself.
 3. **The agent loop:** goal → think → act → observe → repeat; the autoregressive loop one level up.
-4. **Agents in the wild (mid-2026):** coding agents, deep research, computer use; MCP as the "USB-C port" for tools.
+4. **Agents in the wild (mid-2026):** coding agents, deep research, computer use; MCP as the "USB-C port" for tools (verified examples and citations in Appendix A.8).
 5. **Raised stakes:** error compounding across steps; prompt injection graduates to real-world risk (absorbs/expands the Limitations card).
 6. **Interactive:** step-through agent trace (§4.9).
 
@@ -127,14 +127,7 @@ The dangling "(We'll explore building RAG systems in depth later.)" in Limitatio
 - DPO card: "Llama 2+" → "many open models (e.g., Llama 3-era, Zephyr)"; Llama 2 used RLHF/PPO.
 - Knowledge-cutoff timeline hardcoded "~May 2025" cutoff and related copy join the model-facts registry; "Today" marker already dynamic.
 
-**Mid-2026 refresh (via registry §3.1, facts verified by web search at implementation time):**
-- Inference: context-window chart (currently GPT-5.2 400K / Claude Sonnet 4.5 200K / Gemini 3 Flash 1M / Grok 4.1 2M — mixed vintages).
-- Neural Networks: parameter-scale chart (currently all-Llama-3 examples).
-- Fine-Tuning: provider/version examples (GPT-3.5/4o references).
-- Prompting: token pricing table, example system prompt (currently dated Dec 2025).
-- Images & Sound: model matrix ("NanoBanana & GPT Image-Gen 1.5", Sora/Runway, voice examples).
-- Limitations: "standard vs reasoning" model examples (o1/o3-pro, Claude 3.5 Sonnet) — superseded by Reasoning tab's "dial" framing; Limitations keeps only a short pointer.
-- Welcome: no dated facts; verify.
+**Mid-2026 refresh (via registry §3.1):** all dated values now come from **Appendix A**, a web-verified facts baseline researched and adversarially checked on 2026-07-01 (16-agent research workflow; every numeric fact cross-checked against official sources). Sections affected: Inference context-window chart, Neural Networks parameter-scale chart, Fine-Tuning provider/version examples, Prompting pricing table + system-prompt example, Images & Sound model matrix, Limitations model examples, cutoff timeline.
 
 ## 8. Welcome tab orientation
 
@@ -154,3 +147,107 @@ One added card: recommended order (top-to-bottom), rough time expectation per to
 - Canvas-in-collapsed-`details` requires init-on-expand hooks (§3.4); reuse the existing `tabRenders` re-render pattern.
 - Reuse existing THEME/JS conventions; new interactives follow the established `setupX()` + `tabRenders` registration pattern.
 - Verification: run the app in a browser (preview tools), execute every suggested experiment in every tab, and confirm each demo exhibits the behavior its prose claims — the class-A bugs above are the regression tests.
+
+---
+
+## Appendix A — Verified mid-2026 facts baseline (researched 2026-07-01)
+
+Source of truth for the `MODEL_FACTS` registry (§3.1). Every value below was web-researched and adversarially verified against official sources on 2026-07-01. Registry `as_of` stamp: **July 2026**.
+
+### A.1 Flagship lineups (July 2026)
+
+| Provider | Current models | Notes |
+|---|---|---|
+| OpenAI | **GPT-5.5** (flagship, API Apr 23 2026), GPT-5.5 Pro; ChatGPT default incl. free tier = GPT-5.5 Instant (since May 5 2026) | GPT-5.2 retired from ChatGPT Jun 12 2026; GPT-5.6 in limited preview — do NOT feature |
+| Anthropic | **Claude Fable 5** (GA Jun 9 2026), Opus 4.8, Sonnet 5, Haiku 4.5 | Mythos 5 restricted-access; Claude 3.5 Sonnet retired Oct 28 2025 |
+| Google | **Gemini 3.5 Flash** (GA), Gemini 3.1 Pro (preview) | Gemini 3.5 Pro announced, not GA — do NOT feature; "Gemini 3 Flash" superseded |
+| xAI | **Grok 4.3** (~Apr 2026) | Grok 4.1 no longer current; Grok 5 unreleased (param rumors — do NOT print) |
+
+### A.2 Context windows (Inference chart replacement)
+
+| Model | Context | Max output |
+|---|---|---|
+| GPT-5.5 | 1,050,000 | 128K |
+| Claude Fable 5 / Opus 4.8 / Sonnet 5 | 1,000,000 | 128K |
+| Gemini 3.5 Flash | 1,048,576 | 65,536 |
+| Grok 4.3 | 1,000,000 | — |
+| Claude Haiku 4.5 (budget-tier contrast) | 200,000 | 64K |
+
+General statement for prose: "frontier models run 200K–1M+ token windows; 1M is now the standard flagship ceiling." (Replaces the current chart's mixed-vintage GPT-5.2 400K / "Sonnet 4.5 200K" [wrong even for its era — Sonnet 4.5 was 1M] / Gemini 3 Flash 1M / "Grok 4.1 2M" [only 4.1 *Fast* was 2M; standard 4.1 was 256K].)
+
+### A.3 API pricing (Prompting tab economics)
+
+| Model | Input /MTok | Output /MTok | Ratio |
+|---|---|---|---|
+| GPT-5.5 | $5.00 | $30.00 | 6× |
+| GPT-5.4-nano (cheap contrast) | $0.20 | $1.25 | ~6× |
+| Claude Opus 4.8 | $5.00 | $25.00 | 5× |
+| Claude Fable 5 | $10.00 | $50.00 | 5× |
+| Gemini 3.5 Flash | $1.50 | $9.00 | 6× |
+
+Teaching point update: output tokens cost **5–6×** input across providers (the current "8x more!" was GPT-5.2-specific). Claude Sonnet 5 has intro pricing ($2/$10) until 2026-08-31 then $3/$15 — avoid printing it; use Opus 4.8 as the Claude example.
+
+### A.4 Knowledge cutoffs (Limitations timeline)
+
+GPT-5.5: **Dec 1, 2025** · Claude Fable 5 / Opus 4.8 / Sonnet 5: **Jan 2026** · Gemini 3.x: **Jan 2025** · (GPT-5.2 was Aug 31, 2025 — the lab's current "~May 2025" example matches nothing; timeline should use a "late 2025 / early 2026" cutoff against a dynamic "today").
+
+### A.5 Thinking controls (Reasoning tab §5)
+
+| Provider | Mechanism | Levels |
+|---|---|---|
+| OpenAI | `reasoning.effort` | none / low / medium (default) / high / xhigh |
+| Anthropic | adaptive thinking + `effort` (manual "extended thinking" budget_tokens REMOVED on current models; always-on for Fable 5) | low / medium / high / xhigh / max |
+| Google | `thinking_level` (+ Deep Think as separate high-compute mode) | minimal / low / medium / high |
+
+- o1 / o3-pro: legacy (o3/o3-pro API shutdown announced for Dec 11 2026) — use only as historical examples.
+- RLVR citable source: DeepSeek-R1 paper, arXiv:2501.12948 (best open technical primary source; OpenAI hasn't published equivalent detail).
+- Cost guidance (official): low effort for simple/fast/cheap; high/max for complex reasoning, coding, agentic work.
+
+### A.6 Parameter-scale chart (Neural Networks tab)
+
+| Model | Total params | Active/token | Type |
+|---|---|---|---|
+| Llama 4 Scout | 109B | 17B | MoE (16 experts) |
+| Llama 4 Maverick | ~400B | 17B | MoE (128 experts) |
+| Llama 3.1 405B | 405B | 405B | dense (largest confirmed open dense) |
+| DeepSeek V4-Pro | 1.6T | 49B | MoE |
+
+Existing disclaimer ("closed frontier sizes undisclosed; MoE exceeds 1T total") verified still accurate — keep. MoE section gets a real shipped example (DeepSeek V4-Pro: 1.6T total, 49B active). Training-scale example (Pre-Training tab): Llama 3.1 405B — 15T+ tokens, 16,000+ H100s, 39.3M GPU-hours (official Meta); cost ~$170M (third-party estimate — keep the lab's "$100M+" as a safe floor or cite "est. ~$170M (Stanford AI Index)").
+
+### A.7 Media generation (Images & Sound tab)
+
+- **Image:** Nano Banana 2 / Nano Banana Pro (Google — "Nano Banana", two words; current fix for "NanoBanana"); **GPT Image 2** (OpenAI, Apr 21 2026 — fixes fictional "GPT Image-Gen 1.5"); Midjourney V8.1; FLUX.2.
+- **Video:** **Sora is DISCONTINUED** (app shut down Apr 26 2026; API ends Sep 24 2026) — remove as a live example. Current: **Veo 3.1** (native audio, 4K), **Runway Gen-4.5** (~10s clips), **Kling 3.0** (native 4K/60fps, 15s, built-in audio). Sora's shutdown is optionally a good "this field moves fast" teaching beat.
+- **Voice:** ChatGPT voice (GPT-Realtime-2, May 8 2026), Gemini Live (Gemini 3.1 Flash Live, ~97 languages), ElevenLabs Eleven v3 (GA Feb 2026).
+- **STT:** Whisper still acceptable as the teaching example (most-deployed open ASR) with a note that gpt-4o-transcribe-class models now beat it on accuracy.
+- **Realism Warning upgrades:** SynthID now default across Google gen-media and adopted cross-vendor (OpenAI, ElevenLabs); C2PA Content Credentials widespread; EU AI Act Article 50 labeling in force — add watermarking/provenance to the "how to stay skeptical" list.
+
+### A.8 Agents & Tools tab facts (§6)
+
+- **MCP:** governance donated to Linux Foundation's Agentic AI Foundation (Dec 2025); adopted by Anthropic, OpenAI, Google, Microsoft. "USB-C for AI" is common industry shorthand (not official Anthropic phrasing) — fine to use with that framing.
+- **Coding agents (name 3–4):** Claude Code, OpenAI Codex, Cursor, Antigravity CLI. Do NOT cite "Gemini CLI" (deprecated for individuals Jun 18 2026).
+- **Deep research:** ChatGPT Deep Research (runs on GPT-5.5 since Jun 2026), Gemini Deep Research, Claude's research capability.
+- **Computer use:** ChatGPT Agent (successor to Operator, retired Aug 2025); Anthropic computer use (beta).
+- **Tool calling:** still JSON-schema function calls; MCP layered on top as the interop standard.
+- **Prompt injection citations:** OWASP LLM01:2025 (still #1); EchoLeak, CVE-2025-32711 (first real-world zero-click prompt injection, Jun 2025) — strongest citable incident.
+
+### A.9 Cross-cutting technical stats
+
+- **Tokenizer vocab (Tokenization tab):** current "~100k" claim outdated → "~200K for most current frontier models" (OpenAI o200k ≈200K; Llama 4 = 202,048; Gemini ≈256K; Anthropic unpublished). Size the new tiny-BPE demo note accordingly.
+- **Inference speed:** flagships ≈50–180 tok/s (Artificial Analysis); update "20–100 times per second" → "roughly 50–200 tokens per second, with specialized fast-inference hosts far higher."
+- **Embedding dims:** "4K–16K+" verified still accurate (Llama 3.1 405B = 16,384; DeepSeek V3 = 7,168; note Llama 4 Maverick = 5,120).
+- **Layers:** current "40–120" → "roughly 30 to ~126" (gpt-oss-120b = 36; Llama 4 Maverick = 48; DeepSeek V3 = 61; Llama 3.1 405B = 126 per Meta paper).
+- **Token rule of thumb:** "1 token ≈ 4 chars ≈ ¾ word" verified still accurate for English — keep, optionally noting it breaks down for code/non-English.
+- **"Dozens of attention heads per layer":** verified still fair (open-model range 32–128) — keep.
+- **Context visualizer (§4.5):** use 1M as the referenced real-world scale.
+
+### A.10 Do NOT print (low-confidence / rumor as of 2026-07-01)
+
+Gemini 3.5 Pro specs (2M context — unconfirmed, not GA) · Grok 5 parameter counts (rumor) · Kimi K2.5 figures (single source) · Mistral Large 3 / Qwen3.x exact figures (medium confidence, not directly fetched) · Claude Code 2026 feature list specifics (press-sourced) · agent benchmark percentages (aggregator-sourced) · GPT-5.6 anything (limited preview).
+
+### A.11 Fine-Tuning tab example updates
+
+- Version-difference example: "GPT-3.5 vs GPT-4o vs GPT-5" → "GPT-5.2 vs GPT-5.5" or "Claude Sonnet 4.5 vs Sonnet 5" (recent, real, same pedagogical point).
+- DPO card: cite Llama 3/3.1 (official: SFT + rejection sampling + PPO + DPO) and Qwen2/2.5 (official tech reports) — fixes the "Llama 2+" error with sourced examples.
+- Provider-personality list (Claude, ChatGPT, Gemini, Grok): still accurate; no change.
+- Reasoning-model framing in Limitations ("Standard vs Reasoning") confirmed obsolete on every axis — reinforces §5's "thinking is a dial" design.

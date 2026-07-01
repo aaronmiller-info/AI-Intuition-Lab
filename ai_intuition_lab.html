@@ -3067,6 +3067,19 @@
     details.deep-dive[open] > summary.deep-dive-summary::after { content: '▾ collapse'; }
     details.deep-dive > .deep-dive-body { padding-top: 1rem; }
 
+    /* Tab Flow: Recap + Next-Topic Footer */
+    .tab-footer { margin-top: 3rem; }
+    .recap-card { background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; }
+    .recap-card ul { margin: 0.5rem 0 0 1.25rem; }
+    .recap-card li { margin-bottom: 0.35rem; }
+    .next-topic-btn { display: block; margin: 1.25rem 0 0 auto; padding: 0.9rem 1.5rem;
+      background: var(--accent-primary); color: var(--bg-deep); border: none; font-weight: 700;
+      font-size: 1rem; border-radius: var(--radius-sm); cursor: pointer; }
+    .next-topic-btn:hover { filter: brightness(1.1); }
+    .completion-card { background: var(--positive-10, var(--bg-elevated)); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
+
     .concept-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
@@ -10385,6 +10398,78 @@ function populateFacts() {
   });
 }
 
+// ============ TAB FLOW: RECAP + NEXT-TOPIC FOOTERS ============
+// @tab-flow-start
+const TAB_FLOW = [
+  { tab: 'tokens', title: '01: Tokenization', recap: [
+    'LLMs process tokens — subword chunks mapped to ID numbers — not raw text.',
+    'BPE builds the vocabulary by repeatedly merging the most frequent pairs.',
+    'Everything is billed and measured in tokens (≈ ¾ of an English word each).' ]},
+  { tab: 'embed', title: '02: Embedding Space', recap: [
+    'Each token ID becomes a vector — thousands of numbers acting as coordinates.',
+    'Similar meanings sit at nearby coordinates; distance is learned, not programmed.',
+    'Cosine similarity measures the angle between two word-vectors.' ]},
+  { tab: 'inference', title: '03: Inference', recap: [
+    'Models generate one token at a time, re-reading everything so far at every step.',
+    'The output is a probability distribution; temperature controls how it is sampled.',
+    'Each chosen token changes all the probabilities that follow it.' ]},
+  { tab: 'nn', title: '04: Neural Networks', recap: [
+    'A neuron just multiplies inputs by weights, sums, and squashes.',
+    'Hidden layers act as learned pattern detectors — nobody programs them.',
+    'The logic lives distributed across billions of weights: the black box.' ]},
+  { tab: 'attention', title: '05: Attention', recap: [
+    'Attention lets every token look directly at every other token.',
+    'Query, Key, Value: who is asking, who matches, what they contribute.',
+    'A transformer is just attention + feed-forward layers, stacked.' ]},
+  { tab: 'training', title: '06: Pre-Training', recap: [
+    'Every weight starts random; prediction + correction makes them meaningful.',
+    'Loss measures how wrong the prediction was; backprop assigns the blame.',
+    'Grammar, facts, and reasoning all emerge from next-token prediction at scale.' ]},
+  { tab: 'finetuning', title: '07: Fine-Tuning', recap: [
+    'Pre-training gives knowledge; fine-tuning gives behavior.',
+    'RLHF turns human preference ratings into a training signal.',
+    'Different fine-tuning is why models have different personalities.' ]},
+  { tab: 'prompting', title: '08: Prompting', recap: [
+    'A prompt is context for prediction — every word shifts the probabilities.',
+    'Everything competes for finite context-window space.',
+    'Specific prompts activate the right learned patterns.' ]},
+  { tab: 'multimodal', title: '11: Images & Sound', recap: [
+    'Images and audio become embeddings, just like text tokens.',
+    'The pattern is always: divide → embed → attend.',
+    'Generated media is now realistic enough that provenance matters.' ]},
+  { tab: 'limitations', title: '12: Limitations', recap: [
+    'Models predict plausible text, not verified truth.',
+    'Confidence and correctness are not correlated.',
+    'Grounding (search, RAG, code, citations) is the reliability fix.' ]},
+];
+// @tab-flow-end
+
+function setupTabFooters() {
+  TAB_FLOW.forEach((entry, i) => {
+    const section = document.getElementById(`tab-${entry.tab}`);
+    if (!section) return;
+    const next = TAB_FLOW[i + 1];
+    const footer = document.createElement('div');
+    footer.className = 'tab-footer';
+    footer.innerHTML = `
+      <div class="recap-card">
+        <h4>✅ You now know</h4>
+        <ul>${entry.recap.map(r => `<li>${r}</li>`).join('')}</ul>
+      </div>
+      ${next
+        ? `<button class="next-topic-btn" data-next="${next.tab}">Next: ${next.title} →</button>`
+        : `<div class="completion-card"><h4>🎓 You made it!</h4><p>You've walked the entire pipeline — from tokens to the limits of what these systems can do. You now understand LLMs better than the vast majority of the people using them. Go use that intuition.</p></div>`}
+    `;
+    section.appendChild(footer);
+  });
+  document.querySelectorAll('.next-topic-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(`.tab-btn[data-tab="${btn.dataset.next}"]`);
+      if (target) target.click();
+    });
+  });
+}
+
 // ============ UTILITIES ============
 function clamp(val, min, max) {
   return Math.min(max, Math.max(min, val));
@@ -12827,6 +12912,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(forceScrollTop, 50);
 
   populateFacts();
+  setupTabFooters();
   setupTabs();
   setupInference();
   setupNeuralNetwork();

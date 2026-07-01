@@ -3080,6 +3080,22 @@
     .completion-card { background: var(--positive-10, var(--bg-elevated)); border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
 
+    /* Quizzes: Check Your Intuition */
+    .quiz-block { margin-top: 3rem; background: var(--bg-panel); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 1.5rem; }
+    .quiz-title { margin-bottom: 1rem; }
+    .quiz-q { margin-bottom: 1.5rem; }
+    .quiz-question { font-weight: 600; margin-bottom: 0.6rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .quiz-opt { text-align: left; padding: 0.7rem 1rem; background: var(--bg-card);
+      border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.9rem; }
+    .quiz-opt:hover { border-color: var(--accent-primary); }
+    .quiz-opt.right { border-color: var(--positive); background: var(--positive-10, var(--bg-elevated)); }
+    .quiz-opt.wrong { border-color: var(--negative); }
+    .quiz-feedback { margin-top: 0.6rem; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; }
+    .quiz-feedback.good { background: var(--positive-10, var(--bg-elevated)); }
+    .quiz-feedback.retry { background: var(--bg-elevated); }
+
     .concept-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
@@ -10470,6 +10486,145 @@ function setupTabFooters() {
   });
 }
 
+// ============ QUIZZES: CHECK YOUR INTUITION ============
+// @quiz-data-start
+const QUIZ_DATA = {
+  tokens: [
+    { q: 'Why do models use subword tokens instead of whole words?', options: [
+      { text: 'Whole words would make the vocabulary too small', feedback: 'Other way around — a whole-word vocabulary would be enormous and still miss new words, typos, and rare words.' },
+      { text: 'Subwords balance efficiency with the ability to handle any text', correct: true, feedback: 'Right. Common words stay whole; rare words split into reusable pieces, so nothing is ever truly "unknown."' },
+      { text: 'Computers can only process short strings', feedback: 'Length isn\'t the issue — computers handle long strings fine. The issue is having a fixed, finite vocabulary that still covers all possible text.' }]},
+    { q: 'Roughly how many tokens is a 100-word English paragraph?', options: [
+      { text: 'About 35', feedback: 'Too low — that would be ~3 words per token. The rule of thumb runs the other way.' },
+      { text: 'About 133', correct: true, feedback: 'Yes — 1 token ≈ ¾ of a word, so ~100 words ≈ ~133 tokens. This is why long prompts cost real money.' },
+      { text: 'Exactly 100 — one per word', feedback: 'Close but no: common words are often one token, but many words split, and punctuation costs tokens too.' }]},
+  ],
+  embed: [
+    { q: 'In embedding space, what does it mean when two words are close together?', options: [
+      { text: 'They are spelled similarly', feedback: 'Spelling is irrelevant — "dog" and "hound" are far apart in letters but close in embedding space.' },
+      { text: 'The model learned they appear in similar contexts, so they mean similar things', correct: true, feedback: 'Exactly. Proximity is learned from co-occurrence across billions of sentences — meaning as location.' },
+      { text: 'They have consecutive token IDs', feedback: 'Token IDs are just dictionary positions — ID 5000 and 5001 can be totally unrelated words.' }]},
+    { q: 'Cosine similarity between two word-vectors measures…', options: [
+      { text: 'The angle between them', correct: true, feedback: 'Right — pointing the same direction = similar meaning, regardless of vector length.' },
+      { text: 'How many dimensions they share', feedback: 'All vectors in a model have the same dimensions; what differs is the values, and cosine compares their direction.' },
+      { text: 'The difference in their token IDs', feedback: 'IDs are lookup addresses, not meaning. Similarity lives in the vectors, not the IDs.' }]},
+  ],
+  inference: [
+    { q: 'After a model picks a token, what happens next?', options: [
+      { text: 'It keeps writing from where it left off, remembering its plan', feedback: 'There is no plan and no memory beyond the text — that\'s the surprising part.' },
+      { text: 'The token is appended, and the model re-reads the WHOLE text to predict the next one', correct: true, feedback: 'Yes — the entire story so far is re-processed for every single new token. That\'s the one-word-story loop.' },
+      { text: 'It generates the rest of the sentence in one step', feedback: 'Never — generation is strictly one token per step, no matter how long the output.' }]},
+    { q: 'At temperature 0, the model…', options: [
+      { text: 'Refuses to answer creative questions', feedback: 'Temperature doesn\'t gate what it answers — it changes how the next token is picked.' },
+      { text: 'Always picks the single most likely next token', correct: true, feedback: 'Right — "greedy decoding." Same prompt, same output, every time.' },
+      { text: 'Becomes more accurate', feedback: 'Tempting, but no: the most likely token isn\'t necessarily the true one. Determinism ≠ correctness.' }]},
+  ],
+  nn: [
+    { q: 'What does a single weight in a neural network do?', options: [
+      { text: 'Stores one fact the model knows', feedback: 'Facts aren\'t stored one-per-weight — each fact is smeared across millions of weights, which is why the box is black.' },
+      { text: 'Scales how much one input matters to one neuron', correct: true, feedback: 'Exactly — a volume knob. Billions of tuned volume knobs are the whole "intelligence."' },
+      { text: 'Decides which words are grammatically valid', feedback: 'No single weight does anything that interpretable; grammar emerges from many weights acting together.' }]},
+    { q: 'Why is it hard to explain WHY a model gave a specific answer?', options: [
+      { text: 'Companies keep the reasons secret', feedback: 'Even with full access to every weight, the difficulty remains — this is a research problem, not a secrecy problem.' },
+      { text: 'The logic is distributed across billions of weights, not written as rules', correct: true, feedback: 'Right — that\'s the interpretability problem. Nobody wrote the logic; it was learned into the numbers.' },
+      { text: 'The model changes its weights with every conversation', feedback: 'Weights are frozen after training — your chats don\'t change them. The opacity comes from distribution, not change.' }]},
+  ],
+  attention: [
+    { q: 'What does attention let each token do?', options: [
+      { text: 'Look directly at every other token and weigh what matters', correct: true, feedback: 'Yes — direct connections, any distance. This is the transformer\'s superpower over older architectures.' },
+      { text: 'Remember previous conversations', feedback: 'Attention works only within the current context window — there is no memory across conversations.' },
+      { text: 'Check facts against a database', feedback: 'No database — attention only mixes information already present in the context.' }]},
+    { q: '"The trophy doesn\'t fit in the suitcase because it is too small." What must attention figure out?', options: [
+      { text: 'That "it" means the suitcase — using MEANING, not position', correct: true, feedback: 'Right — swap "small" for "big" and the referent flips. Position and grammar alone can\'t solve this.' },
+      { text: 'That "it" means the trophy, the nearest noun', feedback: 'Nearest-noun fails here: too *small* to fit must be the container. That\'s why attention needs semantics.' },
+      { text: 'Nothing — pronouns are skipped', feedback: 'Pronouns are exactly where attention earns its keep — resolving them is essential to understanding.' }]},
+  ],
+  training: [
+    { q: 'Before pre-training starts, the model\'s billions of weights are…', options: [
+      { text: 'Copied from an older model', feedback: 'That happens in some workflows (distillation), but the canonical story — and the mind-blowing one — is pure randomness.' },
+      { text: 'Completely random numbers', correct: true, feedback: 'Yes. Everything the model "knows" was carved out of noise by trillions of predict-check-adjust steps.' },
+      { text: 'Programmed with grammar rules first', feedback: 'Nobody programs any rules — grammar emerges from prediction alone. That\'s the whole point.' }]},
+    { q: 'What does the "loss" measure during training?', options: [
+      { text: 'How much money the training run costs', feedback: 'Great guess given the bills, but no — loss is a math score, not a dollar figure.' },
+      { text: 'How wrong the model\'s prediction was', correct: true, feedback: 'Right — high loss = confident and wrong. Every weight update exists to nudge this number down.' },
+      { text: 'How many tokens were deleted from the data', feedback: 'Nothing is deleted — loss compares the model\'s predicted probabilities to the actual next token.' }]},
+  ],
+  finetuning: [
+    { q: 'What\'s the key difference between pre-training and fine-tuning signals?', options: [
+      { text: 'Pre-training predicts real text; fine-tuning optimizes for judged response quality', correct: true, feedback: 'Exactly — "what comes next in the world\'s text" vs "what response do raters prefer."' },
+      { text: 'Fine-tuning uses more data than pre-training', feedback: 'Reversed — pre-training uses trillions of tokens; fine-tuning uses comparatively tiny curated sets.' },
+      { text: 'Pre-training is done by humans, fine-tuning by machines', feedback: 'Both are automated loops; the difference is where the training signal comes from.' }]},
+    { q: 'Two assistants use similar architectures but "feel" totally different. Most likely cause?', options: [
+      { text: 'Different fine-tuning data and alignment choices', correct: true, feedback: 'Right — personality is mostly a post-training artifact, which is why each provider\'s model feels distinct.' },
+      { text: 'One has a bigger context window', feedback: 'Context size changes how much they can read, not their manner and values.' },
+      { text: 'One is connected to the internet', feedback: 'Tool access changes what they can look up, not their persona.' }]},
+  ],
+  prompting: [
+    { q: 'A very long conversation exceeds the context window. What happens?', options: [
+      { text: 'The model summarizes everything perfectly and continues', feedback: 'Some products do inject summaries, but that\'s app engineering — the model itself just loses whatever no longer fits.' },
+      { text: 'Old conversation turns get dropped; the model has no idea they existed', correct: true, feedback: 'Right — the whiteboard gets erased. (Well-built systems keep the system prompt and trim old turns.)' },
+      { text: 'The model slows down but remembers everything', feedback: 'There\'s no overflow storage — outside the window means gone, period.' }]},
+    { q: 'Why does "I\'m a beginner learning Python for data analysis — explain list comprehensions with a sales-data example" beat "Tell me about Python"?', options: [
+      { text: 'Longer prompts always get better answers', feedback: 'Length isn\'t the mechanism — a long rambling prompt can do worse. Specificity is the mechanism.' },
+      { text: 'It steers probabilities toward exactly the relevant patterns', correct: true, feedback: 'Yes — audience, goal, topic, and format each activate patterns from training, narrowing the distribution to useful outputs.' },
+      { text: 'It uses politer wording', feedback: 'Politeness is fine but does little — information content is what shifts the distribution.' }]},
+  ],
+  multimodal: [
+    { q: 'How does an image get into an LLM\'s context?', options: [
+      { text: 'It\'s converted to a text description first', feedback: 'That\'s how it worked before true multimodality — modern models embed the pixels directly, no text middleman.' },
+      { text: 'It\'s sliced into patches, and each patch becomes an embedding vector', correct: true, feedback: 'Right — divide → embed → attend. After embedding, the transformer can\'t tell patches from word-tokens.' },
+      { text: 'The model runs OCR and reads any text in it', feedback: 'It can read text in images, but that\'s a byproduct — the whole image becomes embeddings, text or not.' }]},
+    { q: 'Why does generating an image usually take longer than generating a sentence?', options: [
+      { text: 'Diffusion needs many denoising passes; text needs one pass per token', correct: true, feedback: 'Right — a diffusion model runs the network dozens of times to sharpen noise into an image.' },
+      { text: 'Images are stored on slower hard drives', feedback: 'Storage isn\'t the bottleneck — the repeated neural-network passes are.' },
+      { text: 'Image models are illegal to run quickly', feedback: 'No such rule — it\'s pure computation cost.' }]},
+  ],
+  limitations: [
+    { q: 'A model states a "fact" very confidently. What does that confidence tell you?', options: [
+      { text: 'The fact is probably true', feedback: 'This is THE trap. Confidence reflects pattern-fit, not truth — fluent nonsense scores high too.' },
+      { text: 'Almost nothing — plausibility and truth are different things', correct: true, feedback: 'Right — the model optimizes "sounds like what comes next," and false things can sound exactly right.' },
+      { text: 'The fact was in its training data', feedback: 'Not necessarily — models fluently fill gaps with invented specifics. That\'s what a hallucination is.' }]},
+    { q: 'Which is the most reliable way to get accurate current information from an AI system?', options: [
+      { text: 'Ask it to promise not to hallucinate', feedback: 'A promise doesn\'t add a fact-checker — the architecture is unchanged. Grounding does.' },
+      { text: 'Ground it: let it search, retrieve documents, or run code, then answer from those', correct: true, feedback: 'Right — verified context beats memorized patterns. This is why tools + RAG are the reliability play.' },
+      { text: 'Raise the temperature so it explores more', feedback: 'Temperature adds randomness, which is the opposite of what accuracy needs.' }]},
+  ],
+};
+// @quiz-data-end
+
+function setupQuizzes() {
+  Object.entries(QUIZ_DATA).forEach(([tab, questions]) => {
+    const section = document.getElementById(`tab-${tab}`);
+    if (!section) return;
+    const quiz = document.createElement('div');
+    quiz.className = 'quiz-block';
+    quiz.innerHTML = `<h3 class="quiz-title">🧠 Check your intuition</h3>` + questions.map((q, qi) => `
+      <div class="quiz-q" data-q="${qi}">
+        <p class="quiz-question">${q.q}</p>
+        <div class="quiz-options">
+          ${q.options.map((o, oi) => `<button class="quiz-opt" data-oi="${oi}">${o.text}</button>`).join('')}
+        </div>
+        <div class="quiz-feedback" hidden></div>
+      </div>`).join('');
+    const footer = section.querySelector('.tab-footer');
+    footer ? section.insertBefore(quiz, footer) : section.appendChild(quiz);
+
+    quiz.querySelectorAll('.quiz-q').forEach((qEl, qi) => {
+      qEl.querySelectorAll('.quiz-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const opt = questions[qi].options[parseInt(btn.dataset.oi)];
+          qEl.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('picked', 'right', 'wrong'));
+          btn.classList.add('picked', opt.correct ? 'right' : 'wrong');
+          const fb = qEl.querySelector('.quiz-feedback');
+          fb.hidden = false;
+          fb.innerHTML = `${opt.correct ? '✓' : '↺'} ${opt.feedback}`;
+          fb.className = 'quiz-feedback ' + (opt.correct ? 'good' : 'retry');
+        });
+      });
+    });
+  });
+}
+
 // ============ UTILITIES ============
 function clamp(val, min, max) {
   return Math.min(max, Math.max(min, val));
@@ -12913,6 +13068,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   populateFacts();
   setupTabFooters();
+  setupQuizzes();
   setupTabs();
   setupInference();
   setupNeuralNetwork();

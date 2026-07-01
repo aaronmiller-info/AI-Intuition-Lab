@@ -1,2 +1,6 @@
 .DS_Store
 .claude/
+
+# Agent scratch
+.superpowers/
+.claude/

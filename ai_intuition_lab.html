@@ -6912,7 +6912,7 @@
 
       <div class="explanation">
         <h4>Why subword tokenization matters</h4>
-        <p>Real models like GPT-4 use ~100k tokens. Words are broken into meaningful pieces: "unhappiness" → ["un", "happiness"] or ["un", "happ", "iness"]. This lets the model understand prefixes like "un-" (negation) and suffixes like "-ness" (noun form). Try typing "unhappy", "happiness", and "unhappiness" to see how they share pieces—this is how models generalize to words they've rarely seen.</p>
+        <p>Real models use large vocabularies — around <span data-fact="vocab.size"></span> tokens for current frontier models. Words are broken into meaningful pieces: this demo's tokenizer splits "unhappiness" into "un" + "h" + "appiness". Reusing a piece like "un" across thousands of words means the model doesn't need to learn every whole word from scratch. Try typing "unhappy", "happiness", and "unhappiness" below and compare their splits—notice the pieces don't always land where a human would put them, because BPE merges are chosen by statistics, not grammar.</p>
         <div class="note-box mt-1 p-075 p-1 text-sm" style="background: var(--bg-elevated); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cool);">
           <strong>📝 Note:</strong> This is a simplified tokenizer for educational purposes. Real tokenizers use larger vocabularies (~100k tokens) and make different splitting decisions. 
           <a href="https://huggingface.co/spaces/Xenova/the-tokenizer-playground" target="_blank" rel="noopener" class="text-primary" style="text-decoration: underline;">Try a real tokenizer →</a>
@@ -7039,11 +7039,11 @@
         <div class="concept-card">
           <h4>Try These Experiments in the Tokenizer</h4>
           <div class="experiment-box">
-            <p><strong>Experiment 1:</strong> Type "unhappiness"—watch it split into "un" + "happiness" or "un" + "happ" + "iness"</p>
-            <p><strong>Experiment 2:</strong> Type "unfortunately"—see how prefixes (un-) and suffixes (-ly) get separated</p>
-            <p><strong>Experiment 3:</strong> Type "antidisestablishmentarianism"—watch it recursively break into: anti + dis + establish + ment + arian + ism</p>
-            <p><strong>Experiment 4:</strong> Type "computerization"—see how technical words get split at meaningful boundaries</p>
-            <p><strong>What you're learning:</strong> Tokenization breaks words into reusable pieces. The prefix "un-" appears in thousands of words, so learning it once helps the model understand all of them.</p>
+            <p><strong>Experiment 1:</strong> Type "unhappiness"—this tokenizer splits it into "un" + "h" + "appiness". Not "un" + "happy" + "ness" the way a person would—"appiness" survives as one chunk because that exact letter run was common in the training data.</p>
+            <p><strong>Experiment 2:</strong> Type "unfortunately"—it splits into "un" + "for" + "t" + "un" + "at" + "el" + "y". The prefix "un" shows up twice (once at the start, once buried inside "fortunately"), which is a good example of BPE matching letter patterns, not word structure.</p>
+            <p><strong>Experiment 3:</strong> Type "antidisestablishmentarianism"—it breaks into "an" + "ti" + "d" + "is" + "es" + "tabl" + "ishment" + "ar" + "i" + "an" + "is" + "m", twelve pieces for one word. Real frontier tokenizers, trained on far more text, would likely produce fewer, cleaner pieces—but the mechanism is the same one shown here.</p>
+            <p><strong>Experiment 4:</strong> Type "computerization"—it splits into "c" + "om" + "put" + "er" + "ization", closer to but still not exactly the human-intuitive "computer" + "ization".</p>
+            <p><strong>What you're learning:</strong> A real BPE tokenizer splits rare or long words into reusable pieces chosen by co-occurrence statistics from its training data. The splits don't always match human morphology (prefixes, roots, suffixes)—and that's normal and true of production tokenizers too, not just this simplified demo.</p>
           </div>
         </div>
 
@@ -11556,197 +11556,55 @@ function setupTokenizer() {
   const tokensDiv = document.getElementById('tok-tokens');
   const idsDiv = document.getElementById('tok-ids');
   
-  // Simulated BPE vocabulary - common subwords and their token IDs
-  // In real models like GPT-4, this would be ~100k entries
-  const bpeVocab = {'<|endoftext|>': 0, ' ': 220, '.': 13, ',': 11, '!': 0, '?': 30, "'": 6, '"': 1, '-': 12, ':': 25, ';': 26, 'the': 1169, 'The': 464, 'a': 64, 'A': 32, 'an': 272, 'is': 318, 'are': 533, 'was': 373, 'be': 1350, 'to': 284, 'of': 286, 'and': 290, 'in': 287, 'that': 326, 'it': 270, 'for': 329, 'on': 319, 'with': 351, 'as': 355, 'at': 379, 'by': 416, 'from': 422, 'or': 393, 'but': 475, 'not': 407, 'this': 428, 'they': 484, 'we': 356, 'you': 345, 'have': 423, 'has': 468, 'had': 550, 'do': 466, 'does': 857, 'did': 750, 'will': 481, 'would': 561, 'could': 714, 'should': 815, 'can': 460, 'may': 743, 'might': 1244, 'must': 1276, 'say': 910, 'said': 531, 'says': 1139, 'go': 748, 'going': 1016, 'goes': 2925, 'went': 1816, 'get': 651, 'got': 1392, 'gets': 3011, 'make': 1205, 'made': 925, 'makes': 1838, 'know': 760, 'known': 1900, 'knows': 4206, 'think': 892, 'thought': 1807, 'see': 766, 'seen': 1775, 'sees': 7224, 'come': 2063, 'came': 1625, 'comes': 2058, 'want': 765, 'wanted': 2227, 'wants': 3382, 'use': 779, 'used': 973, 'uses': 3544, 'using': 1262, 'find': 1064, 'found': 1043, 'give': 1577, 'gave': 2921, 'given': 1813, 'tell': 1560, 'told': 1297, 'work': 670, 'works': 2499, 'worked': 3111, 'working': 1762, 'call': 1444, 'called': 1444, 'try': 1949, 'tried': 3088, 'need': 761, 'needs': 2476, 'feel': 1254, 'feels': 5300, 'become': 1716, 'becomes': 4329, 'leave': 2666, 'left': 1364, 'put': 1234, 'puts': 7584, 'mean': 1612, 'means': 1724, 'keep': 1394, 'kept': 4030, 'let': 1616, 'lets': 8341, 'begin': 3823, 'began': 2540, 'seem': 1283, 'seems': 2331, 'help': 1037, 'helped': 5710, 'helps': 5765, 'helping': 5765, 'show': 905, 'shows': 2523, 'showed': 4894, 'hear': 3285, 'heard': 2982, 'play': 1110, 'played': 2826, 'plays': 5765, 'run': 1057, 'runs': 4539, 'running': 2491, 'move': 1445, 'moved': 3888, 'moves': 6100, 'live': 2107, 'lived': 5615, 'lives': 3268, 'world': 995, 'people': 661, 'time': 640, 'year': 614, 'years': 812, 'way': 636, 'day': 820, 'days': 1528, 'man': 582, 'men': 1450, 'woman': 2415, 'women': 1466, 'child': 1200, 'children': 1717, 'life': 897, 'hand': 1021, 'hands': 2832, 'part': 636, 'place': 1295, 'case': 1339, 'week': 1285, 'company': 1664, 'system': 1080, 'program': 1430, 'question': 1808, 'government': 2067, 'number': 1271, 'night': 1755, 'point': 966, 'home': 1363, 'water': 1660, 'room': 2119, 'mother': 2802, 'area': 1989, 'money': 1637, 'story': 1621, 'fact': 1109, 'month': 1227, 'lot': 1256, 'right': 826, 'study': 2050, 'book': 1492, 'eye': 2951, 'eyes': 2951, 'job': 1693, 'word': 1573, 'words': 2456, 'business': 1597, 'issue': 2071, 'side': 1735, 'kind': 1611, 'head': 1182, 'house': 2156, 'service': 2139, 'friend': 2767, 'friends': 2460, 'father': 2988, 'power': 1176, 'hour': 2232, 'hours': 2250, 'game': 1830, 'line': 1370, 'end': 886, 'member': 3262, 'law': 1099, 'car': 1097, 'city': 1748, 'community': 2437, 'name': 1438, 'president': 4066, 'team': 1074, 'minute': 5765, 'idea': 2126, 'kid': 4065, 'kids': 3988, 'body': 1767, 'information': 1321, 'back': 736, 'parent': 2560, 'parents': 3397, 'face': 1986, 'others': 1854, 'level': 1241, 'office': 2607, 'door': 3420, 'health': 1717, 'person': 1048, 'art': 1242, 'war': 1175, 'history': 2106, 'party': 2151, 'result': 1255, 'change': 1487, 'morning': 3329, 'reason': 1738, 'research': 2267, 'girl': 2576, 'guy': 3099, 'moment': 2589, 'air': 1633, 'teacher': 4701, 'force': 2700, 'education': 2775, 'un': 403, 're': 260, 'pre': 3866, 'dis': 6381, 'mis': 9383, 'over': 2502, 'under': 4625, 'out': 448, 'up': 510, 'down': 866, 'off': 572, 'self': 944, 'ing': 278, 'tion': 653, 'sion': 4885, 'ness': 1108, 'ment': 434, 'able': 540, 'ible': 856, 'ful': 913, 'less': 1203, 'ous': 516, 'ive': 425, 'al': 282, 'ly': 306, 'er': 263, 'or': 273, 'ist': 382, 'ism': 1042, 'ity': 414, 'ty': 774, 'ed': 276, 'es': 274, 's': 82, 'en': 268, 'ion': 295, 'ation': 341, 'com': 785, 'con': 1102, 'pro': 1676, 'per': 525, 'ex': 1069, 'inter': 3849, 'trans': 7645, 'sub': 7266, 'super': 16668, 'anti': 17096, 'auto': 23736, 'semi': 36083, 'de': 2934, 'act': 529, 'form': 687, 'port': 634, 'duct': 6077, 'struct': 7249, 'scrib': 1416, 'script': 6546, 'spec': 16684, 'spect': 4443, 'ject': 752, 'dict': 11600, 'fect': 2715, 'graph': 34960, 'gram': 4546, 'log': 6404, 'logy': 4835, 'phon': 24523, 'phone': 4862, 'photo': 23074, 'tele': 46813, 'vis': 4703, 'vid': 8008, 'video': 8464, 'bio': 65, 'geo': 469, 'psych': 13496, 'soci': 45842, 'tech': 13670, 'techn': 33024, 'ology': 2728, 'establish': 18695, 'fortune': 21721, 'fortunate': 38274, 'fortunately': 44827, 'unfortunately': 52822, 'understand': 1833, 'understanding': 4547, 'elect': 9509, 'electr': 37823, 'electric': 13278, 'comput': 43890, 'computer': 23692, 'computers': 38460, 'artific': 61826, 'artificial': 49521, 'intellig': 40682, 'intelligence': 37438, 'intelligent': 53863, 'machine': 30243, 'machines': 30645, 'learn': 35720, 'learning': 21215, 'neur': 25796, 'neural': 47200, 'net': 3262, 'network': 27349, 'networks': 30888, 'model': 19849, 'models': 27530, 'data': 7890, 'train': 27432, 'training': 24924, 'happ': 23598, 'happy': 15039, 'happiness': 58841, 'unhapp': 48295, 'unhappy': 36450, 'quick': 29068, 'brown': 33282, 'fox': 30845, 'jump': 43327, 'jumps': 73234, 'lazy': 75970, 'dog': 9703};
-  
-  // Subword rules - how to break down words (simplified BPE simulation)
-  const subwordRules = [
-    { pattern: /^(un)(happy|fortunate|likely|able|certain|clear|fair|known|seen|willing|wanted|expected|usual|common|familiar|comfortable|conscious|controlled|decided|defined|done|dressed|equal|ethical|even|explored|finished|fit|fold|forgettable|fortunate|friendly|grateful|healthy|helpful|important|intentional|interesting|kind|lawful|limited|lucky|natural|necessary|official|paid|pleasant|popular|predictable|prepared|professional|real|reasonable|related|reliable|remarkable|resolved|rest|safe|satisfactory|settled|skilled|spoken|stable|successful|sure|surprising|sympathetic|tidy|timely|touched|trained|true|used|usual|wanted|welcome|willing|wise|worthy)/i, split: ['un', '$2'] },
-    { pattern: /^(re)(build|create|define|design|develop|do|make|think|write|act|play|start|turn|view|work|call|cycle|fresh|fund|generate|new|open|place|run|search|set|store|structure|visit)/i, split: ['re', '$2'] },
-    { pattern: /^(pre)(view|dict|pare|vent|fer|cede|fix|heat|load|order|pay|school|set|test|war|historic|existing|determined|arranged|approved)/i, split: ['pre', '$2'] },
-    { pattern: /^(dis)(agree|appear|approve|arm|belief|comfort|connect|continue|cover|grace|honest|like|miss|obey|order|own|please|prove|respect|satisfy|trust)/i, split: ['dis', '$2'] },
-    { pattern: /^(mis)(understand|take|lead|behave|fortune|guide|handle|inform|interpret|judge|place|print|quote|read|spell|treat|use)/i, split: ['mis', '$2'] },
-    { pattern: /^(over)(come|flow|look|see|throw|time|whelm|work|load|pay|power|rate|react|ride|rule|run|sleep|state|step|take|turn|use|weight)/i, split: ['over', '$2'] },
-    { pattern: /^(under)(stand|go|line|take|estimate|graduate|ground|lying|mine|neath|paid|pass|rate|score|sell|side|state|water|wear|write)/i, split: ['under', '$2'] },
-    { pattern: /^(out)(break|come|door|fit|go|grow|line|look|number|put|rage|reach|run|set|side|skirt|source|standing|ward|weigh)/i, split: ['out', '$2'] },
-    { pattern: /(work|play|learn|think|walk|talk|jump|help|look|want|need|start|turn|call|move|live|love|like|use|try|ask|seem|feel|leave|find|give|tell|say|get|make|go|know|take|see|come|think|want|look|use|find|give|tell|become|keep|let|begin|show|hear|run|move|meet|pay|bring|hold|write|stand|lose|send|build|spend|buy|watch|read|grow|carry|walk|win|catch|pass|sell|decide|return|explain|develop|carry|break|receive|continue|reach|rest|include|turn|reach|remain|speak|lead|teach|learn|create|happen|provide|sit|grow|open|walk|win|offer|remember|consider|appear|buy|serve|die|expect|stay|fall|produce|rise|allow|follow|begin|stop|wait|study)(ing|ed|er|s)$/i, split: ['$1', '$2'] },
-    { pattern: /(quick|slow|quiet|loud|soft|hard|bright|dark|light|heavy|easy|happy|angry|busy|dirty|early|empty|full|great|high|large|late|little|long|low|new|old|poor|rich|short|small|strong|weak|wide|young|beautiful|careful|colorful|dangerous|different|difficult|expensive|famous|helpful|important|interesting|natural|necessary|popular|possible|powerful|professional|reasonable|responsible|similar|successful|terrible|useful|wonderful)(ly|ness|er|est)$/i, split: ['$1', '$2'] },
-    { pattern: /(educate|create|operate|communicate|calculate|celebrate|circulate|complicate|concentrate|cooperate|decorate|demonstrate|dominate|educate|eliminate|estimate|evaluate|generate|hesitate|illustrate|indicate|investigate|isolate|locate|motivate|negotiate|operate|participate|populate|regulate|separate|stimulate|terminate|translate|violate)(ion|tion|ed|ing|or|ive)$/i, split: ['$1', '$2'] },
-    { pattern: /(happy|lonely|angry|hungry|healthy|wealthy|noisy|rainy|sunny|windy|cloudy|funny|easy|busy|crazy|lazy|messy|nasty|risky|shaky|stormy|tricky)(ness|ly)$/i, split: ['$1', '$2'] },
-    { pattern: /(govern|develop|manage|establish|accomplish|astonish|distinguish|punish|publish|abolish|admonish|banish|blemish|brandish|burnish|cherish|demolish|diminish|embellish|famish|finish|flourish|furnish|garnish|impoverish|languish|lavish|nourish|perish|polish|ravish|refurbish|relinquish|replenish|skirmish|tarnish|vanish|varnish)(ment|ed|ing|er)$/i, split: ['$1', '$2'] },
-    { pattern: /(think|teach|build|hold|understand|sell|tell|spend|send|lend|mean|meet|keep|feel|leave|sleep|dream|deal|lead|read|spread|feed|speed|bleed|breed|flee|freeze|seek|speak|steal|weep)(er|ing|able)$/i, split: ['$1', '$2'] },
-    { pattern: /(\w{4,})(ization|isation)$/i, split: ['$1', 'ization'] },
-    { pattern: /(\w{4,})(fulness|lessness)$/i, split: ['$1', '$2'] },
-    { pattern: /(\w{3,})(tion|sion)$/i, split: ['$1', '$2'] },
-    { pattern: /(\w{3,})(ness|ment|able|ible|ful|less|ous|ive|ity)$/i, split: ['$1', '$2'] },
-    { pattern: /(\w{3,})(ing|ed|er|est|ly|al)$/i, split: ['$1', '$2'] },
-    { pattern: /(\w+)(\'s|\'t|\'re|\'ve|\'ll|\'d|n\'t)$/i, split: ['$1', '$2'] }
-  ];
-  
-  // BPE-style tokenizer
-  function tokenize(text) {
-    // Returns array of {token, isContinuation} objects
-    const tokens = [];
-    
-    // Helper to add a token
-    const addToken = (t, isCont = false) => tokens.push({token: t, isContinuation: isCont});
-    
-    // First split on whitespace and punctuation, keeping spaces as tokens
-    const rawParts = text.match(/\s+|[^\s\w]|[\w]+/g) || [];
-    
-    rawParts.forEach(part => {
-      // Handle whitespace - GPT models encode spaces with the following token
-      if (/^\s+$/.test(part)) {
-        // Spaces are typically merged with next token, but we'll show them
-        // In real BPE, space is often prefix of next word like "Ġthe"
-        return; // Skip standalone spaces, they're implicit
+  // @bpe-data-start
+  // Generated by tools/train_bpe.py — do not hand-edit. Ġ (\u0120) marks a leading space.
+  const BPE_MERGES = ["i n", "a n", "e r", "t i", "in g", "o n", "e n", "Ġ t", "an d", "r e", "a l", "ti on", "Ġ a", "o m", "Ġ and", "o r", "a tion", "Ġ s", "Ġ l", "r o", "Ġ c", "u t", "e s", "h e", "p ut", "s t", "Ġc om", "Ġ b", "Ġ w", "i c", "e a", "u n", "i s", "e d", "Ġ o", "e l", "Ġ m", "Ġ re", "Ġt he", "Ġcom put", "Ġ in", "i z", "o w", "es s", "p ro", "m en", "r a", "Ġ f", "c e", "c h", "Ġ un", "d er", "k ing", "a t", "men t", "Ġ n", "o g", "der st", "derst and", "ation al", "iz ation", "Ġ g", "l y", "u l", "t h", "Ġ d", "Ġ A", "ti f", "i al", "i g", "ea r", "an s", "f or", "derstand ing", "Ġ p", "q u", "r tif", "rtif ic", "rtific ial", "Ġin t", "en ce", "Ġl ear", "Ġlear n", "for m", "u r", "Ġo f", "Ġcomput ational", "Ġt h", "Ġt o", "Ġ h", "a r", "g e", "a p", "o t", "er s", "e t", "i th", "r y", "T he", "v er", "Ġa re", "Ġt r", "an g", "a ge", "Ġm o", "Ġmo d", "Ġmod el", "Ġw or", "pro c", "proc ess", "process ing", "at e", "a b", "ab l", "u s", "en s", "i l", "d s", "Ġw ith", "p h", "f ul", "Ġ qu", "p s", "ĠA rtificial", "Ġint el", "Ġintel l", "Ġintell ig", "Ġintellig ence", "m a", "ch in", "chin e", "Ġtr ans", "Ġun derstanding", "Ġth in", "Ġh ow", "Ġl ang", "Ġlang u", "Ġlangu age", "Ġmodel s", "ap p", "in ess", "Ġcom m", "Ġ C", "ĠC om", "ĠCom put", "ea ch", "ing s", "Ġg en", "Ġgen er", "Ġa d", "w or", "form ation", "o l", "ur al", "o re", "Ġb y", "ig h", "Ġm e", "Ġs p", "Ġs t", "og ra", "ogra ph", "ograph y", "Ġs u", "Ġ en", "Ġen d", "Ġ is", "Ġcomput er", "m s", "Ġre c", "er ry", "ic k", "Ġb ro", "j u", "ma chine", "Ġlearn ing", "Ġtrans form", "Ġthin king", "U n", "Un derstanding", "Ġto k", "app iness", "a re", "a m", "p er", "on s", "re d", "t abl", "c on", "d u", "Ġ e", "i es", "is h", "ish ment", "Ġ pro", "Ġpro g", "Ġprog ra", "Ġprogra m", "Ġt each", "Ġqu e", "Ġ king", "Ġw h", "Ġ The", "ow ed", "s s", "l i", "l d", "g re", "gre e", "gree ment", "pro v", "Ġs l", "Ġth ro", "Ġthro u", "Ġthrou g", "Ġthroug h", "Ġa t", "e ural", "Ġn et", "Ġnet wor", "Ġnetwor k", "Ġnetwork s", "Ġf r", "igh t", "ra in", "Ġp l", "a ce", "Ġwor ds", "i m", "Ġme an", "m ed", "ot ography", "Ġ us", "Ġus e", "Ġsu f", "Ġsuf f", "Ġsuff i", "Ġsuffi x", "k e", "b s", "e v", "i ence", "Ġs y", "Ġsy st", "Ġsyst e", "Ġsyste ms", "Ġrec or", "Ġrecor ds", "ti c", "al ly", "ra w", "raw b", "rawb erry", "Ġg ro", "Ġ al", "Ġb i", "Ġbi ol", "Ġbiol og", "Ġqu ick", "Ġbro w", "Ġbrow n", "Ġf o", "Ġfo x", "Ġ ju", "Ġju m", "Ġjum ps", "Ġo ver", "Ġl a", "Ġla z", "Ġlaz y", "Ġd og", "Ġtransform ing", "Ġo ur", "Ġtok en", "Ġtoken ization", "Ġ he", "Ġhe l", "Ġhel ps", "Ġ y", "Ġy o", "Ġyo u", "Ġun derstand", "Ġl ar", "Ġlar ge", "Ġwor k", "H appiness", "Ġun h", "Ġunh appiness", "Ġs h", "Ġsh are", "Ġs am", "Ġsam e", "Ġ ro", "Ġro ot", "Ġm is", "Ġmis un", "Ġmisun derstanding", "d o", "Ġto o", "Ġ P", "ĠP re", "ĠPre processing", "Ġre processing", "Ġp o", "Ġpo st", "Ġpost processing", "Ġcomm on", "Ġo per", "Ġoper ation", "Ġoperation s", "Ġun for", "Ġunfor t", "Ġunfort un", "Ġunfortun ate", "Ġc ons", "Ġcons e", "Ġconse qu", "Ġconsequ en", "Ġconsequen c", "Ġconsequenc es", "Ġw er", "Ġwer e", "Ġun p", "Ġunp red", "Ġunpred ic", "Ġunpredic tabl", "Ġunpredictabl e", "Ġun con", "Ġuncon t", "Ġuncont ro", "Ġuncontro l", "Ġuncontrol l", "Ġuncontroll abl", "Ġuncontrollabl e", "Ġ N", "ĠN ational", "ĠNational ization", "in du", "indu st", "indust r", "industr ial", "industrial ization", "Ġg l", "Ġgl o", "Ġglo b", "Ġglob al", "Ġglobal ization", "Ġre s", "Ġres h", "Ġresh ap", "Ġreshap ed", "Ġe con", "Ġecon om", "Ġeconom ies", "ĠA n", "ĠAn ti", "ĠAnti d", "ĠAntid is", "ĠAntidis es", "ĠAntidises tabl", "ĠAntidisestabl ishment", "ĠAntidisestablishment ar", "ĠAntidisestablishmentar i", "ĠAntidisestablishmentari an", "ĠAntidisestablishmentarian is", "ĠAntidisestablishmentarianis m", "Ġf am", "Ġfam o", "Ġfamo us", "Ġfamous ly", "Ġl on", "Ġlon g", "ĠComput ers", "Ġcomput e", "Ġprogram m", "Ġprogramm ers", "Ġteach ers", "Ġlearn ers", "K ings", "Ġque ens", "Ġ r", "Ġr ul", "Ġrul ed", "Ġking d", "Ġkingd om", "Ġkingdom s", "Ġwh il", "Ġwhil e", "Ġgener al", "Ġgeneral s", "Ġcomm and", "Ġcommand ed", "Ġa r", "Ġar m", "Ġarm ies", "Ġm ess", "Ġmess en", "Ġmessen g", "Ġmesseng er", "Ġb owed", "t o", "Ġque en", "Ġad d", "Ġadd re", "Ġaddre ss", "Ġaddress ed", "Ġp ar", "Ġpar li", "Ġparli a", "Ġparlia ment", "Ġ R", "ĠR e", "ĠRe b", "ĠReb u", "ĠRebu il", "ĠRebuil d", "ĠRebuild ing", "Ġre ma", "Ġrema king", "Ġre th", "Ġreth in", "Ġrethin king", "re qu", "requ i", "requi re", "Ġre wor", "Ġrewor king", "Ġo ld", "Ġa ss", "Ġass u", "Ġassu m", "Ġassum p", "Ġassump tion", "Ġassumption s", "Ġ D", "ĠD is", "ĠDis a", "ĠDisa greement", "Ġd is", "Ġdis ap", "Ġdisap prov", "Ġdisapprov al", "Ġsl owed", "Ġa greement", "T r", "Tr ans", "Trans formation", "Ġat t", "Ġatt en", "Ġatten tion", "Ġre v", "Ġrev ol", "Ġrevol u", "Ġrevolu tion", "Ġrevolution iz", "Ġrevolutioniz ed", "Ġn at", "Ġnat ural", "Ġ processing", "Ġf ore", "Ġfore ver", "N eural", "Ġp at", "Ġpat t", "Ġpatt er", "Ġpatter n", "Ġpattern s", "Ġfr om", "Ġd at", "Ġdat a", "Ġad ju", "Ġadju st", "Ġadjust ing", "Ġb il", "Ġbil li", "Ġbilli ons", "Ġw e", "Ġwe ight", "Ġweight s", "Ġd ur", "Ġdur ing", "Ġt rain", "Ġtrain ing", "E m", "Em b", "Emb ed", "Embed d", "Embedd ings", "Ġpl ace", "Ġs im", "Ġsim il", "Ġsimil ar", "Ġmean ings", "Ġn ear", "Ġ each", "Ġo th", "Ġoth er", "Ġh igh", "Ġd i", "Ġdi men", "Ġdimen s", "Ġdimens i", "Ġdimensi on", "Ġdimension al", "Ġsp ace", "R ea", "Rea s", "Reas on", "Reason ing", "Ġthin k", "Ġb e", "Ġbe f", "Ġbef ore", "Ġthe y", "Ġ ans", "Ġans w", "Ġansw er", "Ġgener at", "Ġgenerat ing", "Ġint er", "Ġinter med", "Ġintermed i", "Ġintermedi ate", "Ġst e", "Ġste ps", "Ġa s", "Ġtok ens", "P h", "Ph otography", "Ġt el", "Ġtel e", "Ġtele ph", "Ġteleph otography", "Ġ v", "Ġv i", "Ġvi d", "Ġvid e", "Ġvide ography", "Ġl ight", "Ġl ens", "Ġlens es", "Ġs ens", "Ġsens or", "Ġsensor s", "B ea", "Bea u", "Beau tif", "Beautif ul", "Ġw on", "Ġwon der", "Ġwonder ful", "Ġp ow", "Ġpow er", "Ġpower ful", "Ġmean ing", "Ġmeaning ful", "Ġc ar", "Ġcar ry", "Ġsuffix es", "Ġl i", "Ġli ke", "Ġf ul", "Ġn ess", "Q u", "Qu ick", "Quick ly", "Ġsl ow", "Ġslow ly", "Ġc are", "Ġcare ful", "Ġcareful ly", "Ġh app", "Ġhapp i", "Ġhappi ly", "Ġad ver", "Ġadver bs", "Ġf or", "Ġfor med", "Ġl y", "Ġend ing", "E st", "Est abl", "Establ ishment", "Ġg o", "Ġgo ver", "Ġgover n", "Ġgovern ment", "Ġd ev", "Ġdev el", "Ġdevel o", "Ġdevelo p", "Ġdevelop ment", "Ġm an", "Ġman age", "Ġmanage ment", "Ġm en", "Ġmen t", "I n", "In formation", "Ġ ed", "Ġed u", "Ġedu c", "Ġeduc ation", "Ġcomm un", "Ġcommun ic", "Ġcommunic ation", "Ġ or", "Ġor g", "Ġorg an", "Ġorgan ization", "Ġ tion", "A rtificial", "Ġbro a", "Ġbroa d", "Ġf i", "Ġfi el", "Ġfiel d", "Ġs c", "Ġsc ience", "c an", "Ġn ow", "Ġrec og", "Ġrecog n", "Ġrecogn iz", "Ġrecogniz e", "Ġsp e", "Ġspe e", "Ġspee ch", "Ġtrans l", "Ġtransl ate", "Ġgener ate", "o f", "Ġwor ld", "Ġ M", "ĠM a", "ĠMa chine", "Ġsu bs", "Ġsubs et", "Ġa rtificial", "Ġwh ic", "Ġwhic h", "Ġ im", "Ġim prov", "Ġimprov es", "Ġt a", "Ġta s", "Ġtas k", "Ġe x", "Ġex per", "Ġexper ience", "Ġcomputer ization", "Ġl et", "Ġlet s", "Ġst ore", "Ġs or", "Ġsor t", "Ġre t", "Ġret r", "Ġretr i", "Ġretri ev", "Ġretriev e", "Ġin formation", "Ġa ut", "Ġaut om", "Ġautom a", "Ġautoma tic", "Ġautomatic ally", "ĠComput er", "ĠComputer ization", "ch ang", "chang ed", "Ġb us", "Ġbus iness", "Ġbusiness es", "Ġ ke", "Ġke e", "Ġkee p", "Ġ S", "ĠS t", "ĠSt rawberry", "Ġpl an", "Ġplan t", "Ġplant s", "Ġgro w", "Ġl ow", "Ġgro un", "Ġgroun d", "pro du", "produ ce", "Ġs w", "Ġsw e", "Ġswe et", "Ġre d", "Ġfr u", "Ġfru i", "Ġfrui t", "Ġst rawberry", "Ġn ot", "Ġtr u", "Ġtru e", "Ġb erry", "Ġb ot", "Ġbot an", "Ġbotan ic", "Ġbotanic ally", "Ġsp ea", "Ġspea king", "Ġme ans", "Ġal g", "Ġalg or", "Ġalgor ith", "Ġalgorith ms", "in put", "Ġint o", "Ġo ut", "Ġout put", "Ġn eural", "Ġl o", "Ġlo o", "Ġloo s", "Ġloos el", "Ġloosel y", "Ġin s", "Ġins p", "Ġinsp i", "Ġinspi red", "Ġbiolog ic", "Ġbiologic al", "b rain", "brain s", "ĠComput ational", "Ġbiolog y", "Ġl ing", "Ġling u", "Ġlingu is", "Ġlinguis tic", "Ġlinguistic s", "c he", "che m", "chem i", "chemi st", "chemist ry", "Ġal l", "Ġcomput ers", "Ġcom p", "Ġcomp l", "Ġcompl e", "Ġcomple x"];
+  const BPE_VOCAB = {"<|pad|>": 0, "<|unk|>": 1, "<|endoftext|>": 2, "T": 3, "h": 4, "e": 5, "Ġ": 6, "q": 7, "u": 8, "i": 9, "c": 10, "k": 11, "b": 12, "r": 13, "o": 14, "w": 15, "n": 16, "f": 17, "x": 18, "j": 19, "m": 20, "p": 21, "s": 22, "v": 23, "t": 24, "l": 25, "a": 26, "z": 27, "y": 28, "d": 29, "g": 30, ".": 31, "A": 32, "U": 33, "H": 34, ";": 35, "P": 36, ",": 37, "N": 38, "C": 39, "K": 40, "R": 41, "D": 42, "E": 43, "B": 44, "Q": 45, "I": 46, "M": 47, "S": 48, "in": 49, "an": 50, "er": 51, "ti": 52, "ing": 53, "on": 54, "en": 55, "Ġt": 56, "and": 57, "re": 58, "al": 59, "tion": 60, "Ġa": 61, "om": 62, "Ġand": 63, "or": 64, "ation": 65, "Ġs": 66, "Ġl": 67, "ro": 68, "Ġc": 69, "ut": 70, "es": 71, "he": 72, "put": 73, "st": 74, "Ġcom": 75, "Ġb": 76, "Ġw": 77, "ic": 78, "ea": 79, "un": 80, "is": 81, "ed": 82, "Ġo": 83, "el": 84, "Ġm": 85, "Ġre": 86, "Ġthe": 87, "Ġcomput": 88, "Ġin": 89, "iz": 90, "ow": 91, "ess": 92, "pro": 93, "men": 94, "ra": 95, "Ġf": 96, "ce": 97, "ch": 98, "Ġun": 99, "der": 100, "king": 101, "at": 102, "ment": 103, "Ġn": 104, "og": 105, "derst": 106, "derstand": 107, "ational": 108, "ization": 109, "Ġg": 110, "ly": 111, "ul": 112, "th": 113, "Ġd": 114, "ĠA": 115, "tif": 116, "ial": 117, "ig": 118, "ear": 119, "ans": 120, "for": 121, "derstanding": 122, "Ġp": 123, "qu": 124, "rtif": 125, "rtific": 126, "rtificial": 127, "Ġint": 128, "ence": 129, "Ġlear": 130, "Ġlearn": 131, "form": 132, "ur": 133, "Ġof": 134, "Ġcomputational": 135, "Ġth": 136, "Ġto": 137, "Ġh": 138, "ar": 139, "ge": 140, "ap": 141, "ot": 142, "ers": 143, "et": 144, "ith": 145, "ry": 146, "The": 147, "ver": 148, "Ġare": 149, "Ġtr": 150, "ang": 151, "age": 152, "Ġmo": 153, "Ġmod": 154, "Ġmodel": 155, "Ġwor": 156, "proc": 157, "process": 158, "processing": 159, "ate": 160, "ab": 161, "abl": 162, "us": 163, "ens": 164, "il": 165, "ds": 166, "Ġwith": 167, "ph": 168, "ful": 169, "Ġqu": 170, "ps": 171, "ĠArtificial": 172, "Ġintel": 173, "Ġintell": 174, "Ġintellig": 175, "Ġintelligence": 176, "ma": 177, "chin": 178, "chine": 179, "Ġtrans": 180, "Ġunderstanding": 181, "Ġthin": 182, "Ġhow": 183, "Ġlang": 184, "Ġlangu": 185, "Ġlanguage": 186, "Ġmodels": 187, "app": 188, "iness": 189, "Ġcomm": 190, "ĠC": 191, "ĠCom": 192, "ĠComput": 193, "each": 194, "ings": 195, "Ġgen": 196, "Ġgener": 197, "Ġad": 198, "wor": 199, "formation": 200, "ol": 201, "ural": 202, "ore": 203, "Ġby": 204, "igh": 205, "Ġme": 206, "Ġsp": 207, "Ġst": 208, "ogra": 209, "ograph": 210, "ography": 211, "Ġsu": 212, "Ġen": 213, "Ġend": 214, "Ġis": 215, "Ġcomputer": 216, "ms": 217, "Ġrec": 218, "erry": 219, "ick": 220, "Ġbro": 221, "ju": 222, "machine": 223, "Ġlearning": 224, "Ġtransform": 225, "Ġthinking": 226, "Un": 227, "Understanding": 228, "Ġtok": 229, "appiness": 230, "are": 231, "am": 232, "per": 233, "ons": 234, "red": 235, "tabl": 236, "con": 237, "du": 238, "Ġe": 239, "ies": 240, "ish": 241, "ishment": 242, "Ġpro": 243, "Ġprog": 244, "Ġprogra": 245, "Ġprogram": 246, "Ġteach": 247, "Ġque": 248, "Ġking": 249, "Ġwh": 250, "ĠThe": 251, "owed": 252, "ss": 253, "li": 254, "ld": 255, "gre": 256, "gree": 257, "greement": 258, "prov": 259, "Ġsl": 260, "Ġthro": 261, "Ġthrou": 262, "Ġthroug": 263, "Ġthrough": 264, "Ġat": 265, "eural": 266, "Ġnet": 267, "Ġnetwor": 268, "Ġnetwork": 269, "Ġnetworks": 270, "Ġfr": 271, "ight": 272, "rain": 273, "Ġpl": 274, "ace": 275, "Ġwords": 276, "im": 277, "Ġmean": 278, "med": 279, "otography": 280, "Ġus": 281, "Ġuse": 282, "Ġsuf": 283, "Ġsuff": 284, "Ġsuffi": 285, "Ġsuffix": 286, "ke": 287, "bs": 288, "ev": 289, "ience": 290, "Ġsy": 291, "Ġsyst": 292, "Ġsyste": 293, "Ġsystems": 294, "Ġrecor": 295, "Ġrecords": 296, "tic": 297, "ally": 298, "raw": 299, "rawb": 300, "rawberry": 301, "Ġgro": 302, "Ġal": 303, "Ġbi": 304, "Ġbiol": 305, "Ġbiolog": 306, "Ġquick": 307, "Ġbrow": 308, "Ġbrown": 309, "Ġfo": 310, "Ġfox": 311, "Ġju": 312, "Ġjum": 313, "Ġjumps": 314, "Ġover": 315, "Ġla": 316, "Ġlaz": 317, "Ġlazy": 318, "Ġdog": 319, "Ġtransforming": 320, "Ġour": 321, "Ġtoken": 322, "Ġtokenization": 323, "Ġhe": 324, "Ġhel": 325, "Ġhelps": 326, "Ġy": 327, "Ġyo": 328, "Ġyou": 329, "Ġunderstand": 330, "Ġlar": 331, "Ġlarge": 332, "Ġwork": 333, "Happiness": 334, "Ġunh": 335, "Ġunhappiness": 336, "Ġsh": 337, "Ġshare": 338, "Ġsam": 339, "Ġsame": 340, "Ġro": 341, "Ġroot": 342, "Ġmis": 343, "Ġmisun": 344, "Ġmisunderstanding": 345, "do": 346, "Ġtoo": 347, "ĠP": 348, "ĠPre": 349, "ĠPreprocessing": 350, "Ġreprocessing": 351, "Ġpo": 352, "Ġpost": 353, "Ġpostprocessing": 354, "Ġcommon": 355, "Ġoper": 356, "Ġoperation": 357, "Ġoperations": 358, "Ġunfor": 359, "Ġunfort": 360, "Ġunfortun": 361, "Ġunfortunate": 362, "Ġcons": 363, "Ġconse": 364, "Ġconsequ": 365, "Ġconsequen": 366, "Ġconsequenc": 367, "Ġconsequences": 368, "Ġwer": 369, "Ġwere": 370, "Ġunp": 371, "Ġunpred": 372, "Ġunpredic": 373, "Ġunpredictabl": 374, "Ġunpredictable": 375, "Ġuncon": 376, "Ġuncont": 377, "Ġuncontro": 378, "Ġuncontrol": 379, "Ġuncontroll": 380, "Ġuncontrollabl": 381, "Ġuncontrollable": 382, "ĠN": 383, "ĠNational": 384, "ĠNationalization": 385, "indu": 386, "indust": 387, "industr": 388, "industrial": 389, "industrialization": 390, "Ġgl": 391, "Ġglo": 392, "Ġglob": 393, "Ġglobal": 394, "Ġglobalization": 395, "Ġres": 396, "Ġresh": 397, "Ġreshap": 398, "Ġreshaped": 399, "Ġecon": 400, "Ġeconom": 401, "Ġeconomies": 402, "ĠAn": 403, "ĠAnti": 404, "ĠAntid": 405, "ĠAntidis": 406, "ĠAntidises": 407, "ĠAntidisestabl": 408, "ĠAntidisestablishment": 409, "ĠAntidisestablishmentar": 410, "ĠAntidisestablishmentari": 411, "ĠAntidisestablishmentarian": 412, "ĠAntidisestablishmentarianis": 413, "ĠAntidisestablishmentarianism": 414, "Ġfam": 415, "Ġfamo": 416, "Ġfamous": 417, "Ġfamously": 418, "Ġlon": 419, "Ġlong": 420, "ĠComputers": 421, "Ġcompute": 422, "Ġprogramm": 423, "Ġprogrammers": 424, "Ġteachers": 425, "Ġlearners": 426, "Kings": 427, "Ġqueens": 428, "Ġr": 429, "Ġrul": 430, "Ġruled": 431, "Ġkingd": 432, "Ġkingdom": 433, "Ġkingdoms": 434, "Ġwhil": 435, "Ġwhile": 436, "Ġgeneral": 437, "Ġgenerals": 438, "Ġcommand": 439, "Ġcommanded": 440, "Ġar": 441, "Ġarm": 442, "Ġarmies": 443, "Ġmess": 444, "Ġmessen": 445, "Ġmesseng": 446, "Ġmessenger": 447, "Ġbowed": 448, "to": 449, "Ġqueen": 450, "Ġadd": 451, "Ġaddre": 452, "Ġaddress": 453, "Ġaddressed": 454, "Ġpar": 455, "Ġparli": 456, "Ġparlia": 457, "Ġparliament": 458, "ĠR": 459, "ĠRe": 460, "ĠReb": 461, "ĠRebu": 462, "ĠRebuil": 463, "ĠRebuild": 464, "ĠRebuilding": 465, "Ġrema": 466, "Ġremaking": 467, "Ġreth": 468, "Ġrethin": 469, "Ġrethinking": 470, "requ": 471, "requi": 472, "require": 473, "Ġrewor": 474, "Ġreworking": 475, "Ġold": 476, "Ġass": 477, "Ġassu": 478, "Ġassum": 479, "Ġassump": 480, "Ġassumption": 481, "Ġassumptions": 482, "ĠD": 483, "ĠDis": 484, "ĠDisa": 485, "ĠDisagreement": 486, "Ġdis": 487, "Ġdisap": 488, "Ġdisapprov": 489, "Ġdisapproval": 490, "Ġslowed": 491, "Ġagreement": 492, "Tr": 493, "Trans": 494, "Transformation": 495, "Ġatt": 496, "Ġatten": 497, "Ġattention": 498, "Ġrev": 499, "Ġrevol": 500, "Ġrevolu": 501, "Ġrevolution": 502, "Ġrevolutioniz": 503, "Ġrevolutionized": 504, "Ġnat": 505, "Ġnatural": 506, "Ġprocessing": 507, "Ġfore": 508, "Ġforever": 509, "Neural": 510, "Ġpat": 511, "Ġpatt": 512, "Ġpatter": 513, "Ġpattern": 514, "Ġpatterns": 515, "Ġfrom": 516, "Ġdat": 517, "Ġdata": 518, "Ġadju": 519, "Ġadjust": 520, "Ġadjusting": 521, "Ġbil": 522, "Ġbilli": 523, "Ġbillions": 524, "Ġwe": 525, "Ġweight": 526, "Ġweights": 527, "Ġdur": 528, "Ġduring": 529, "Ġtrain": 530, "Ġtraining": 531, "Em": 532, "Emb": 533, "Embed": 534, "Embedd": 535, "Embeddings": 536, "Ġplace": 537, "Ġsim": 538, "Ġsimil": 539, "Ġsimilar": 540, "Ġmeanings": 541, "Ġnear": 542, "Ġeach": 543, "Ġoth": 544, "Ġother": 545, "Ġhigh": 546, "Ġdi": 547, "Ġdimen": 548, "Ġdimens": 549, "Ġdimensi": 550, "Ġdimension": 551, "Ġdimensional": 552, "Ġspace": 553, "Rea": 554, "Reas": 555, "Reason": 556, "Reasoning": 557, "Ġthink": 558, "Ġbe": 559, "Ġbef": 560, "Ġbefore": 561, "Ġthey": 562, "Ġans": 563, "Ġansw": 564, "Ġanswer": 565, "Ġgenerat": 566, "Ġgenerating": 567, "Ġinter": 568, "Ġintermed": 569, "Ġintermedi": 570, "Ġintermediate": 571, "Ġste": 572, "Ġsteps": 573, "Ġas": 574, "Ġtokens": 575, "Ph": 576, "Photography": 577, "Ġtel": 578, "Ġtele": 579, "Ġteleph": 580, "Ġtelephotography": 581, "Ġv": 582, "Ġvi": 583, "Ġvid": 584, "Ġvide": 585, "Ġvideography": 586, "Ġlight": 587, "Ġlens": 588, "Ġlenses": 589, "Ġsens": 590, "Ġsensor": 591, "Ġsensors": 592, "Bea": 593, "Beau": 594, "Beautif": 595, "Beautiful": 596, "Ġwon": 597, "Ġwonder": 598, "Ġwonderful": 599, "Ġpow": 600, "Ġpower": 601, "Ġpowerful": 602, "Ġmeaning": 603, "Ġmeaningful": 604, "Ġcar": 605, "Ġcarry": 606, "Ġsuffixes": 607, "Ġli": 608, "Ġlike": 609, "Ġful": 610, "Ġness": 611, "Qu": 612, "Quick": 613, "Quickly": 614, "Ġslow": 615, "Ġslowly": 616, "Ġcare": 617, "Ġcareful": 618, "Ġcarefully": 619, "Ġhapp": 620, "Ġhappi": 621, "Ġhappily": 622, "Ġadver": 623, "Ġadverbs": 624, "Ġfor": 625, "Ġformed": 626, "Ġly": 627, "Ġending": 628, "Est": 629, "Establ": 630, "Establishment": 631, "Ġgo": 632, "Ġgover": 633, "Ġgovern": 634, "Ġgovernment": 635, "Ġdev": 636, "Ġdevel": 637, "Ġdevelo": 638, "Ġdevelop": 639, "Ġdevelopment": 640, "Ġman": 641, "Ġmanage": 642, "Ġmanagement": 643, "Ġmen": 644, "Ġment": 645, "In": 646, "Information": 647, "Ġed": 648, "Ġedu": 649, "Ġeduc": 650, "Ġeducation": 651, "Ġcommun": 652, "Ġcommunic": 653, "Ġcommunication": 654, "Ġor": 655, "Ġorg": 656, "Ġorgan": 657, "Ġorganization": 658, "Ġtion": 659, "Artificial": 660, "Ġbroa": 661, "Ġbroad": 662, "Ġfi": 663, "Ġfiel": 664, "Ġfield": 665, "Ġsc": 666, "Ġscience": 667, "can": 668, "Ġnow": 669, "Ġrecog": 670, "Ġrecogn": 671, "Ġrecogniz": 672, "Ġrecognize": 673, "Ġspe": 674, "Ġspee": 675, "Ġspeech": 676, "Ġtransl": 677, "Ġtranslate": 678, "Ġgenerate": 679, "of": 680, "Ġworld": 681, "ĠM": 682, "ĠMa": 683, "ĠMachine": 684, "Ġsubs": 685, "Ġsubset": 686, "Ġartificial": 687, "Ġwhic": 688, "Ġwhich": 689, "Ġim": 690, "Ġimprov": 691, "Ġimproves": 692, "Ġta": 693, "Ġtas": 694, "Ġtask": 695, "Ġex": 696, "Ġexper": 697, "Ġexperience": 698, "Ġcomputerization": 699, "Ġlet": 700, "Ġlets": 701, "Ġstore": 702, "Ġsor": 703, "Ġsort": 704, "Ġret": 705, "Ġretr": 706, "Ġretri": 707, "Ġretriev": 708, "Ġretrieve": 709, "Ġinformation": 710, "Ġaut": 711, "Ġautom": 712, "Ġautoma": 713, "Ġautomatic": 714, "Ġautomatically": 715, "ĠComputer": 716, "ĠComputerization": 717, "chang": 718, "changed": 719, "Ġbus": 720, "Ġbusiness": 721, "Ġbusinesses": 722, "Ġke": 723, "Ġkee": 724, "Ġkeep": 725, "ĠS": 726, "ĠSt": 727, "ĠStrawberry": 728, "Ġplan": 729, "Ġplant": 730, "Ġplants": 731, "Ġgrow": 732, "Ġlow": 733, "Ġgroun": 734, "Ġground": 735, "produ": 736, "produce": 737, "Ġsw": 738, "Ġswe": 739, "Ġsweet": 740, "Ġred": 741, "Ġfru": 742, "Ġfrui": 743, "Ġfruit": 744, "Ġstrawberry": 745, "Ġnot": 746, "Ġtru": 747, "Ġtrue": 748, "Ġberry": 749, "Ġbot": 750, "Ġbotan": 751, "Ġbotanic": 752, "Ġbotanically": 753, "Ġspea": 754, "Ġspeaking": 755, "Ġmeans": 756, "Ġalg": 757, "Ġalgor": 758, "Ġalgorith": 759, "Ġalgorithms": 760, "input": 761, "Ġinto": 762, "Ġout": 763, "Ġoutput": 764, "Ġneural": 765, "Ġlo": 766, "Ġloo": 767, "Ġloos": 768, "Ġloosel": 769, "Ġloosely": 770, "Ġins": 771, "Ġinsp": 772, "Ġinspi": 773, "Ġinspired": 774, "Ġbiologic": 775, "Ġbiological": 776, "brain": 777, "brains": 778, "ĠComputational": 779, "Ġbiology": 780, "Ġling": 781, "Ġlingu": 782, "Ġlinguis": 783, "Ġlinguistic": 784, "Ġlinguistics": 785, "che": 786, "chem": 787, "chemi": 788, "chemist": 789, "chemistry": 790, "Ġall": 791, "Ġcomputers": 792, "Ġcomp": 793, "Ġcompl": 794, "Ġcomple": 795, "Ġcomplex": 796};
+  // @bpe-data-end
+
+  // @bpe-fn-start
+  const _bpeRank = new Map(BPE_MERGES.map((s, i) => [s, i]));
+  // GPT-style pre-tokenization: keep a leading space attached to the next word.
+  const _bpePretok = /'s|'t|'re|'ve|'m|'ll|'d| ?[A-Za-z]+| ?\d+| ?[^\sA-Za-z\d]+|\s+/g;
+  function _bpeMergeWord(sym) {
+    let symbols = Array.from(sym);
+    while (symbols.length > 1) {
+      let best = null, bestRank = Infinity, bestI = -1;
+      for (let i = 0; i < symbols.length - 1; i++) {
+        const key = symbols[i] + ' ' + symbols[i + 1];
+        const r = _bpeRank.get(key);
+        if (r !== undefined && r < bestRank) { bestRank = r; best = key; bestI = i; }
       }
-      
-      // Handle punctuation
-      if (/^[^\s\w]$/.test(part)) {
-        addToken(part, false);
-        return;
-      }
-      
-      // Handle words - try to break into subwords
-      let word = part;
-      let subTokens = [];
-      
-      // Check if whole word is in vocab first
-      if (bpeVocab[word] !== undefined) {
-        addToken(word, false);
-        return;
-      }
-      
-      // Try to apply subword rules
-      let matched = false;
-      for (const rule of subwordRules) {
-        const match = word.match(rule.pattern);
-        if (match) {
-          // Split according to rule
-          const parts = rule.split.map(p => {
-            if (p.startsWith('$')) {
-              const idx = parseInt(p.substring(1));
-              return match[idx];
-            }
-            return p;
-          }).filter(p => p && p.length > 0);
-          
-          parts.forEach((p, idx) => addToken(p, idx > 0)); // First part is not continuation
-          matched = true;
-          break;
-        }
-      }
-      
-      if (!matched) {
-        // Recursive fallback: keep stripping prefixes and suffixes
-        let remaining = word;
-        const foundParts = [];
-        
-        // Define prefixes and suffixes for recursive stripping
-        const prefixes = ['anti', 'dis', 'un', 're', 'pre', 'mis', 'over', 'under', 'out', 'up', 'down', 'self', 'semi', 'auto', 'inter', 'trans', 'sub', 'super', 'non', 'de', 'en', 'em', 'in', 'im', 'il', 'ir'];
-        const suffixes = ['ization', 'isation', 'fulness', 'lessness', 'ousness', 'iveness', 'ibility', 'ability', 'arian', 'ment', 'tion', 'sion', 'ness', 'able', 'ible', 'ful', 'less', 'ous', 'ive', 'ity', 'ing', 'ed', 'er', 'est', 'ly', 'al', 'ism', 'ist', 'es', 's'];
-        
-        // Keep stripping prefixes
-        let foundPrefix = true;
-        while (foundPrefix && remaining.length > 3) {
-          foundPrefix = false;
-          for (const prefix of prefixes) {
-            if (remaining.toLowerCase().startsWith(prefix) && remaining.length > prefix.length + 2) {
-              foundParts.push(remaining.substring(0, prefix.length));
-              remaining = remaining.substring(prefix.length);
-              foundPrefix = true;
-              break;
-            }
-          }
-        }
-        
-        // Keep stripping suffixes (collect them, add in reverse order later)
-        const suffixParts = [];
-        let foundSuffix = true;
-        while (foundSuffix && remaining.length > 3) {
-          foundSuffix = false;
-          for (const suffix of suffixes) {
-            if (remaining.toLowerCase().endsWith(suffix) && remaining.length > suffix.length + 2) {
-              suffixParts.unshift(remaining.substring(remaining.length - suffix.length));
-              remaining = remaining.substring(0, remaining.length - suffix.length);
-              foundSuffix = true;
-              break;
-            }
-          }
-        }
-        
-        // Add the stem if there's anything left
-        if (remaining.length > 0) {
-          // Check if stem is in vocab, otherwise try to break further
-          if (bpeVocab[remaining] !== undefined || bpeVocab[remaining.toLowerCase()] !== undefined) {
-            foundParts.push(remaining);
-          } else if (remaining.length > 6) {
-            // Try one more split in the middle for long stems
-            // Look for common word roots
-            const roots = ['establish', 'stand', 'struct', 'form', 'port', 'dict', 'scrib', 'spec', 'ject', 'duct', 'graph', 'log', 'phon', 'photo', 'vis', 'vid', 'bio', 'geo', 'psych', 'tech', 'electr', 'comput'];
-            let splitRoot = false;
-            for (const root of roots) {
-              const idx = remaining.toLowerCase().indexOf(root);
-              if (idx > 0 && idx < remaining.length - root.length) {
-                foundParts.push(remaining.substring(0, idx));
-                foundParts.push(remaining.substring(idx, idx + root.length));
-                if (idx + root.length < remaining.length) {
-                  foundParts.push(remaining.substring(idx + root.length));
-                }
-                splitRoot = true;
-                break;
-              } else if (idx === 0 && remaining.length > root.length) {
-                foundParts.push(remaining.substring(0, root.length));
-                foundParts.push(remaining.substring(root.length));
-                splitRoot = true;
-                break;
-              }
-            }
-            if (!splitRoot) {
-              foundParts.push(remaining);
-            }
-          } else {
-            foundParts.push(remaining);
-          }
-        }
-        
-        // Add all suffix parts
-        foundParts.push(...suffixParts);
-        
-        // Add all found parts to tokens - first part is not continuation, rest are
-        foundParts.forEach((p, idx) => {
-          if (p && p.length > 0) addToken(p, idx > 0);
-        });
-      }
-    });
-    
-    return tokens;
+      if (best === null) break;
+      symbols = symbols.slice(0, bestI)
+        .concat([symbols[bestI] + symbols[bestI + 1]])
+        .concat(symbols.slice(bestI + 2));
+    }
+    return symbols;
   }
-  
-  function getTokenId(token) {
-    // Check exact match first
-    if (bpeVocab[token] !== undefined) {
-      return bpeVocab[token];
+  // Returns [{token, isContinuation}] — lossless (join + Ġ→space rebuilds input).
+  function bpeTokenize(text) {
+    const pieces = text.match(_bpePretok) || [];
+    const out = [];
+    for (const piece of pieces) {
+      if (/^\s+$/.test(piece)) continue;      // standalone spaces fold into next word
+      const marked = piece.replace(/ /g, 'Ġ');
+      _bpeMergeWord(marked).forEach((t, i) => out.push({ token: t, isContinuation: i > 0 }));
     }
-    // Check lowercase
-    if (bpeVocab[token.toLowerCase()] !== undefined) {
-      return bpeVocab[token.toLowerCase()];
-    }
-    // Generate a pseudo-random but consistent ID for unknown tokens
+    return out;
+  }
+  function bpeTokenId(token) {
+    if (BPE_VOCAB[token] !== undefined) return BPE_VOCAB[token];
     let hash = 0;
-    for (let i = 0; i < token.length; i++) {
-      hash = ((hash << 5) - hash) + token.charCodeAt(i);
-      hash = hash & hash;
-    }
+    for (let i = 0; i < token.length; i++) { hash = ((hash << 5) - hash) + token.charCodeAt(i); hash |= 0; }
     return 50000 + Math.abs(hash % 50000);
   }
-  
+  // @bpe-fn-end
+
   function render() {
     const text = input.value;
-    const tokenData = tokenize(text); // Now returns [{token, isContinuation}, ...]
-    
+    const tokenData = bpeTokenize(text); // [{token, isContinuation}, ...]
+
     tokensDiv.innerHTML = '';
     tokenData.forEach((data, i) => {
       const chip = document.createElement('span');
@@ -11756,25 +11614,26 @@ function setupTokenizer() {
         chip.style.borderColor = THEME.rgba(THEME.colors.blue, 0.5);
         chip.style.background = THEME.rgba(THEME.colors.blue, 0.1);
       }
-      chip.innerHTML = `<span class="index">${i}</span><span class="text">${data.token}</span>`;
+      const displayToken = data.token.replace(/Ġ/g, '␣');
+      chip.innerHTML = `<span class="index">${i}</span><span class="text">${displayToken}</span>`;
       tokensDiv.appendChild(chip);
     });
-    
+
     const tokens = tokenData.map(d => d.token);
-    const ids = tokens.map(t => getTokenId(t));
-    
+    const ids = tokens.map(t => bpeTokenId(t));
+
     // Format output nicely
-    const tokenStrs = tokens.map(t => `"${t}"`);
+    const tokenStrs = tokens.map(t => `"${t.replace(/Ġ/g, '␣')}"`);
     let tokensLine = 'tokens: [' + tokenStrs.join(', ') + ']';
     let idsLine = 'ids:    [' + ids.join(', ') + ']';
-    
+
     // Only show the blue token legend if there are continuation tokens
     const hasContinuations = tokenData.some(d => d.isContinuation);
-    const legendHtml = hasContinuations ? 
+    const legendHtml = hasContinuations ?
       `<div style="color: var(--color-blue); font-size: 0.9rem;">` +
       `<span style="display: inline-block; width: 12px; height: 12px; background: var(--secondary-20); border: 1px solid var(--color-blue); border-radius: 4px; margin-right: 6px; vertical-align: middle;"></span>` +
-      `Blue tokens are subword pieces (parts of a split word)</div>` : '';
-    
+      `Blue tokens continue a word; ␣ marks a leading space (real tokenizers attach spaces to the following token).</div>` : '';
+
     idsDiv.innerHTML = `<div style="margin-bottom: 0.75rem; color: var(--color-red);">${tokensLine}</div>` +
                        `<div style="margin-bottom: 1rem;">${idsLine}</div>` +
                        legendHtml;

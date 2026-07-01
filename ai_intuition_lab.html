@@ -7674,23 +7674,23 @@
           <p>The model can only "see" a maximum amount of text at once—this is the <strong>context window</strong>:</p>
           <div class="scale-comparison">
             <div class="scale-item">
-              <div class="scale-number">400K</div>
-              <div class="scale-label">GPT 5.2</div>
+              <div class="scale-number" data-fact="ctx.gpt"></div>
+              <div class="scale-label" data-fact="name.gpt"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">200K</div>
-              <div class="scale-label">Claude Sonnet 4.5</div>
+              <div class="scale-number" data-fact="ctx.claude"></div>
+              <div class="scale-label" data-fact="name.claude"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">1M</div>
-              <div class="scale-label">Gemini 3 Flash</div>
+              <div class="scale-number" data-fact="ctx.gemini"></div>
+              <div class="scale-label" data-fact="name.gemini"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">Up to 2M</div>
-              <div class="scale-label">Grok 4.1</div>
+              <div class="scale-number" data-fact="ctx.haiku"></div>
+              <div class="scale-label">Budget models (e.g. Claude Haiku 4.5)</div>
             </div>
           </div>
-          <p>Each inference step processes the <em>entire</em> context, all those tokens with their embedding vectors. It's a massive amount of math for each pass. That's why longer conversations are more expensive for model providers—more tokens to process each step!</p>
+          <p>As of <span data-fact-asof></span>, a 1M-token window is the frontier standard, with budget models around 200K. Each inference step processes the <em>entire</em> context, all those tokens with their embedding vectors. It's a massive amount of math for each pass. That's why longer conversations are more expensive for model providers—more tokens to process each step!</p>
         </div>
 
         <div class="concept-card">
@@ -7999,23 +7999,23 @@
           <p>The demo network above has <strong>~30 parameters</strong>. Real language models have:</p>
           <div class="scale-comparison">
             <div class="scale-item">
-              <div class="scale-number">8B</div>
-              <div class="scale-label">Llama 3</div>
+              <div class="scale-number" data-fact="params.small"></div>
+              <div class="scale-label" data-fact="params.small.name"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">70B</div>
-              <div class="scale-label">Llama 3.1</div>
+              <div class="scale-number" data-fact="params.mid"></div>
+              <div class="scale-label" data-fact="params.mid.name"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">405B</div>
-              <div class="scale-label">Llama 3.1 405B</div>
+              <div class="scale-number" data-fact="params.dense"></div>
+              <div class="scale-label" data-fact="params.dense.name"></div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">500B–1T+</div>
-              <div class="scale-label">Frontier models like GPT 5.2</div>
+              <div class="scale-number" data-fact="params.moe"></div>
+              <div class="scale-label" data-fact="params.moe.name"></div>
             </div>
           </div>
-          <p>Same basic idea—multiply, add, activate—just repeated trillions of times with carefully tuned weights across hundreds of layers. Note: Exact sizes for closed-source frontier models aren't disclosed; the largest confirmed dense models are ~500B parameters, while sparse MoE models can exceed 1T total parameters.</p>
+          <p>Same basic idea—multiply, add, activate—just repeated trillions of times with carefully tuned weights across hundreds of layers. Note: Closed-source frontier labs don't disclose exact sizes. The largest confirmed open dense model is 405B parameters; sparse mixture-of-experts models exceed 1T total parameters (as of <span data-fact-asof></span>).</p>
         </div>
       </div>
     </section>
@@ -8813,19 +8813,19 @@
           <p>The demo above trains 2 parameters. Real language models:</p>
           <div class="scale-comparison">
             <div class="scale-item">
-              <div class="scale-number">405B</div>
-              <div class="scale-label">parameters (Llama 3.1)</div>
+              <div class="scale-number" data-fact="params.dense"></div>
+              <div class="scale-label">parameters (Llama 3.1 405B)</div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">15T+</div>
+              <div class="scale-number" data-fact="train.tokens"></div>
               <div class="scale-label">tokens of training data</div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">$100M+</div>
-              <div class="scale-label">compute cost (estimated)</div>
+              <div class="scale-number" data-fact="train.cost"></div>
+              <div class="scale-label">compute cost (third-party estimate)</div>
             </div>
             <div class="scale-item">
-              <div class="scale-number">16,000+</div>
+              <div class="scale-number" data-fact="train.gpus"></div>
               <div class="scale-label">GPUs for months</div>
             </div>
           </div>
@@ -9957,7 +9957,7 @@
           </div>
           <div class="timeline-segment cutoff">
             <div class="timeline-dot"></div>
-            <div class="timeline-label">Knowledge Cutoff<small>~May 2025</small></div>
+            <div class="timeline-label">Knowledge Cutoff<small data-fact="cutoff.example"></small></div>
           </div>
           <div class="timeline-segment unknown">
             <div class="timeline-dot"></div>
@@ -9970,7 +9970,7 @@
         </div>
         
         <div class="cutoff-note">
-          <strong>Why this matters:</strong> If you ask about events after a model's cutoff date, it will either refuse or potentially hallucinate. For example, a model with a May 2025 cutoff won't have reliable information about events in late 2025. The information simply isn't in its weights.
+          <strong>Why this matters:</strong> If you ask about events after a model's cutoff date, it will either refuse or potentially hallucinate. For example, a model with a December 2025 cutoff can't know about events in 2026 — the information simply isn't in its weights.
         </div>
       </div>
 
@@ -10310,6 +10310,55 @@ const THEME = {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 };
+
+// @model-facts-start
+// Single source of truth for every dated fact in the lab (spec Appendix A).
+// To refresh next semester: edit values here, update asOf, done.
+const MODEL_FACTS = {
+  asOf: 'July 2026',
+  facts: {
+    // Flagship names
+    'name.gpt': 'GPT-5.5', 'name.claude': 'Claude Fable 5', 'name.claude.mid': 'Claude Opus 4.8',
+    'name.gemini': 'Gemini 3.5 Flash', 'name.grok': 'Grok 4.3',
+    'name.gpt.free': 'GPT-5.5 Instant',
+    // Context windows (A.2)
+    'ctx.gpt': '1M', 'ctx.claude': '1M', 'ctx.gemini': '1M', 'ctx.grok': '1M', 'ctx.haiku': '200K',
+    'ctx.industry': '200K–1M+',
+    // Pricing per 1M tokens (A.3)
+    'price.gpt.in': '$5.00', 'price.gpt.out': '$30.00', 'price.gpt.ratio': '6x',
+    'price.cheap.name': 'GPT-5.4-nano', 'price.cheap.in': '$0.20', 'price.cheap.out': '$1.25',
+    'price.claude.in': '$5.00', 'price.claude.out': '$25.00',
+    'price.gemini.in': '$1.50', 'price.gemini.out': '$9.00',
+    // Knowledge cutoffs (A.4)
+    'cutoff.gpt': 'December 2025', 'cutoff.claude': 'January 2026', 'cutoff.gemini': 'January 2025',
+    'cutoff.example': 'December 2025',
+    // Parameter scale (A.6)
+    'params.small.name': 'Llama 4 Scout', 'params.small': '109B (17B active)',
+    'params.mid.name': 'Llama 4 Maverick', 'params.mid': '~400B (17B active)',
+    'params.dense.name': 'Llama 3.1 405B', 'params.dense': '405B dense',
+    'params.moe.name': 'DeepSeek V4-Pro', 'params.moe': '1.6T (49B active)',
+    // Training scale (A.6)
+    'train.tokens': '15T+', 'train.gpus': '16,000+', 'train.cost': '~$170M (est.)',
+    // Media (A.7)
+    'img.google': 'Nano Banana 2', 'img.openai': 'GPT Image 2', 'img.other': 'Midjourney V8.1',
+    'video.models': 'Veo 3.1, Runway Gen-4.5, Kling 3.0',
+    'voice.models': 'ChatGPT voice (GPT-Realtime-2), Gemini Live',
+    // Tech stats (A.9)
+    'vocab.size': '~200,000', 'speed.range': '50–200 tokens per second',
+    'layers.range': '30 to ~126', 'dims.range': '4K–16K+',
+  },
+  lookup(key) { return this.facts[key] ?? `??${key}??`; },
+};
+// @model-facts-end
+
+function populateFacts() {
+  document.querySelectorAll('[data-fact]').forEach(el => {
+    el.textContent = MODEL_FACTS.lookup(el.dataset.fact);
+  });
+  document.querySelectorAll('[data-fact-asof]').forEach(el => {
+    el.textContent = MODEL_FACTS.asOf;
+  });
+}
 
 // ============ UTILITIES ============
 function clamp(val, min, max) {
@@ -12737,6 +12786,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Small delay to catch any late browser scroll adjustments
   setTimeout(forceScrollTop, 50);
 
+  populateFacts();
   setupTabs();
   setupInference();
   setupNeuralNetwork();

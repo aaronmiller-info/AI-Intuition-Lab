@@ -3055,6 +3055,18 @@
       text-align: center;
     }
 
+    details.deep-dive > summary.deep-dive-summary {
+      cursor: pointer; font-size: 1.15rem; font-weight: 700; padding: 1rem 1.25rem;
+      color: var(--text-primary); list-style: none; border-radius: var(--radius-sm);
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    }
+    details.deep-dive > summary.deep-dive-summary::-webkit-details-marker { display: none; }
+    details.deep-dive > summary.deep-dive-summary::after {
+      content: '▸ expand'; float: right; font-size: 0.8rem; color: var(--text-muted); font-weight: 400;
+    }
+    details.deep-dive[open] > summary.deep-dive-summary::after { content: '▾ collapse'; }
+    details.deep-dive > .deep-dive-body { padding-top: 1rem; }
+
     .concept-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
@@ -6879,9 +6891,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Tokenization</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Tokenization</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>Why Not Just Use Letters?</h4>
           <p>You might wonder: why not just feed the model one letter at a time? Three reasons:</p>
@@ -7029,7 +7041,8 @@
           </div>
           <p><strong>Rule of thumb:</strong> 1 token ≈ 4 characters or ≈ ¾ of a word in English.</p>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- EMBEDDINGS TAB -->
@@ -7217,9 +7230,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Going Deeper on Embeddings</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Going Deeper on Embeddings</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>From Tokens to Vectors</h4>
           <p>Remember from the <b>Tokenization</b> tab: text gets split into tokens, and each token gets an ID number. But a single ID (like 15339 for "hello") doesn't capture meaning—it's just an address.</p>
@@ -7401,7 +7414,8 @@
             <p><strong>What you're learning:</strong> Embeddings capture multiple aspects of meaning simultaneously, arranged spatially so similar things cluster together.</p>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- INFERENCE TAB -->
@@ -7615,9 +7629,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Inference</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Inference</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The Core Loop</h4>
           <p>When you chat with an AI, you're watching this loop happen incredibly fast:</p>
@@ -7702,7 +7716,8 @@
             <p><strong>What you're learning:</strong> The same prompt can produce different outputs depending on sampling settings. This is why AI responses can vary even when you ask the same question.</p>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- NEURAL NETWORK TAB -->
@@ -7834,9 +7849,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Neural Networks</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Neural Networks</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The Big Picture</h4>
           <p>A neural network is just a series of simple math operations chained together. Each "neuron" does three things:</p>
@@ -8017,7 +8032,8 @@
           </div>
           <p>Same basic idea—multiply, add, activate—just repeated trillions of times with carefully tuned weights across hundreds of layers. Note: Closed-source frontier labs don't disclose exact sizes. The largest confirmed open dense model is 405B parameters; sparse mixture-of-experts models exceed 1T total parameters (as of <span data-fact-asof></span>).</p>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- ATTENTION TAB -->
@@ -8074,9 +8090,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Attention</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Attention</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The Core Intuition</h4>
           <p>Imagine you're reading a sentence and trying to understand what "it" refers to:</p>
@@ -8326,7 +8342,8 @@
           </div>
           <p style="margin-top: 1rem; text-align: center; color: var(--text-secondary);">The <strong>Pre-Training</strong> tab shows how all those billions of parameters get learned.</p>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- TRAINING TAB -->
@@ -8632,9 +8649,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Pre-Training</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Pre-Training</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>What Pre-Training Achieves</h4>
           <p>By predicting billions of next tokens, the model learns far more than just "which word comes next":</p>
@@ -8857,7 +8874,8 @@
           </div>
           <p>That's why pre-training is just the first step. Models like ChatGPT and Claude undergo additional training (fine-tuning, RLHF) to become useful assistants—which is exactly what we cover in the <strong>Fine-Tuning</strong> tab.</p>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- FINE-TUNING TAB -->
@@ -9094,9 +9112,9 @@
       </div>
 
       <!-- Deep Dive Section -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Understanding Fine-Tuning</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Understanding Fine-Tuning</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The Three Stages of Creating an AI Assistant</h4>
           <p>Modern AI assistants go through multiple training phases:</p>
@@ -9321,7 +9339,8 @@
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- CONTEXT & PROMPTING TAB -->
@@ -9563,9 +9582,9 @@
       </div>
 
       <!-- Deep Dive -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Prompt Engineering Techniques</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Prompt Engineering Techniques</summary>
+        <div class="deep-dive-body">
         <p style="margin-bottom: 1.5rem;"><strong>Prompt engineering</strong> is the craft of writing effective inputs to get better outputs from AI models.</p>
         
         <div class="concept-card">
@@ -9625,9 +9644,12 @@
           <p>You can tell an AI model to take the perspective of someone, like a user of your service, a character in a book, or an expert in a field. "Act like a senior developer" shifts probability distributions toward patterns associated with that expertise in the training data.</p>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">The model learned correlations like "senior developers" → "best practices, error handling, type hints, documentation." Invoking the persona activates these associations.</p>
         </div>
+        </div>
+      </details>
 
-        <h3 class="deep-dive-title" style="margin-top: 2rem;">🏗️ Context Engineering Techniques</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🏗️ Go deeper (optional): Context Engineering Techniques</summary>
+        <div class="deep-dive-body">
         <p style="margin-bottom: 1.5rem;">Context engineering focuses on <em>what information the AI model "sees"</em>. In production AI tools, much of the context window is filled programmatically—not typed by users.</p>
 
         <div class="concept-card">
@@ -9679,7 +9701,8 @@
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- IMAGES & SOUND TAB -->
@@ -9860,9 +9883,9 @@
       </div>
 
       <!-- Deep Dive -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Image and Audio Generation</h3>
-
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Image and Audio Generation</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>Diffusion Models for Generation</h4>
           <p>Most image generation (NanoBanana & GPT Image-Gen 1.5) uses a different approach called <strong>diffusion</strong>:</p>
@@ -9880,7 +9903,8 @@
           <p>Audio models like Whisper convert sound waves to spectrograms (visual representations of sound), then process them similarly to images. For speech generation, the process reverses—tokens become audio waveforms.</p>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Real-time voice conversation (like GPT-5.2) requires extremely fast processing—the model must listen, think, and speak with minimal delay to feel natural.</p>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
 
     <!-- LIMITATIONS & HALLUCINATIONS TAB -->
@@ -10184,9 +10208,9 @@
       </div>
 
       <!-- Deep Dive -->
-      <div class="deep-dive">
-        <h3 class="deep-dive-title">🔬 Going Deeper on Limitations</h3>
-        
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Going Deeper on Limitations</summary>
+        <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The Calibration Problem</h4>
           <p>Ideally, when a model says "I'm 80% confident," it should be correct 80% of the time. In practice, LLMs are often <strong>overconfident</strong>—they express high certainty even for things they're wrong about.</p>
@@ -10252,7 +10276,8 @@
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </section>
     </main>
   </div>
@@ -10416,6 +10441,21 @@ function revealInView(section) {
       el.classList.add('revealed');
       if (_revealObserver) _revealObserver.unobserve(el);
     }
+  });
+}
+
+// Deep dives render collapsed; when one opens, re-render that tab's canvases
+// (they were zero-size while hidden) and reveal any newly-visible content.
+function setupDeepDives() {
+  document.querySelectorAll('details.deep-dive').forEach(d => {
+    d.addEventListener('toggle', () => {
+      if (!d.open) return;
+      const section = d.closest('.tab-section');
+      const tab = section && section.id.replace('tab-', '');
+      // Canvases inside a previously-hidden details have zero size; re-render.
+      if (tab && tabRenders[tab]) setTimeout(() => tabRenders[tab](), 50);
+      revealInView(section);
+    });
   });
 }
 
@@ -12808,6 +12848,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupReadingProgress();
   setupResizeRedraw();
   markRevealItems();
+  setupDeepDives();
   // Reveal the initially-visible topic's in-view blocks right away
   revealInView(document.querySelector('.tab-section.active'));
 });

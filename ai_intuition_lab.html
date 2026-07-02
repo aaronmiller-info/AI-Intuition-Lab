@@ -10854,6 +10854,7 @@ function setupInference() {
   let stepCount = 0;
   let mode = 'you'; // 'you' = You be the model, 'watch' = Watch the model play
   let currentKey = null; // walker position within STORY_TREE
+  let genEpoch = 0; // bumped on reset/mode-switch to invalidate in-flight generateNext() callbacks
 
   // Branching continuation map: each node offers a probability distribution
   // over next tokens, and (optionally) maps a sampled token to the next node.
@@ -11200,6 +11201,7 @@ function setupInference() {
 
     isGenerating = true;
     const temp = parseFloat(tempSlider.value);
+    const epoch = genEpoch; // snapshot so a reset/mode-switch mid-flight can invalidate this callback
 
     // Brief re-read sweep over the text so far, then animate the pipeline
     promptDisplay.classList.add('reread-sweep');
@@ -11209,14 +11211,17 @@ function setupInference() {
     setTimeout(() => {
       pipelineModel.classList.remove('active');
 
+      if (epoch !== genEpoch) {
+        // Reset or mode-switch happened while this step was in flight — discard it.
+        isGenerating = false;
+        return;
+      }
+
       // Sample token based on temperature
       const sampled = sampleToken(node.probs, temp);
-      const preCommitProbs = node.probs;
       commitToken(sampled.token);
       isGenerating = false;
 
-      // Update probability display with actual selected token
-      updateProbDisplay(preCommitProbs, sampled.token);
       updateDisplay();
 
       // Check if we hit stop token
@@ -11253,6 +11258,8 @@ function setupInference() {
   // Reset
   function reset() {
     stopAutoGenerate();
+    genEpoch++; // invalidate any in-flight generateNext() callback
+    isGenerating = false;
     currentText = basePrompt;
     generatedTokens = [];
     stepCount = 0;
@@ -11264,6 +11271,8 @@ function setupInference() {
   function setMode(newMode) {
     if (mode === newMode) return;
     stopAutoGenerate();
+    genEpoch++; // invalidate any in-flight generateNext() callback
+    isGenerating = false;
     mode = newMode;
     modeYouBtn.classList.toggle('active', mode === 'you');
     modeWatchBtn.classList.toggle('active', mode === 'watch');

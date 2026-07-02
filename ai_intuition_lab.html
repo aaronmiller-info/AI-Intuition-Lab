@@ -9520,8 +9520,8 @@
         </div>
         
         <div class="system-example">
-          <div class="system-example-label">Example System Prompt (GPT-5.2)</div>
-          "You are GPT-5.2, a large language model trained by OpenAI. You are helpful, harmless, and honest. Current date: December 18, 2025. Knowledge cutoff: May 2025."
+          <div class="system-example-label">Example System Prompt (illustrative)</div>
+          "You are <span data-fact="name.gpt"></span>, a large language model trained by OpenAI. You are helpful, harmless, and honest. Knowledge cutoff: <span data-fact="cutoff.gpt"></span>."
         </div>
       </div>
 
@@ -9559,12 +9559,16 @@
         
         <div class="cost-comparison">
           <div class="cost-row">
-            <span class="cost-label">Input token cost (GPT-5.2)</span>
-            <span class="cost-value">~$1.75 / 1 Million tokens</span>
+            <span class="cost-label">Input token cost (<span data-fact="name.gpt"></span>)</span>
+            <span class="cost-value"><span data-fact="price.gpt.in"></span> / 1 Million tokens</span>
           </div>
           <div class="cost-row">
-            <span class="cost-label">Typical output token cost (GPT-5.2)</span>
-            <span class="cost-value">~$14.00 / 1 Million tokens (8x more!)</span>
+            <span class="cost-label">Output token cost (<span data-fact="name.gpt"></span>)</span>
+            <span class="cost-value"><span data-fact="price.gpt.out"></span> / 1 Million tokens (<span data-fact="price.gpt.ratio"></span> more!)</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Budget-model contrast (<span data-fact="price.cheap.name"></span>)</span>
+            <span class="cost-value"><span data-fact="price.cheap.in"></span> in / <span data-fact="price.cheap.out"></span> out per 1M tokens</span>
           </div>
           <div class="cost-row">
             <span class="cost-label">Why the difference?</span>

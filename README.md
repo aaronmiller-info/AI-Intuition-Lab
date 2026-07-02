@@ -6,7 +6,7 @@ A hands-on interactive guide to understanding how AI and Large Language Models w
 
 ## About
 
-AI Intuition Lab is an interactive educational resource designed to help people develop intuition for how modern AI and large language models (LLMs) actually work. It covers 10 key topics:
+AI Intuition Lab is an interactive educational resource designed to help people develop intuition for how modern AI and large language models (LLMs) actually work. It covers 12 key topics:
 
 1. **Tokenization** – How text gets broken into pieces the model can process
 2. **Embedding Space** – How tokens become meaningful numbers
@@ -16,8 +16,10 @@ AI Intuition Lab is an interactive educational resource designed to help people 
 6. **Pre-Training** – How models learn from massive datasets
 7. **Fine-Tuning** – How models are adapted for specific tasks
 8. **Prompting** – How to communicate effectively with AI
-9. **Images & Sound** – How AI handles multimodal content
-10. **Limitations** – What AI can't do (yet)
+9. **Reasoning** – How models "think" before answering
+10. **Agents & Tools** – How models take actions and use tools
+11. **Images & Sound** – How AI handles multimodal content
+12. **Limitations** – What AI can't do (yet)
 
 ## Who Is This For?
 
@@ -32,7 +34,7 @@ AI Intuition Lab is a single HTML file with no dependencies. Just open it in a b
 1. Download `ai_intuition_lab.html`
 2. Open it in any modern web browser
 
-Best viewed on a tablet or computer (not optimized for mobile phones).
+Works on phones, but best on a tablet or computer.
 
 ## Contributing
 
@@ -53,7 +55,7 @@ You're also very welcome to fork this repository and create your own version wit
 
 Created by [Aaron Miller](https://aaronmiller.info) at [BYU Marriott School of Business](https://marriott.byu.edu).
 
-Built with assistance from [Cursor](https://cursor.com) and [Claude Code](https://claude.ai/claude-code) using Claude Opus 4.5.
+Built with assistance from [Cursor](https://cursor.com) and [Claude Code](https://claude.ai/claude-code) using Claude Opus 4.5 and Claude Fable 5.
 
 ## License
 

@@ -47,7 +47,18 @@ Beautiful, wonderful, powerful, and meaningful words carry suffixes like ful and
 Quickly, slowly, carefully, and happily are adverbs formed with the ly ending.
 Establishment, government, development, and management end with the ment suffix.
 Information, education, communication, and organization end with tion.
-""" * 40
+Artificial intelligence is a broad field of computer science. Artificial systems
+can now recognize speech, translate language, and generate computational models
+of the world. Machine learning is a subset of artificial intelligence in which a
+machine improves at a task through experience. A computerization of records lets
+a computer store, sort, and retrieve information automatically. Computerization
+changed how businesses keep records. Strawberry plants grow low to the ground and
+produce a sweet red fruit. A strawberry is not a true berry, botanically speaking.
+Understanding computational thinking means understanding how algorithms transform
+input into output. Artificial neural networks are loosely inspired by biological
+brains. Computational biology, computational linguistics, and computational
+chemistry all use computers to model complex systems.
+""" * 60
 
 
 def get_stats(words):

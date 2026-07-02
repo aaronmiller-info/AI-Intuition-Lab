@@ -8132,7 +8132,7 @@
 
       <div class="explanation">
         <h4>Why attention is powerful</h4>
-        <p>Traditional neural networks process words in fixed order, passing information step by step. <strong>Attention</strong> lets every word directly access every other word, regardless of distance. When processing "it" in "The cat sat on the mat because it was tired", attention connects "it" directly back to "cat"—no information lost in between. This is what makes <strong>transformers</strong> (attention-based networks) so effective at understanding language.</p>
+        <p>Traditional neural networks process words in fixed order, passing information step by step. <strong>Attention</strong> lets every word directly access every other word, regardless of distance. When processing "it" in "The cat sat because it was tired", attention connects "it" directly back to "cat"—no information lost in between. This is what makes <strong>transformers</strong> (attention-based networks) so effective at understanding language.</p>
       </div>
 
       <!-- Deep Dive Section -->
@@ -12017,8 +12017,6 @@ function setupAttention() {
     [0.03, 0.20, 0.08, 0.05, 0.25, 0.14, 0.25], // tired -> it/cat
   ];
   // @att-data-end
-
-  const colors = [THEME.colors.blue, THEME.colors.green, THEME.colors.yellow, THEME.colors.purple, THEME.colors.red, THEME.colors.blue];
 
   let queryIdx = ATT_TOKENS.indexOf('it');
 

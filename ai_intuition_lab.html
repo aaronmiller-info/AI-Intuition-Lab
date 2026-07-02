@@ -1066,7 +1066,7 @@
 
     #embedding-canvas {
       width: 100%;
-      height: 450px;
+      height: 100%;
       background: var(--bg-card);
       border-radius: var(--radius);
       border: 1px solid var(--border-subtle);
@@ -7222,14 +7222,14 @@
                 <h3>2D Word Space</h3>
                 <span class="badge">Click a word to see the similarity scores</span>
               </div>
-              <div style="background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); padding: 1.5rem; height: 900px; display: flex; align-items: center; justify-content: center;">
-                <!-- Canvas constrained to 600px width but full height to ensure vertical aspect ratio -->
+              <div style="background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); padding: 1.5rem; aspect-ratio: 3 / 4; height: auto; max-height: 80vh; display: flex; align-items: center; justify-content: center;">
+                <!-- Canvas responsive: wrapper controls aspect ratio, canvas fills it -->
                 <canvas id="embedding-canvas" style="width: 100%; height: 100%; max-width: 600px;"></canvas>
               </div>
             </div>
 
             <div class="embed-sidebar">
-              <div class="concept-card h-900 flex flex-col" style="margin: 0;">
+              <div class="concept-card flex flex-col" style="margin: 0; height: 100%; min-height: 400px;">
                 <h4 class="mb-125" style="font-size: 1.1rem;">Similarity Scores</h4>
                 
                 <div class="control-panel-well mb-15">
@@ -7255,7 +7255,7 @@
                 </div>
                 
                 <p class="mt-15 text-sm text-muted" style="line-height: 1.5;">
-                  <strong>Note:</strong> This is a conceptual projection. The calculations are not the same that would be used in a real model.
+                  <strong>Note:</strong> These scores <em>are</em> real cosine similarity, computed from each word's hidden 8-dimensional vector. The 2D map is a projection for plotting, so on-screen distance is only approximate — trust the table, not your eyes.
                 </p>
               </div>
             </div>
@@ -11728,27 +11728,60 @@ function setupEmbeddings() {
   let W = 0, H = 0;
   let initialized = false;
   
-  // 2D embeddings - realistic layout based on semantic similarity
-  // Left side = living things, Right side = non-living/artificial
-  const embeddings = {
-    // People cluster (upper-left) - humans
-    man:      { x: 0.20, y: 1.35, color: THEME.colors.blue },
-    woman:    { x: 0.30, y: 1.25, color: THEME.colors.blue },
-    // Royalty cluster (near people - they're humans too)
-    king:     { x: 0.45, y: 1.30, color: THEME.colors.yellow },
-    queen:    { x: 0.55, y: 1.20, color: THEME.colors.yellow },
-    // Emotions cluster (below people - human experiences)
-    happy:    { x: 0.25, y: 0.85, color: THEME.colors.red },
-    sad:      { x: 0.15, y: 0.70, color: THEME.colors.red },
-    // Animals cluster (lower-left, living things)
-    cat:      { x: 0.10, y: 0.30, color: THEME.colors.green },
-    dog:      { x: 0.25, y: 0.20, color: THEME.colors.green },
-    // Tech cluster (far right, non-living - away from all living things)
-    computer: { x: 0.90, y: 0.45, color: THEME.colors.purple },
-    phone:    { x: 0.85, y: 0.30, color: THEME.colors.purple }
+  // @embed-words-start
+  function cosineSim(a, b) {
+    let dot = 0, na = 0, nb = 0;
+    for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
+    return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+  }
+  // vec = hand-tuned 8-D "meaning" vector (drives cosine); x,y = 2D plot projection.
+  // Dimensions (intuition): royal, human, animal, tech, emotion, size, positive, action.
+  const EMBED_WORDS = {
+    king:    { vec: [0.9,0.8,0.0,0.0,0.1,0.7,0.4,0.3], x: 0.45, y: 1.30, color: THEME.colors.yellow },
+    queen:   { vec: [0.9,0.8,0.0,0.0,0.1,0.6,0.4,0.3], x: 0.55, y: 1.20, color: THEME.colors.yellow },
+    prince:  { vec: [0.85,0.8,0.0,0.0,0.1,0.5,0.4,0.3], x: 0.50, y: 1.38, color: THEME.colors.yellow },
+    man:     { vec: [0.1,0.9,0.0,0.0,0.1,0.6,0.2,0.3], x: 0.20, y: 1.35, color: THEME.colors.blue },
+    woman:   { vec: [0.1,0.9,0.0,0.0,0.1,0.5,0.2,0.3], x: 0.30, y: 1.25, color: THEME.colors.blue },
+    child:   { vec: [0.0,0.9,0.0,0.0,0.2,0.3,0.3,0.4], x: 0.22, y: 1.10, color: THEME.colors.blue },
+    cat:     { vec: [0.0,0.1,0.9,0.0,0.1,0.3,0.3,0.4], x: 0.10, y: 0.30, color: THEME.colors.green },
+    dog:     { vec: [0.0,0.1,0.9,0.0,0.2,0.35,0.4,0.5], x: 0.25, y: 0.20, color: THEME.colors.green },
+    mouse:   { vec: [0.0,0.1,0.9,0.1,0.1,0.1,0.2,0.4], x: 0.05, y: 0.42, color: THEME.colors.green },
+    lion:    { vec: [0.0,0.1,0.9,0.0,0.2,0.8,0.2,0.5], x: 0.15, y: 0.15, color: THEME.colors.green },
+    computer:{ vec: [0.0,0.0,0.0,0.95,0.0,0.4,0.2,0.3], x: 0.90, y: 0.45, color: THEME.colors.purple },
+    phone:   { vec: [0.0,0.0,0.0,0.9,0.0,0.2,0.3,0.3], x: 0.85, y: 0.30, color: THEME.colors.purple },
+    laptop:  { vec: [0.0,0.0,0.0,0.92,0.0,0.3,0.2,0.3], x: 0.95, y: 0.55, color: THEME.colors.purple },
+    robot:   { vec: [0.0,0.2,0.1,0.85,0.0,0.5,0.1,0.5], x: 0.80, y: 0.60, color: THEME.colors.purple },
+    happy:   { vec: [0.0,0.3,0.0,0.0,0.9,0.2,0.9,0.3], x: 0.25, y: 0.85, color: THEME.colors.red },
+    sad:     { vec: [0.0,0.3,0.0,0.0,0.9,0.2,0.1,0.2], x: 0.15, y: 0.70, color: THEME.colors.red },
+    joy:     { vec: [0.0,0.2,0.0,0.0,0.95,0.2,0.95,0.3], x: 0.33, y: 0.90, color: THEME.colors.red },
+    anger:   { vec: [0.0,0.3,0.0,0.0,0.9,0.3,0.1,0.5], x: 0.10, y: 0.80, color: THEME.colors.red },
+    bread:   { vec: [0.0,0.0,0.0,0.0,0.1,0.3,0.5,0.2], x: 0.55, y: 0.55, color: THEME.colors.gray },
+    apple:   { vec: [0.0,0.0,0.1,0.05,0.1,0.25,0.6,0.2], x: 0.60, y: 0.68, color: THEME.colors.gray },
+    water:   { vec: [0.0,0.0,0.1,0.0,0.1,0.4,0.5,0.3], x: 0.65, y: 0.40, color: THEME.colors.gray },
+    run:     { vec: [0.0,0.3,0.3,0.0,0.2,0.3,0.5,0.95], x: 0.40, y: 0.60, color: THEME.colors.blue },
+    jump:    { vec: [0.0,0.3,0.3,0.0,0.2,0.3,0.5,0.95], x: 0.45, y: 0.68, color: THEME.colors.blue },
+    think:   { vec: [0.0,0.6,0.0,0.1,0.3,0.1,0.5,0.8], x: 0.50, y: 0.85, color: THEME.colors.blue },
+    doctor:  { vec: [0.0,0.9,0.0,0.1,0.2,0.5,0.6,0.6], x: 0.35, y: 1.05, color: THEME.colors.blue },
+    teacher: { vec: [0.0,0.9,0.0,0.1,0.3,0.4,0.7,0.6], x: 0.40, y: 1.15, color: THEME.colors.blue },
+    artist:  { vec: [0.0,0.9,0.0,0.1,0.4,0.4,0.7,0.6], x: 0.45, y: 1.00, color: THEME.colors.blue },
+    car:     { vec: [0.0,0.0,0.0,0.5,0.0,0.7,0.3,0.6], x: 0.78, y: 0.20, color: THEME.colors.purple },
+    train:   { vec: [0.0,0.0,0.0,0.5,0.0,0.9,0.3,0.6], x: 0.88, y: 0.15, color: THEME.colors.purple },
+    boat:    { vec: [0.0,0.0,0.0,0.4,0.0,0.7,0.3,0.6], x: 0.70, y: 0.10, color: THEME.colors.purple },
+    city:    { vec: [0.0,0.2,0.0,0.3,0.1,0.9,0.4,0.3], x: 0.72, y: 0.85, color: THEME.colors.gray },
+    house:   { vec: [0.0,0.2,0.0,0.2,0.2,0.6,0.6,0.2], x: 0.68, y: 0.95, color: THEME.colors.gray },
   };
-  
+  // @embed-words-end
+  const embeddings = EMBED_WORDS;
+
+  // The HTML markup ships a hardcoded 10-option <select> as fallback content;
+  // replace it here so the dropdown always matches the full EMBED_WORDS set.
+  select.innerHTML = Object.keys(EMBED_WORDS)
+    .map(word => `<option value="${word}">${word}</option>`)
+    .join('');
+
   let selectedWord = 'king';
+  let hoveredWord = null;
+  select.value = selectedWord;
   
   function initCanvas() {
     const dpr = window.devicePixelRatio || 1;
@@ -11778,16 +11811,11 @@ function setupEmbeddings() {
     };
   }
   
-  // Use distance-based similarity so visual proximity = similarity
-  // Convert Euclidean distance to a 0-1 similarity score
+  // Real cosine similarity over the hidden 8-D "meaning" vectors (not screen distance).
+  // The 2D x/y used for plotting is a separate projection, so on-screen proximity is
+  // only approximate; the table numbers are the actual cosine similarity.
   function similarity(a, b) {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    // Max possible distance in our coordinate space is ~1.8
-    // Convert to similarity: closer = higher score
-    const maxDist = 1.8;
-    return Math.max(0, 1 - distance / maxDist);
+    return cosineSim(a.vec, b.vec);
   }
   
   function render() {
@@ -11871,11 +11899,17 @@ function setupEmbeddings() {
         ctx.stroke();
       }
       
-      // Label
-      ctx.fillStyle = THEME.text.primary;
-      ctx.font = `${isSelected ? 'bold ' : ''}16px ${THEME.fonts.sans}`;
-      ctx.textAlign = 'center';
-      ctx.fillText(word, pos.cx, pos.cy - 18);
+      // Label — with 32 words on screen at once, labeling every point makes an
+      // illegible smear of overlapping text. Always show the selected word's label
+      // (bold, larger) and the hovered word's label; everything else stays label-free
+      // (the dot + color + click/hover-to-reveal is enough to explore the space).
+      const isHovered = word === hoveredWord;
+      if (isSelected || isHovered) {
+        ctx.fillStyle = THEME.text.primary;
+        ctx.font = `${isSelected ? 'bold ' : ''}13px ${THEME.fonts.sans}`;
+        ctx.textAlign = 'center';
+        ctx.fillText(word, pos.cx, pos.cy - 16);
+      }
     });
     
     // Update similarity table
@@ -11925,18 +11959,29 @@ function setupEmbeddings() {
     });
   });
 
-  // Pointer cursor when hovering a clickable word (affordance cue)
+  // Pointer cursor + label reveal when hovering a clickable word (affordance cue)
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    let overWord = false;
-    Object.values(embeddings).forEach((emb) => {
+    let overWord = null;
+    Object.entries(embeddings).forEach(([word, emb]) => {
       const pos = toCanvas(emb.x, emb.y);
       const dist = Math.sqrt((x - pos.cx) ** 2 + (y - pos.cy) ** 2);
-      if (dist < 20) overWord = true;
+      if (dist < 20) overWord = word;
     });
     canvas.style.cursor = overWord ? 'pointer' : 'crosshair';
+    if (overWord !== hoveredWord) {
+      hoveredWord = overWord;
+      render();
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    if (hoveredWord !== null) {
+      hoveredWord = null;
+      render();
+    }
   });
 
   // Register for tab switching

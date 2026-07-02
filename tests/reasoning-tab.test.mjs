@@ -4,7 +4,7 @@ assertTrue(src.includes('id="tab-reasoning"'), 'reasoning section exists');
 assertTrue(src.includes('data-tab="reasoning"'), 'reasoning nav button exists');
 const FLOW = eval(`(() => { ${extract('// @tab-flow-start', '// @tab-flow-end')}; return TAB_FLOW; })()`);
 const i = FLOW.findIndex(t => t.tab === 'reasoning');
-assertTrue(FLOW[i-1].tab === 'prompting' && FLOW[i+1].tab === 'multimodal', 'reasoning sits between prompting and images');
+assertTrue(FLOW[i-1].tab === 'prompting' && FLOW[i+1].tab === 'agents', 'reasoning sits between prompting and agents');
 const QUIZ = eval(`(() => { ${extract('// @quiz-data-start', '// @quiz-data-end')}; return QUIZ_DATA; })()`);
 assertTrue(QUIZ.reasoning && QUIZ.reasoning.length >= 2, 'reasoning has a quiz');
 done();

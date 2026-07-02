@@ -6523,6 +6523,25 @@
       border-left: 3px solid var(--accent-primary);
     }
 
+    /* Agents & Tools: step-through agent trace */
+    .agent-trace-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 720px) { .agent-trace-layout { grid-template-columns: 1fr; } }
+    .agent-step-card { background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 0.9rem; margin-bottom: 0.75rem; }
+    .agent-step-num { font-weight: 700; font-size: 0.8rem; color: var(--text-muted); }
+    .agent-think { font-style: italic; margin: 0.4rem 0; }
+    .agent-action { font-family: var(--font-mono); font-size: 0.85rem; margin: 0.3rem 0; }
+    .agent-obs { font-size: 0.85rem; color: var(--text-secondary); }
+    .agent-context-panel { background: var(--bg-deep); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm); padding: 1rem; }
+    .agent-context-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .ctx-line { font-family: var(--font-mono); font-size: 0.78rem; padding: 0.3rem 0.5rem; margin-bottom: 0.3rem;
+      border-radius: 4px; background: var(--bg-card); }
+    .ctx-line.goal { border-left: 3px solid var(--accent-primary); }
+    .ctx-line.tool { border-left: 3px solid var(--accent-cool); }
+    .ctx-line.answer { border-left: 3px solid var(--positive); }
+    .agent-trace-controls { margin-top: 1rem; display: flex; gap: 0.75rem; }
+
     /* Other Limitations Section */
     .other-limitations {
       background: var(--bg-panel);
@@ -6874,7 +6893,7 @@
           </div>
         </div>
         <div class="tab-group">
-          <span class="tab-group-label"><span class="group-num">08-09, 11-12</span> IN PRACTICE</span>
+          <span class="tab-group-label"><span class="group-num">08-12</span> IN PRACTICE</span>
           <div class="tab-group-buttons">
             <button class="tab-btn" data-tab="prompting">
               <span class="icon">💡</span>
@@ -6883,6 +6902,10 @@
             <button class="tab-btn" data-tab="reasoning">
               <span class="icon">🧠</span>
               <span>Reasoning</span>
+            </button>
+            <button class="tab-btn" data-tab="agents">
+              <span class="icon">🔧</span>
+              <span>Agents & Tools</span>
             </button>
             <button class="tab-btn" data-tab="multimodal">
               <span class="icon">🖼️</span>
@@ -9960,6 +9983,79 @@
       </details>
     </section>
 
+    <!-- AGENTS & TOOLS TAB -->
+    <section id="tab-agents" class="tab-section">
+      <div class="section-header">
+        <h2>10: Agents & Tools</h2>
+        <p>How a model that can only write text learns to <em>act</em> — without ever leaving the token loop</p>
+      </div>
+      <div class="intuition-callout">
+        <div class="intuition-main">If you understand agents, you understand <em>that "doing things" is just the model writing a tool request, software running it, and the result coming back as more tokens.</em></div>
+        <div class="intuition-detail">An agent is a model in a loop: it thinks, writes an action, the surrounding software performs that action, the result is pasted back into the context window, and the loop repeats until the goal is met.</div>
+      </div>
+
+      <div class="concept-card">
+        <h4>🔧 Tool calling: the model asks, the software does</h4>
+        <p>A model can't actually check the weather or run code — it can only produce tokens. So tool use works like this:</p>
+        <ol class="concept-list">
+          <li>The model writes a specially-formatted request: <code>get_weather(city="Provo")</code>.</li>
+          <li>The <strong>software around the model</strong> (not the model) actually runs that function.</li>
+          <li>The result — <code>"38°F, snow"</code> — is pasted back into the context window as new tokens.</li>
+          <li>The model reads that result and keeps going.</li>
+        </ol>
+        <p>Tools are just <strong>context the model requests for itself</strong> — a direct extension of the context engineering from the <strong>Prompting</strong> tab.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>🔁 The agent loop</h4>
+        <p>Chain that together and you get an agent: <strong>goal → think → act → observe → repeat</strong>. It's the autoregressive loop from the Inference tab, one level up — instead of predicting the next token, it's choosing the next action.</p>
+      </div>
+
+      <!-- Interactive: step-through agent trace -->
+      <div class="agent-trace-section">
+        <h3>🎮 Step through an agent</h3>
+        <p>Goal: <strong>"What should I wear in Provo tomorrow?"</strong> Step the loop and watch the context window grow.</p>
+        <div class="interactive-well">
+          <div class="agent-trace-layout">
+            <div class="agent-trace-steps" id="agent-trace-steps"></div>
+            <div class="agent-context-panel">
+              <div class="agent-context-label">📋 Context window (grows each step)</div>
+              <div class="agent-context-body" id="agent-context-body"></div>
+            </div>
+          </div>
+          <div class="agent-trace-controls">
+            <button class="gen-btn primary" id="agent-step-btn">▶ Next step</button>
+            <button class="gen-btn secondary" id="agent-reset-btn">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <h4>🌐 Agents in the wild (as of <span data-fact-asof></span>)</h4>
+        <div class="grid grid-2-col gap-1 mt-1">
+          <div class="card-sm"><strong>💻 Coding agents</strong><p class="text-sm">Claude Code, OpenAI Codex, and Cursor write, run, and debug code across many files in a loop.</p></div>
+          <div class="card-sm"><strong>🔍 Deep research</strong><p class="text-sm">Agents that search, read, and synthesize dozens of sources into a cited report.</p></div>
+          <div class="card-sm"><strong>🖥️ Computer use</strong><p class="text-sm">Agents that see the screen and click, type, and navigate like a person.</p></div>
+          <div class="card-sm"><strong>🔌 MCP</strong><p class="text-sm">The Model Context Protocol is a shared standard for connecting models to tools — a "USB-C port" for AI. Governed by the Linux Foundation and supported across the major providers.</p></div>
+        </div>
+      </div>
+
+      <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
+        <h4>⚠️ Why agents raise the stakes</h4>
+        <p>When a model can only talk, a mistake is a bad sentence. When it can act, a mistake takes actions.</p>
+        <ul class="concept-list">
+          <li><strong>Errors compound.</strong> A wrong step early can send the whole loop down a bad path.</li>
+          <li><strong>Prompt injection becomes dangerous.</strong> If a webpage or email the agent reads contains hidden instructions, and the agent can act, an attacker's text can make it do things — send data, run commands, make purchases.</li>
+        </ul>
+        <p class="text-sm text-muted">Prompt injection is the #1 risk on the OWASP LLM Top 10. A real 2025 case (<a href="https://en.wikipedia.org/wiki/Prompt_injection" target="_blank" rel="noopener">"EchoLeak," CVE-2025-32711</a>) showed an AI assistant leaking data from a single crafted message. Always be cautious about what an agent is allowed to read and do.</p>
+      </div>
+
+      <div class="explanation">
+        <h4>The through-line</h4>
+        <p>Nothing here breaks the model you've been building up. Tokenization, embeddings, attention, inference, the context window — an agent is all of that, wrapped in a loop that turns some tokens into actions and feeds the results back in as more tokens.</p>
+      </div>
+    </section>
+
     <!-- IMAGES & SOUND TAB -->
     <section id="tab-multimodal" class="tab-section">
       <div class="section-header">
@@ -10345,14 +10441,6 @@
             </div>
             <p>Text doesn't naturally encode spatial relationships. Tasks involving 3D visualization, rotations, or physical intuition are challenging.</p>
           </div>
-          <div class="limitation-card">
-            <div class="limitation-header">
-              <span class="limitation-icon">🛡️</span>
-              <strong>Prompt Injection</strong>
-            </div>
-            <p>User input can sometimes override system instructions. Malicious users may craft inputs that cause the model to ignore its guidelines or reveal system prompts.</p>
-            <div class="limitation-example"><em>This is a security concern for production applications—always validate and sanitize user inputs when building AI-powered systems.</em></div>
-          </div>
         </div>
       </div>
 
@@ -10586,6 +10674,10 @@ const TAB_FLOW = [
     'A reasoning model writes private "thinking" tokens before answering you.',
     'More thinking = more forward passes = more computation on your problem.',
     'It is trained by rewarding correct answers on checkable problems — and in 2026, thinking is a dial you control.' ]},
+  { tab: 'agents', title: '10: Agents & Tools', recap: [
+    'An agent is a model in a loop: think → act → observe → repeat.',
+    'Tool calls are just the model requesting context; software runs the tool and pastes the result back.',
+    'Acting raises the stakes — errors compound and prompt injection becomes dangerous.' ]},
   { tab: 'multimodal', title: '11: Images & Sound', recap: [
     'Images and audio become embeddings, just like text tokens.',
     'The pattern is always: divide → embed → attend.',
@@ -10715,6 +10807,16 @@ const QUIZ_DATA = {
       { text: 'By memorizing solved problems', feedback: 'Memorization doesn\'t generalize to new problems — the training is reinforcement, not lookup.' },
       { text: 'Reinforcement learning that rewards reaching correct answers on checkable problems', correct: true, feedback: 'Right — reward = "was the answer correct?" on math/code, so the model learns reasoning that pays off.' },
       { text: 'Humans rating which reasoning sounds smartest', feedback: 'That\'s closer to RLHF for tone. Reasoning RL rewards correctness, not style.' }]},
+  ],
+  agents: [
+    { q: 'When an agent "uses a tool," what actually runs the tool?', options: [
+      { text: 'The model executes the code itself', feedback: 'The model can only produce tokens — it can\'t run anything. Something else does.' },
+      { text: 'The software around the model runs it, then feeds the result back as tokens', correct: true, feedback: 'Right — the model writes a request; the surrounding program executes it and pastes the result into the context.' },
+      { text: 'The tool runs inside the neural network', feedback: 'Tools live outside the model entirely; only their text results re-enter the context window.' }]},
+    { q: 'Why is prompt injection more dangerous for an agent than for a chatbot?', options: [
+      { text: 'Agents have larger context windows', feedback: 'Window size isn\'t the issue — the ability to take actions is.' },
+      { text: 'An agent can act, so injected instructions can trigger real actions', correct: true, feedback: 'Right — a chatbot might say something wrong; an agent might send data or run a command based on hidden text it read.' },
+      { text: 'Agents ignore their system prompt', feedback: 'They still have system prompts; the danger is that malicious input in tool results can override intended behavior.' }]},
   ],
   multimodal: [
     { q: 'How does an image get into an LLM\'s context?', options: [
@@ -13347,6 +13449,54 @@ function setupPatchGrid() {
   tabRenders['multimodal'] = () => draw();
 }
 
+// ============ AGENTS & TOOLS: STEP-THROUGH AGENT TRACE ============
+// @agent-trace-start
+const AGENT_TRACE = [
+  { think: 'The user wants clothing advice for Provo tomorrow. I need the weather forecast — I don\'t have it. I should use a tool.',
+    action: 'get_weather', args: 'city="Provo", day="tomorrow"',
+    observation: '{ high: 39°F, low: 24°F, condition: "light snow", wind: "12 mph" }' },
+  { think: 'Snow and below freezing. "Tomorrow" is vague — let me confirm the date so my advice is concrete.',
+    action: 'get_date', args: 'offset=1',
+    observation: '{ date: "2026-07-02", weekday: "Thursday" }' },
+  { think: 'I have the forecast and the date. Cold, snowy, windy — I can answer now. No more tools needed.',
+    action: 'answer',
+    observation: 'For Provo on Thursday: expect light snow, a high near 39°F and wind. Wear a warm insulated coat, waterproof boots, and a hat and gloves. Layers underneath will help if you go indoors.' },
+];
+// @agent-trace-end
+
+function setupAgentTrace() {
+  const stepsEl = document.getElementById('agent-trace-steps');
+  const ctxEl = document.getElementById('agent-context-body');
+  const stepBtn = document.getElementById('agent-step-btn');
+  const resetBtn = document.getElementById('agent-reset-btn');
+  if (!stepsEl || !stepBtn) return;
+  let i = 0;
+  const goal = 'GOAL: "What should I wear in Provo tomorrow?"';
+  function reset() {
+    i = 0; stepsEl.innerHTML = ''; ctxEl.innerHTML = `<div class="ctx-line goal">${goal}</div>`;
+    stepBtn.disabled = false; stepBtn.textContent = '▶ Next step';
+  }
+  stepBtn.addEventListener('click', () => {
+    if (i >= AGENT_TRACE.length) return;
+    const s = AGENT_TRACE[i];
+    const stepCard = document.createElement('div');
+    stepCard.className = 'agent-step-card';
+    stepCard.innerHTML = `<div class="agent-step-num">Step ${i + 1}</div>
+      <div class="agent-think">🤔 ${s.think}</div>
+      <div class="agent-action">${s.action === 'answer' ? '✅ Answer the user' : `🔧 call <code>${s.action}(${s.args})</code>`}</div>
+      <div class="agent-obs">${s.action === 'answer' ? '💬 ' + s.observation : '↩ tool returned: <code>' + s.observation + '</code>'}</div>`;
+    stepsEl.appendChild(stepCard);
+    // Context window physically grows: append the model's action and the observation.
+    ctxEl.innerHTML += `<div class="ctx-line think">think: ${s.think}</div>`;
+    if (s.action === 'answer') ctxEl.innerHTML += `<div class="ctx-line answer">answer: ${s.observation}</div>`;
+    else ctxEl.innerHTML += `<div class="ctx-line tool">tool ${s.action} → ${s.observation}</div>`;
+    i++;
+    if (i >= AGENT_TRACE.length) { stepBtn.disabled = true; stepBtn.textContent = '✓ Goal reached'; }
+  });
+  resetBtn.addEventListener('click', reset);
+  reset();
+}
+
 // ============ INITIALIZATION ============
 document.addEventListener('DOMContentLoaded', () => {
   // Disable automatic scroll restoration
@@ -13384,6 +13534,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPromptComparison();
   setupThinkingDemo();
   setupThinkingBudget();
+  setupAgentTrace();
   setupPatchGrid();
 
   // Critique-fix enhancements

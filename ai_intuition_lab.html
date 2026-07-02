@@ -10054,6 +10054,42 @@
         <h4>The through-line</h4>
         <p>Nothing here breaks the model you've been building up. Tokenization, embeddings, attention, inference, the context window — an agent is all of that, wrapped in a loop that turns some tokens into actions and feeds the results back in as more tokens.</p>
       </div>
+
+      <details class="deep-dive">
+        <summary class="deep-dive-summary">🔬 Go deeper (optional): Inside the Agent Loop</summary>
+        <div class="deep-dive-body">
+          <div class="concept-card">
+            <h4>What a tool call actually looks like on the wire</h4>
+            <p>"The model writes a specially-formatted request" is doing a lot of work in that sentence — here's what it means concretely. Under the hood, a tool call is just structured, JSON-ish tokens the model was trained to produce when it decides an action is useful. The application layer watches for that pattern, pulls out the tool name and arguments, and calls real code. Nothing here is magic; it's the same next-token prediction from the Inference tab, just aimed at a format the surrounding software knows how to parse.</p>
+            <div class="code-snippet">
+              // model emits (still just tokens):<br>
+              {"tool_call": {"name": "get_weather",<br>
+              &nbsp;&nbsp;"arguments": {"city": "Provo"}}}<br>
+              <br>
+              // software runs get_weather(), pastes the result<br>
+              // back into context as more tokens:<br>
+              {"tool_result": "38°F, snow"}
+            </div>
+            <p class="text-sm text-muted">The model never touches the weather API, a filesystem, or a database. It only ever produces and consumes tokens — the "acting" is entirely done by ordinary code sitting outside the model, triggered by a pattern the model learned to emit.</p>
+          </div>
+
+          <div class="concept-card">
+            <h4>🔌 Why a shared standard for tools matters</h4>
+            <p>Every model provider could invent its own private format for describing tools, and for a while they mostly did — meaning a tool built for one assistant had to be rewritten for the next. The industry has converged on the <strong>Model Context Protocol (MCP)</strong> as a common interface, so a tool built once can be plugged into any compatible model — the "USB-C port" comparison from the card above captures the idea: one port, many devices, instead of a different cable for every combination.</p>
+          </div>
+
+          <div class="concept-card">
+            <h4>📉 Why errors compound across steps</h4>
+            <p>A single reply only has to be right once. A multi-step agent has to be right <em>repeatedly</em> — each step's output becomes the next step's input, so mistakes carry forward instead of resetting. Even a solid per-step success rate erodes fast once you chain enough steps together:</p>
+            <div class="code-snippet">
+              per-step success rate: 95%<br>
+              10 steps: 0.95^10 ≈ 60% end-to-end<br>
+              20 steps: 0.95^20 ≈ 36% end-to-end
+            </div>
+            <p class="text-sm text-muted">That's why agent design leans so heavily on verification and checkpoints — tests after a code edit, a confirmation before a purchase, a human review before an irreversible action. Catching an error at step 3 is far cheaper than discovering it after step 15 has already built on top of it.</p>
+          </div>
+        </div>
+      </details>
     </section>
 
     <!-- IMAGES & SOUND TAB -->

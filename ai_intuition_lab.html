@@ -7059,7 +7059,7 @@
             <li><strong>Start with characters</strong>—Begin with just letters and punctuation</li>
             <li><strong>Find frequent pairs</strong>—Look for character pairs that appear often together (like "th" or "ing")</li>
             <li><strong>Merge them</strong>—Add "th" as a single token, repeat with next most frequent pair</li>
-            <li><strong>Keep going</strong>—After ~50,000 merges, you have a vocabulary</li>
+            <li><strong>Keep going</strong>—After tens to hundreds of thousands of merges, you have a vocabulary</li>
           </ol>
           <div class="token-evolution">
             <div class="evolution-step">
@@ -7779,7 +7779,7 @@
             <li><strong>Sample</strong>—Pick one token based on those probabilities + temperature</li>
             <li><strong>Repeat</strong>—Add the new token and go again until done</li>
           </ol>
-          <p>Most Large Language Models (LLMs) do this loop about 50–200 times per second — and specialized fast-inference services go much higher!</p>
+          <p>Most Large Language Models (LLMs) run this loop fast enough to generate <span data-fact="speed.range"></span> — and specialized fast-inference services go much higher!</p>
         </div>
 
         <div class="concept-card">
@@ -9901,7 +9901,7 @@
         <p class="text-sm text-muted">The practical skill: spend thinking on genuinely hard problems (math, code, multi-step logic); skip it for simple lookups, where it just adds cost and latency.</p>
       </div>
 
-      <!-- Thinking-budget interactive (Task 15 Step 4) -->
+      <!-- Thinking-budget interactive -->
       <div class="thinking-budget-section">
         <h3>🎮 See it: the same problem at three thinking budgets</h3>
         <p>Watch how more thinking tokens change the answer — and the cost.</p>
@@ -9910,7 +9910,7 @@
         </div>
       </div>
 
-      <!-- Interactive Thinking Demo (relocated from Limitations, Task 15 Step 3) -->
+      <!-- Interactive Thinking Demo (relocated from Limitations) -->
       <div class="thinking-demo-section">
         <h3>🎮 See the Difference: Standard vs Reasoning</h3>
         <p>Watch how the same problem gets different treatment. The reasoning model's "thinking" becomes context that helps it arrive at the correct answer.</p>
@@ -10396,7 +10396,7 @@
         </div>
       </div>
 
-      <!-- Reasoning pointer (Task 15 addendum B): full comparison now lives on the Reasoning tab -->
+      <!-- Reasoning pointer: full comparison now lives on the Reasoning tab -->
       <div class="reasoning-section">
         <h3>🧠 Thinking helps — but it isn't a fix-all</h3>
         <p>Modern models can "think before answering" — and that meaningfully reduces errors on hard problems. The <strong>Reasoning</strong> tab covers how that works. But thinking is still pattern-matching: it can't recover knowledge that was never learned, and it can't outrun a wrong premise. The limitations on this page apply to thinking models too.</p>
@@ -10454,7 +10454,7 @@
               <strong>Math & Counting</strong>
             </div>
             <p>Tokenization splits numbers unpredictably. "123" might be one token or multiple. The model isn't "doing math"—it's predicting likely digits.</p>
-            <div class="limitation-example">Q: How many r's in "strawberry"?<br>A: 2 (Legacy models—wrong! The correct answer is 3: st<strong>r</strong>awbe<strong>rr</strong>y) <br><em>Note: Modern reasoning models like GPT-5.2 solve this via native reasoning.</em></div>
+            <div class="limitation-example">Q: How many r's in "strawberry"?<br>A: 2 (Legacy models—wrong! The correct answer is 3: st<strong>r</strong>awbe<strong>rr</strong>y) <br><em>Note: Modern reasoning models like <span data-fact="name.gpt"></span> solve this via native reasoning.</em></div>
           </div>
           <div class="limitation-card">
             <div class="limitation-header">
@@ -13320,21 +13320,21 @@ function setupThinkingBudget() {
     {
       problem: "A bat and ball cost $1.10 total. The bat costs $1.00 more than the ball. How much does the ball cost?",
       wrongAnswer: "The ball costs <span class=\"answer-incorrect\">$0.10</span>",
-      shortThinking: "Quick check: $1.10 total, bat is $1 more → ball ≈ $0.05, bat ≈ $1.05.",
+      shortThinking: "Bat is $1.00 more... so bat $1.00, ball $0.10. $1.10 total — checks out.",
       fullThinking: "Let me work through this carefully...\n\nLet ball = x\nThen bat = x + $1.00 (bat costs $1 more than ball)\n\nTotal: x + (x + $1.00) = $1.10\n2x + $1.00 = $1.10\n2x = $0.10\nx = $0.05\n\nLet me verify: ball=$0.05, bat=$1.05\nDifference: $1.05 - $0.05 = $1.00 ✓\nTotal: $0.05 + $1.05 = $1.10 ✓",
       correctAnswer: "The ball costs <span class=\"answer-correct\">$0.05</span>"
     },
     {
       problem: "In a lake, there's a patch of lily pads. Every day, the patch doubles in size. If it takes 48 days for the patch to cover the entire lake, how many days would it take to cover half the lake?",
       wrongAnswer: "It would take <span class=\"answer-incorrect\">24 days</span> to cover half the lake",
-      shortThinking: "Doubling each day — so half coverage is one day before full: probably 47, not 24.",
+      shortThinking: "48 days to cover the lake, so half the lake just takes half the time: 48 ÷ 2 = 24.",
       fullThinking: "Let me think about this...\n\nKey insight: the patch DOUBLES each day.\n\nIf the patch covers the whole lake on day 48...\nAnd it doubles each day...\nThen on day 47, it was HALF the size it is on day 48.\n\nSo on day 47, it covered half the lake.\n\nThe answer isn't 48/2 = 24—that assumes linear growth.\nWith doubling, half coverage is just one day before full coverage.",
       correctAnswer: "It would take <span class=\"answer-correct\">47 days</span> to cover half the lake"
     },
     {
       problem: "If 5 machines can make 5 widgets in 5 minutes, how long would it take 100 machines to make 100 widgets?",
       wrongAnswer: "It would take <span class=\"answer-incorrect\">100 minutes</span>",
-      shortThinking: "Each machine makes 1 widget per 5 minutes, working in parallel — more machines doesn't mean more time.",
+      shortThinking: "5 machines → 5 widgets in 5 min, so scale up: 100 machines → 100 widgets in 100 min.",
       fullThinking: "Let me analyze this step by step...\n\nFirst, what does '5 machines make 5 widgets in 5 minutes' mean?\n- Each machine makes 1 widget in 5 minutes\n- The machines work in parallel\n\nSo for 100 machines making 100 widgets:\n- Each of the 100 machines makes 1 widget\n- They all work simultaneously\n- Each widget still takes 5 minutes\n\nAnswer: 5 minutes (same time, just more parallelism)",
       correctAnswer: "It would take <span class=\"answer-correct\">5 minutes</span>"
     }
@@ -13490,13 +13490,13 @@ function setupPatchGrid() {
 const AGENT_TRACE = [
   { think: 'The user wants clothing advice for Provo tomorrow. I need the weather forecast — I don\'t have it. I should use a tool.',
     action: 'get_weather', args: 'city="Provo", day="tomorrow"',
-    observation: '{ high: 39°F, low: 24°F, condition: "light snow", wind: "12 mph" }' },
-  { think: 'Snow and below freezing. "Tomorrow" is vague — let me confirm the date so my advice is concrete.',
+    observation: '{ high: 95°F, low: 64°F, condition: "sunny", wind: "8 mph" }' },
+  { think: 'Hot and sunny. "Tomorrow" is vague — let me confirm the date so my advice is concrete.',
     action: 'get_date', args: 'offset=1',
     observation: '{ date: "2026-07-02", weekday: "Thursday" }' },
-  { think: 'I have the forecast and the date. Cold, snowy, windy — I can answer now. No more tools needed.',
+  { think: 'I have the forecast and the date. Hot, sunny, dry — I can answer now. No more tools needed.',
     action: 'answer',
-    observation: 'For Provo on Thursday: expect light snow, a high near 39°F and wind. Wear a warm insulated coat, waterproof boots, and a hat and gloves. Layers underneath will help if you go indoors.' },
+    observation: 'For Provo on Thursday: expect sunny skies with a high near 95°F. Wear light, breathable clothing, sunglasses, and sunscreen, and bring water if you\'ll be outside.' },
 ];
 // @agent-trace-end
 

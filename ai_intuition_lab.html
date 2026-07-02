@@ -8116,9 +8116,10 @@
                     <option value="0">The</option>
                     <option value="1">cat</option>
                     <option value="2">sat</option>
-                    <option value="3">on</option>
-                    <option value="4">the</option>
-                    <option value="5">mat</option>
+                    <option value="3">because</option>
+                    <option value="4">it</option>
+                    <option value="5">was</option>
+                    <option value="6">tired</option>
                   </select>
                 </div>
 
@@ -12002,23 +12003,29 @@ function setupAttention() {
   
   let W = 0, H = 0;
   let initialized = false;
-  
-  const tokens = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
-  
-  // Simplified attention patterns (in reality, these are learned)
-  const attentionPatterns = {
-    0: [0.3, 0.3, 0.1, 0.1, 0.1, 0.1], // "The" attends to "The", "cat"
-    1: [0.15, 0.4, 0.2, 0.05, 0.05, 0.15], // "cat" self-attends, attends to "sat", "mat"
-    2: [0.05, 0.35, 0.3, 0.1, 0.05, 0.15], // "sat" attends to "cat"
-    3: [0.05, 0.1, 0.15, 0.2, 0.15, 0.35], // "on" attends to "mat"
-    4: [0.2, 0.1, 0.05, 0.15, 0.2, 0.3], // "the" attends to first "The", "mat"
-    5: [0.05, 0.25, 0.15, 0.2, 0.15, 0.2]  // "mat" attends to "cat", "on"
-  };
-  
+
+  // @att-data-start
+  const ATT_TOKENS = ['The', 'cat', 'sat', 'because', 'it', 'was', 'tired'];
+  // Row i = how token i distributes its attention over all tokens (sums to 1).
+  const ATT_PATTERNS = [
+    [0.45, 0.30, 0.10, 0.05, 0.04, 0.03, 0.03], // The -> cat
+    [0.10, 0.45, 0.20, 0.05, 0.08, 0.05, 0.07], // cat -> self/sat
+    [0.05, 0.40, 0.30, 0.05, 0.08, 0.05, 0.07], // sat -> cat
+    [0.03, 0.15, 0.12, 0.25, 0.20, 0.10, 0.15], // because -> links clause
+    [0.05, 0.50, 0.08, 0.07, 0.15, 0.05, 0.10], // it -> cat  (the payoff)
+    [0.04, 0.15, 0.10, 0.06, 0.30, 0.20, 0.15], // was -> it
+    [0.03, 0.20, 0.08, 0.05, 0.25, 0.14, 0.25], // tired -> it/cat
+  ];
+  // @att-data-end
+
   const colors = [THEME.colors.blue, THEME.colors.green, THEME.colors.yellow, THEME.colors.purple, THEME.colors.red, THEME.colors.blue];
-  
-  let queryIdx = 0;
-  
+
+  let queryIdx = ATT_TOKENS.indexOf('it');
+
+  // Repopulate the select options from ATT_TOKENS
+  select.innerHTML = ATT_TOKENS.map((token, i) => `<option value="${i}">${token}</option>`).join('');
+  select.value = queryIdx.toString();
+
   function initCanvas() {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
@@ -12039,18 +12046,18 @@ function setupAttention() {
     if (!initialized) {
       if (!initCanvas()) return;
     }
-    
+
     ctx.clearRect(0, 0, W, H);
-    
-    const weights = attentionPatterns[queryIdx];
-    
+
+    const weights = ATT_PATTERNS[queryIdx];
+
     // Calculate token positions
-    const tokenWidth = 80;
-    const totalWidth = tokens.length * tokenWidth;
+    const tokenWidth = 70;
+    const totalWidth = ATT_TOKENS.length * tokenWidth;
     const startX = (W - totalWidth) / 2;
     const y = H / 2;
-    
-    const positions = tokens.map((_, i) => ({
+
+    const positions = ATT_TOKENS.map((_, i) => ({
       x: startX + i * tokenWidth + tokenWidth / 2,
       y: y
     }));
@@ -12083,29 +12090,29 @@ function setupAttention() {
     });
     
     // Draw tokens
-    tokens.forEach((token, i) => {
+    ATT_TOKENS.forEach((token, i) => {
       const pos = positions[i];
       const isQuery = i === queryIdx;
-      
+
       // Token box
       ctx.fillStyle = isQuery ? THEME.rgba(THEME.colors.red, 0.15) : THEME.rgba(THEME.bg.card, 0.95);
       ctx.strokeStyle = isQuery ? THEME.colors.red : THEME.rgba(THEME.text.primary, 0.2);
       ctx.lineWidth = isQuery ? 3 : 1;
-      
-      const boxWidth = 70;
+
+      const boxWidth = 60;
       const boxHeight = 45;
       ctx.beginPath();
       ctx.roundRect(pos.x - boxWidth/2, pos.y - boxHeight/2, boxWidth, boxHeight, 8);
       ctx.fill();
       ctx.stroke();
-      
+
       // Token text
       ctx.fillStyle = isQuery ? THEME.colors.red : THEME.text.primary;
-      ctx.font = `${isQuery ? 'bold ' : ''}18px ${THEME.fonts.sans}`;
+      ctx.font = `${isQuery ? 'bold ' : ''}16px ${THEME.fonts.sans}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(token, pos.x, pos.y);
-      
+
       // Weight label below
       if (!isQuery) {
         ctx.fillStyle = THEME.text.secondary;
@@ -12113,15 +12120,15 @@ function setupAttention() {
         ctx.fillText(weights[i].toFixed(2), pos.x, pos.y + 40);
       }
     });
-    
+
     // Query indicator
     ctx.fillStyle = THEME.colors.red;
     ctx.font = `14px ${THEME.fonts.sans}`;
     ctx.textAlign = 'center';
     ctx.fillText('Query', positions[queryIdx].x, positions[queryIdx].y + 55);
-    
+
     // Update weights display
-    weightsDiv.innerHTML = tokens.map((token, i) => {
+    weightsDiv.innerHTML = ATT_TOKENS.map((token, i) => {
       const weight = weights[i];
       const barColor = i === queryIdx ? THEME.colors.red : THEME.rgba(THEME.colors.red, 0.3 + weight * 0.7);
       return `
@@ -12145,16 +12152,16 @@ function setupAttention() {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     // Check if clicked on a token box
-    const tokenWidth = 80;
-    const totalWidth = tokens.length * tokenWidth;
+    const tokenWidth = 70;
+    const totalWidth = ATT_TOKENS.length * tokenWidth;
     const startX = (W - totalWidth) / 2;
-    const boxWidth = 70;
+    const boxWidth = 60;
     const boxHeight = 45;
     const centerY = H / 2;
 
-    for (let i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < ATT_TOKENS.length; i++) {
       const tokenX = startX + i * tokenWidth + tokenWidth / 2;
       if (Math.abs(x - tokenX) < boxWidth / 2 && Math.abs(y - centerY) < boxHeight / 2) {
         queryIdx = i;
@@ -12170,16 +12177,16 @@ function setupAttention() {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
-    const tokenWidth = 80;
-    const totalWidth = tokens.length * tokenWidth;
+
+    const tokenWidth = 70;
+    const totalWidth = ATT_TOKENS.length * tokenWidth;
     const startX = (W - totalWidth) / 2;
-    const boxWidth = 70;
+    const boxWidth = 60;
     const boxHeight = 45;
     const centerY = H / 2;
 
     let isHovering = false;
-    for (let i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < ATT_TOKENS.length; i++) {
       const tokenX = startX + i * tokenWidth + tokenWidth / 2;
       if (Math.abs(x - tokenX) < boxWidth / 2 && Math.abs(y - centerY) < boxHeight / 2) {
         isHovering = true;

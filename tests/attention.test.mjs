@@ -1,0 +1,11 @@
+import { extract, assertEq, assertTrue, done } from './harness.mjs';
+const code = extract('// @att-data-start', '// @att-data-end');
+const { ATT_TOKENS, ATT_PATTERNS } = eval(`(() => { ${code}; return { ATT_TOKENS, ATT_PATTERNS }; })()`);
+const itIdx = ATT_TOKENS.indexOf('it');
+const catIdx = ATT_TOKENS.indexOf('cat');
+assertTrue(itIdx >= 0 && catIdx >= 0, 'sentence contains "it" and "cat"');
+const row = ATT_PATTERNS[itIdx];
+const argmax = row.indexOf(Math.max(...row));
+assertEq(argmax, catIdx, '"it" attends most to "cat"');
+ATT_PATTERNS.forEach((r, i) => assertTrue(Math.abs(r.reduce((a,b)=>a+b,0) - 1) < 0.02, `row ${i} sums ~1`));
+done();

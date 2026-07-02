@@ -6873,7 +6873,7 @@
           <div class="card-sm">
             <div class="text-accent bold mb-05">The Pro Photographer</div>
             <p class="text-sm">A professional photographer understands how <strong>light</strong> interacts with the <strong>lens</strong> and the <strong>sensor</strong>. They know how to adjust the <strong>aperture</strong>, <strong>shutter speed</strong>, <strong>ISO</strong>, and <strong>focus</strong> to get beautiful photos.</p>
-            <p class="text-sm">They don't know to build a camera, but they know how it works.</p>
+            <p class="text-sm">They don't know how to build a camera, but they know how it works.</p>
           </div>
         </div>
       </div>
@@ -7692,7 +7692,7 @@
             <li><strong>Sample</strong>—Pick one token based on those probabilities + temperature</li>
             <li><strong>Repeat</strong>—Add the new token and go again until done</li>
           </ol>
-          <p>Most Large Language Models (LLMs) do this loop about 20-100 times per second!</p>
+          <p>Most Large Language Models (LLMs) do this loop about 50–200 times per second — and specialized fast-inference services go much higher!</p>
         </div>
 
         <div class="concept-card">
@@ -7978,7 +7978,7 @@
           <ul class="concept-list mt-1">
             <li><strong>Distributed Knowledge:</strong> The concept of "Apple" isn't in one neuron; it's a tiny pattern across thousands of them.</li>
             <li><strong>Emergent Behavior:</strong> Models often develop capabilities (like coding or translation) that their creators didn't explicitly plan for.</li>
-            <li><strong>Mechanical Interpretability:</strong> A new field of science dedicated to "reverse-engineering" these weights to understand the model's internal world.</li>
+            <li><strong>Mechanistic Interpretability:</strong> A new field of science dedicated to "reverse-engineering" these weights to understand the model's internal world.</li>
           </ul>
         </div>
 
@@ -8270,7 +8270,7 @@
             </div>
             <div class="timeline-item">
               <span class="timeline-year">2018+</span>
-              <span class="timeline-desc">Big Language Models (BLMs) like BERT, GPT, and everything since = transformers</span>
+              <span class="timeline-desc">Large language models like BERT, GPT, and everything since = transformers</span>
             </div>
           </div>
         </div>
@@ -8359,7 +8359,7 @@
           </div>
 
           <div class="transformer-scale-note">
-            <strong>Real scale:</strong> Modern LLMs have anywhere from 40–120 layers, with billions of parameters in each layer.
+            <strong>Real scale:</strong> Modern LLMs have anywhere from roughly 30 to 120+ layers, with billions of parameters in each layer.
           </div>
         </div>
 
@@ -8405,7 +8405,7 @@
       </div>
 
       <div class="intuition-callout">
-        <div class="intuition-main">If you understand pre-training, you understand <em>how AI use data to learn complex things like grammar, facts about the world, and computer programming.</em></div>
+        <div class="intuition-main">If you understand pre-training, you understand <em>how AI uses data to learn complex things like grammar, facts about the world, and computer programming.</em></div>
         <div class="intuition-detail">AI starts as billions of random numbers, then learns by predicting the next token across trillions of examples. Pre-training is where AI starts to make sense of the world by finding patterns in the data.</div>
       </div>
 
@@ -8462,7 +8462,7 @@
         </div>
         
         <div class="data-scale-note">
-          <strong>Scale:</strong> Modern LLMs are trained on trillions of tokens—essentially a significant fraction of all text ever written and published on the internet. This is a source of controversy because not everyone wrote the text gave permission for it to be used in pre-training.
+          <strong>Scale:</strong> Modern LLMs are trained on trillions of tokens—essentially a significant fraction of all text ever written and published on the internet. This is a source of controversy because not everyone who wrote that text gave permission for it to be used in pre-training.
         </div>
       </div>
 
@@ -8493,26 +8493,26 @@
                     <div class="prediction-bars">
                       <div class="pred-row">
                         <span class="pred-token correct-highlight">"king"</span>
-                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-1" style="width: 15%"></div></div>
-                        <span class="pred-prob" id="pred-prob-1">0.15</span>
+                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-1" style="width: 25%"></div></div>
+                        <span class="pred-prob" id="pred-prob-1">0.25</span>
                         <span class="pred-feedback" id="pred-feedback-1"></span>
                       </div>
                       <div class="pred-row">
                         <span class="pred-token">"queen"</span>
-                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-2" style="width: 12%"></div></div>
-                        <span class="pred-prob" id="pred-prob-2">0.12</span>
+                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-2" style="width: 25%"></div></div>
+                        <span class="pred-prob" id="pred-prob-2">0.25</span>
                         <span class="pred-feedback" id="pred-feedback-2"></span>
                       </div>
                       <div class="pred-row">
                         <span class="pred-token">"general"</span>
-                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-3" style="width: 8%"></div></div>
-                        <span class="pred-prob" id="pred-prob-3">0.08</span>
+                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-3" style="width: 25%"></div></div>
+                        <span class="pred-prob" id="pred-prob-3">0.25</span>
                         <span class="pred-feedback" id="pred-feedback-3"></span>
                       </div>
                       <div class="pred-row">
                         <span class="pred-token">"floor"</span>
-                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-4" style="width: 65%"></div></div>
-                        <span class="pred-prob" id="pred-prob-4">0.65</span>
+                        <div class="pred-bar-container"><div class="pred-bar" id="pred-bar-4" style="width: 25%"></div></div>
+                        <span class="pred-prob" id="pred-prob-4">0.25</span>
                         <span class="pred-feedback" id="pred-feedback-4"></span>
                       </div>
                     </div>
@@ -8521,8 +8521,8 @@
                   <div class="loop-loss-card">
                     <div class="loop-step-label">Training Loss</div>
                     <div class="loss-display">
-                      <div class="loss-formula">Loss = -log(<span id="loss-prob">0.15</span>) =</div>
-                      <div class="loss-value" id="loss-value">1.90</div>
+                      <div class="loss-formula">Loss = -log(<span id="loss-prob">0.25</span>) =</div>
+                      <div class="loss-value" id="loss-value">1.39</div>
                       <div class="loss-interpretation" id="loss-interp">High loss = very wrong</div>
                     </div>
                   </div>
@@ -8548,7 +8548,7 @@
                 <div class="concept-card mt-125 p-075 bg-dark">
                   <div class="loop-stats" style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
                     <span>Steps: <strong id="loop-steps">0</strong></span>
-                    <span>Avg Loss: <strong id="loop-avg-loss">1.90</strong></span>
+                    <span>Avg Loss: <strong id="loop-avg-loss">1.39</strong></span>
                   </div>
                 </div>
               </div>
@@ -11364,7 +11364,7 @@ function setupNeuralNetwork() {
     W = rect.width;
     H = rect.height;
     
-    const inputLabels = ['roy', 'mil', 'gen', 'frml'];
+    const inputLabels = ['roy', 'mil', 'male', 'frml'];
     const hiddenLabels = ['h₁', 'h₂', 'h₃', 'h₄'];
     const outputLabels = ['king', 'general', 'queen'];
     
@@ -12597,7 +12597,7 @@ function setupTrainingLoop() {
     
     // Update stats
     if (stepsDisplay) stepsDisplay.textContent = formatNumber(steps);
-    if (avgLossDisplay) avgLossDisplay.textContent = steps > 0 ? (totalLoss / steps).toFixed(2) : '1.90';
+    if (avgLossDisplay) avgLossDisplay.textContent = steps > 0 ? (totalLoss / steps).toFixed(2) : '1.39';
   }
   
   function takeStep() {

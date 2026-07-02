@@ -6744,6 +6744,11 @@
       .reading-progress-fill { transition: none; }
       .nav-toggle span { transition: none; }
     }
+
+    /* ─── Images & Sound: patch-grid interactive ─── */
+    .patch-demo-grid { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+    .patch-readout { font-family: var(--font-mono); font-size: 0.9rem; background: var(--bg-card);
+      padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); min-width: 220px; }
   </style>
 </head>
 <body>
@@ -9792,17 +9797,17 @@
           <div class="scale-item" style="padding: 1rem;">
             <div class="scale-number" style="font-size: 1.5rem;">🎨</div>
             <div class="scale-label" style="font-size: 0.85rem;">Image Generation</div>
-            <div style="font-size: 0.65rem; color: var(--text-muted);">NanoBanana & GPT Image-Gen 1.5</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);"><span data-fact="img.google"></span> & <span data-fact="img.openai"></span></div>
           </div>
           <div class="scale-item" style="padding: 1rem;">
             <div class="scale-number" style="font-size: 1.5rem;">🎙️</div>
             <div class="scale-label" style="font-size: 0.85rem;">Voice Conversation</div>
-            <div style="font-size: 0.65rem; color: var(--text-muted);">GPT-5.2, Gemini Live</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);"><span data-fact="voice.models"></span></div>
           </div>
           <div class="scale-item" style="padding: 1rem;">
             <div class="scale-number" style="font-size: 1.5rem;">🎬</div>
             <div class="scale-label" style="font-size: 0.85rem;">Video</div>
-            <div style="font-size: 0.65rem; color: var(--text-muted);">Sora, Runway</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);"><span data-fact="video.models"></span></div>
           </div>
         </div>
         <p style="font-size: 0.85rem; color: var(--text-secondary);">Many modern services combine several of these. ChatGPT can see images, hear audio, and speak—all in one application.</p>
@@ -9847,6 +9852,16 @@
         <p><strong>The pattern:</strong> Divide → Embed → Attend. Once everything is vectors, the transformer doesn't know (or care) whether it started as pixels, sound waves, or words.</p>
       </div>
 
+      <!-- Patch Grid Interactive -->
+      <div class="patch-demo interactive-well">
+        <div class="card-header"><h3>🖼️ Try it: an image becomes patches</h3>
+          <span class="badge">Hover a patch to see its vector</span></div>
+        <div class="patch-demo-grid">
+          <canvas id="patch-canvas" width="320" height="320" style="max-width:100%; cursor: crosshair;"></canvas>
+          <div class="patch-readout" id="patch-readout">Hover over the image →</div>
+        </div>
+      </div>
+
       <!-- What You Can Do -->
       <div class="concept-card">
         <h3>✨ What You Can Do With It</h3>
@@ -9862,7 +9877,7 @@
           </div>
           <div class="card-sm">
             <strong>🎨 Image Generation</strong>
-            <p class="mt-05 text-sm">Describe what you want, get an image. Models like NanoBanana & GPT Image-Gen 1.5 generate images from text prompts. Some can also edit existing images based on instructions you give them.</p>
+            <p class="mt-05 text-sm">Describe what you want, get an image. Models like <span data-fact="img.google"></span> and <span data-fact="img.openai"></span> generate images from text prompts. Some can also edit existing images based on instructions you give them.</p>
           </div>
           <div class="card-sm">
             <strong>🎬 Video Understanding</strong>
@@ -9900,7 +9915,7 @@
           </div>
         </div>
         
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;"><strong>Examples:</strong> Whisper specializes in audio transcription. Midjourney focuses on artistic image generation. Sora targets video generation. GPT 5.2 combines text, vision, and audio in one model.</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;"><strong>Examples:</strong> Whisper specializes in audio transcription (newer speech-to-text models now beat it on accuracy). <span data-fact="img.other"></span> focuses on artistic image generation. <span data-fact="video.models"></span> target video generation. Modern flagship models combine text, vision, and audio in one model.</p>
       </div>
 
       <!-- The Realism Warning -->
@@ -9935,6 +9950,7 @@
             <li>Check for artifacts—unusual hands, text, physics, backgrounds, or audio glitches</li>
             <li>Reverse image search—has this "photo" appeared before in different contexts?</li>
             <li>When in doubt, wait—breaking news is often corrected within hours</li>
+            <li>Check for provenance signals—many AI tools now embed invisible watermarks (SynthID) or Content Credentials (C2PA)</li>
           </ul>
         </div>
       </div>
@@ -9945,7 +9961,7 @@
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>Diffusion Models for Generation</h4>
-          <p>Most image generation (NanoBanana & GPT Image-Gen 1.5) uses a different approach called <strong>diffusion</strong>:</p>
+          <p>Most image generation (<span data-fact="img.google"></span> & <span data-fact="img.openai"></span>) uses a different approach called <strong>diffusion</strong>:</p>
           <ol class="concept-list">
             <li><strong>Start with noise</strong>—Pure random static</li>
             <li><strong>Gradually denoise</strong>—A neural network predicts and removes noise, step by step</li>
@@ -13045,6 +13061,50 @@ function setupThinkingDemo() {
   showProblem(0);
 }
 
+// ============ IMAGES & SOUND: PATCH-GRID INTERACTIVE ============
+// @patch-fn-start
+// Deterministic pseudo-embedding for a patch at grid (px, py). No RNG (keeps it reproducible).
+function patchVectorFor(px, py) {
+  const seed = (px * 73856093) ^ (py * 19349663);
+  const out = [];
+  for (let k = 0; k < 6; k++) {
+    const s = Math.sin(seed * 0.0001 + k * 1.7);
+    out.push(Math.round(s * 100) / 100);
+  }
+  return out;
+}
+// @patch-fn-end
+
+function setupPatchGrid() {
+  const canvas = document.getElementById('patch-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const readout = document.getElementById('patch-readout');
+  const N = 8, cell = canvas.width / N;
+  function draw(hx = -1, hy = -1) {
+    // Procedural "landscape": sky gradient + sun + ground, so patches look meaningful.
+    for (let gy = 0; gy < N; gy++) for (let gx = 0; gx < N; gx++) {
+      const isGround = gy >= 6, isSun = (gx === 5 && gy === 1) || (gx === 6 && gy === 1);
+      ctx.fillStyle = isSun ? THEME.colors.yellow
+        : isGround ? THEME.rgba(THEME.colors.green, 0.5 + 0.1 * ((gx + gy) % 3))
+        : THEME.rgba(THEME.colors.blue, 0.25 + 0.06 * gy);
+      ctx.fillRect(gx * cell, gy * cell, cell - 1, cell - 1);
+      if (gx === hx && gy === hy) { ctx.strokeStyle = THEME.colors.red; ctx.lineWidth = 3;
+        ctx.strokeRect(gx * cell + 1, gy * cell + 1, cell - 3, cell - 3); }
+    }
+  }
+  canvas.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    const gx = Math.floor((e.clientX - r.left) / r.width * N);
+    const gy = Math.floor((e.clientY - r.top) / r.height * N);
+    draw(gx, gy);
+    const idx = gy * N + gx;
+    readout.innerHTML = `patch #${idx} → [ ${patchVectorFor(gx, gy).join(', ')} … ]<br><small>one of ${N*N} patches, each an embedding vector</small>`;
+  });
+  draw();
+  tabRenders['multimodal'] = () => draw();
+}
+
 // ============ INITIALIZATION ============
 document.addEventListener('DOMContentLoaded', () => {
   // Disable automatic scroll restoration
@@ -13081,6 +13141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupContextVisualizer();
   setupPromptComparison();
   setupThinkingDemo();
+  setupPatchGrid();
 
   // Critique-fix enhancements
   setupMobileNav();

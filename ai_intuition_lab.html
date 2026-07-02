@@ -2598,6 +2598,11 @@
       transform: none;
     }
 
+    .reward-meter-wrap { margin: 1rem 0; }
+    .reward-meter-track { height: 12px; background: var(--bg-elevated); border-radius: 6px; overflow: hidden; }
+    .reward-meter-fill { height: 100%; background: var(--accent-secondary); transition: width 0.4s ease; }
+    .reward-meter-caption { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; }
+
     /* Deep Dive: Training Stages */
     .training-stages {
       display: flex;
@@ -8974,7 +8979,7 @@
         <div class="ft-example-container">
           <div class="ft-prompt">
             <div class="prompt-label">User prompt:</div>
-            <div class="prompt-text">"How do I pick a lock?"</div>
+            <div class="prompt-text">"Write a joke making fun of my coworker Dave's weight."</div>
           </div>
           <div class="ft-responses">
             <div class="ft-response before">
@@ -8982,18 +8987,18 @@
                 <span class="response-badge bad">Pre-trained only</span>
               </div>
               <div class="response-text">
-                "First, you'll need a tension wrench and pick. Insert the tension wrench into the bottom of the keyhole and apply slight pressure. Then insert the pick and feel for the pins..."
+                "Sure! Why did Dave break the office chair? Because..."
               </div>
-              <div class="response-note">Just continues the most likely text—no judgment about appropriateness</div>
+              <div class="response-note">Just continues the most likely text — no judgment about whether this is a good idea</div>
             </div>
             <div class="ft-response after">
               <div class="response-header">
                 <span class="response-badge good">Fine-tuned</span>
               </div>
               <div class="response-text">
-                "I can help with legitimate locksmith questions! If you're locked out of your own home, I'd recommend calling a licensed locksmith. If you're interested in lockpicking as a hobby, there are legal practice locks designed for learning. What's your situation?"
+                "I'd rather not write jokes targeting someone's body — those tend to land as cruel rather than funny, especially at work. I could write you a good-natured joke about office life or a playful roast that Dave would laugh at too. Want one of those?"
               </div>
-              <div class="response-note">Helpful while considering safety—offers alternatives and asks clarifying questions</div>
+              <div class="response-note">Declines the harmful framing but stays genuinely helpful with an alternative</div>
             </div>
           </div>
         </div>
@@ -9143,7 +9148,13 @@
             <div class="rater-feedback" id="rater-feedback">
               <!-- Filled by JS after selection -->
             </div>
-            
+
+            <div class="reward-meter-wrap">
+              <div class="reward-meter-label">Reward model's learned preference</div>
+              <div class="reward-meter-track"><div class="reward-meter-fill" id="reward-meter" style="width: 50%"></div></div>
+              <div class="reward-meter-caption" id="reward-caption">Rate comparisons to shape the reward model →</div>
+            </div>
+
             <div class="rater-stats">
               <span>Comparisons rated: <strong id="rater-count">0</strong></span>
               <button class="rater-next-btn" id="rater-next">Next Comparison →</button>
@@ -9220,7 +9231,7 @@
               <div class="approach-name">DPO</div>
               <div class="approach-full">Direct Preference Optimization</div>
               <div class="approach-desc">Skip using a reward model. Train directly on preference pairs. Simpler, often equally effective.</div>
-              <div class="approach-used">Examples: Llama 2+, many open models</div>
+              <div class="approach-used">Examples: Llama 3/3.1, Qwen 2/2.5 (per their technical reports)</div>
             </div>
           </div>
         </div>
@@ -9344,7 +9355,7 @@
           <p>Fine-tuning is why different models behave so differently from each other, even when built on similar base architectures:</p>
           <ul style="margin: 0.75rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
             <li><strong>Different providers, different behavior:</strong> Claude, ChatGPT, Gemini, and Grok all have distinct "personalities" because of their different fine-tuning data and alignment approaches</li>
-            <li><strong>Version changes matter:</strong> Even models from the same provider (e.g., GPT-3.5 vs GPT-4o vs GPT-5) can behave quite differently due to updated fine-tuning</li>
+            <li><strong>Version changes matter:</strong> Even models from the same provider (e.g., GPT-5.2 vs GPT-5.5, or Claude Sonnet 4.5 vs Sonnet 5) can behave quite differently due to updated fine-tuning</li>
             <li><strong>Prompts may need adjustment:</strong> A prompt that works well on one model may need tweaking for another</li>
           </ul>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;"><strong>Professional tip:</strong> When building production applications that use AI, always test your prompts across model versions and consider how model updates might affect your system's behavior.</p>
@@ -9429,7 +9440,7 @@
       <!-- Context Window Visualizer -->
       <div class="context-window-section">
         <h3>📦 The Context Window Visualized</h3>
-        <p>Everything the model "sees" fits inside its context window. System prompts, your messages, and its responses all compete for the same limited space.</p>
+        <p>Everything the model "sees" fits inside its context window. System prompts, your messages, and its responses all compete for the same limited space. Real context windows are huge now (about <span data-fact="ctx.industry"></span> tokens) — this demo uses a small window so you can see it fill.</p>
         
         <div class="interactive-well">
           <div class="context-visualizer">
@@ -12660,7 +12671,9 @@ function setupRaterDemo() {
   const feedbackEl = document.getElementById('rater-feedback');
   const countEl = document.getElementById('rater-count');
   const nextBtn = document.getElementById('rater-next');
-  
+  const rewardMeterEl = document.getElementById('reward-meter');
+  const rewardCaptionEl = document.getElementById('reward-caption');
+
   if (!promptEl || !choiceA || !choiceB) return;
   
   const comparisons = [
@@ -12671,10 +12684,10 @@ function setupRaterDemo() {
       feedback: '<strong>B is better:</strong> It acknowledges the question is context-dependent, provides nuanced information, and asks a clarifying question. A makes an absolute claim that\'s debatable.'
     },
     {
-      prompt: '"Write me a poem about love"',
-      a: { text: 'Love is a feeling so divine,<br>It makes the stars and moon align,<br>Two hearts that beat as one,<br>Together until life is done.', better: false },
-      b: { text: 'I\'d be happy to write a poem about love! To make it more personal, could you tell me:<br>• What style do you prefer (romantic, playful, melancholic)?<br>• Is this for someone specific?<br>• Any particular length in mind?', better: true },
-      feedback: '<strong>B is better:</strong> While A produces a generic poem, B asks clarifying questions to create something more tailored and useful. Asking for clarification is often more helpful than guessing.'
+      prompt: '"How many seconds are in 45 minutes?"',
+      a: { text: '2,700 seconds. (45 minutes × 60 seconds per minute.)', better: true },
+      b: { text: 'Great question! To give you the most accurate answer, could you clarify:<br>• Do you mean exactly 45 minutes?<br>• Should I account for leap seconds?<br>• What will you use this for?', better: false },
+      feedback: '<strong>A is better:</strong> The question is unambiguous — just answer it. B\'s clarifying questions add friction without adding value. (Clarifying questions ARE better when a request is genuinely ambiguous — reflexive clarifying is what raters penalize.)'
     },
     {
       prompt: '"How do I make my website faster?"',
@@ -12704,6 +12717,7 @@ function setupRaterDemo() {
   
   let currentIdx = 0;
   let count = 0;
+  let agreements = 0;
   let hasSelected = false;
   
   function showComparison(idx) {
@@ -12727,13 +12741,20 @@ function setupRaterDemo() {
     
     count++;
     countEl.textContent = count.toString();
-    
+
     if (isCorrect) {
+      agreements++;
       feedbackEl.innerHTML = '✓ Nice! ' + feedback;
     } else {
       feedbackEl.innerHTML = '← Different perspective: ' + feedback;
     }
     feedbackEl.classList.add('show');
+
+    if (rewardMeterEl && rewardCaptionEl) {
+      const pct = Math.round(((agreements + 1) / (count + 2)) * 100);
+      rewardMeterEl.style.width = pct + '%';
+      rewardCaptionEl.textContent = `After ${count} rating${count === 1 ? '' : 's'}, the reward model matches your preferences ${pct}% of the time`;
+    }
   }
   
   choiceA.addEventListener('click', () => {
@@ -12858,30 +12879,31 @@ function setupContextVisualizer() {
   });
 
   overflowBtn.addEventListener('click', () => {
-    // Simulate overflow by marking early messages as truncated
-    const allSegments = contextWindow.querySelectorAll('.context-segment');
-    const truncateCount = Math.min(3, allSegments.length - 2);
-    
+    // Simulate overflow by marking the oldest non-system messages as truncated.
+    // The system prompt is pinned and must never be truncated.
+    const nonSystemSegments = contextWindow.querySelectorAll('.context-segment:not(.system)');
+    const truncateCount = Math.min(3, nonSystemSegments.length);
+
     if (truncateCount <= 0) return;
 
     for (let i = 0; i < truncateCount; i++) {
-      if (!allSegments[i].classList.contains('truncated')) {
-        allSegments[i].style.opacity = '0.3';
-        allSegments[i].style.textDecoration = 'line-through';
-        allSegments[i].querySelector('.segment-label').textContent += ' [TRUNCATED]';
-        allSegments[i].classList.add('truncated');
+      if (!nonSystemSegments[i].classList.contains('truncated')) {
+        nonSystemSegments[i].style.opacity = '0.3';
+        nonSystemSegments[i].style.textDecoration = 'line-through';
+        nonSystemSegments[i].querySelector('.segment-label').textContent += ' [TRUNCATED]';
+        nonSystemSegments[i].classList.add('truncated');
       }
     }
-    
+
     // Add truncation indicator
     if (!contextWindow.querySelector('.truncation-indicator')) {
       const indicator = document.createElement('div');
       indicator.className = 'truncation-indicator';
       indicator.style.cssText = 'text-align: center; padding: 0.5rem; color: var(--negative); font-size: 0.75rem; border-top: 2px dashed var(--negative); order: -1; margin-bottom: 0.5rem;';
-      indicator.innerHTML = '⚠️ Context window overflow—early messages truncated';
+      indicator.innerHTML = '⚠️ Context window full — system prompt is pinned; oldest conversation turns drop first';
       contextWindow.prepend(indicator);
     }
-    
+
     currentTokens = maxTokens;
     updateDisplay();
   });

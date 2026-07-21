@@ -10060,6 +10060,13 @@
       </div>
 
       <div class="concept-card">
+        <h4>💬 Start with the gap: chatting isn't doing</h4>
+        <p>By now you know what a language model is: a next-token predictor with a context window. That explains something you've probably noticed using ChatGPT or Claude: the model can <em>discuss</em> anything, but on its own it can't <em>do</em> anything. Ask a bare model "what should I wear tomorrow?" and it can only guess — it has no way to check the actual forecast. It can't read your calendar, see today's news, or book you a table. It's sealed in a box: text goes in, text comes out.</p>
+        <p>And yet the AI products you use clearly <em>do</em> things — they search the web, look at your files, some even browse and click. So something must connect the sealed box to the world. This tab is about that something, and the surprise is how ordinary it is: no new intelligence, just the model's text hooked up to the plumbing the rest of the internet already runs on.</p>
+        <p class="text-sm text-muted"><strong>The plan:</strong> first that plumbing (two minutes of plain computing), then how a model gets connected to it, then what happens when you run that connection in a loop — which is all the word "agent" means.</p>
+      </div>
+
+      <div class="concept-card">
         <h4>🖥️ First, some plain computing: how software talks to software</h4>
         <p>Set AI aside for a moment, because agents are built on a piece of ordinary computing worth having in your pocket: <strong>most of what happens on the internet is one computer asking another computer for something.</strong> A <strong>server</strong> is simply a computer whose job is to answer requests — it <em>serves</em>. It usually sits in a data center, powered on all day, waiting for questions to arrive. Your phone and laptop are <strong>clients</strong>: they do the asking.</p>
         <p>Your weather app doesn't know the weather. When you open it, it sends a request across the internet to a weather company's server, and the server sends structured data back:</p>
@@ -10091,16 +10098,10 @@
             </div>
           </div>
         </div>
-        <p>Nearly every app you use is assembled this way: maps, payments, messaging, and streaming apps are mostly making API calls to other companies' servers and arranging the answers on your screen. <strong>Hold onto this model</strong> — an AI "tool" is almost always one of these API requests wearing a new name, and MCP (coming up in this tab) is an API standard designed for AI.</p>
-      </div>
-
-      <div class="concept-card">
-        <h4>🗺️ The picture to keep in your head</h4>
-        <p>The same request-and-response shape, three times — first without AI, then with an LLM in the loop, then with MCP standardizing the plug.</p>
+        <p>Nearly every app you use is assembled this way: maps, payments, messaging, and streaming apps are mostly making API calls to other companies' servers and arranging the answers on your screen. <strong>Hold onto this model</strong> — an AI "tool" is almost always one of these API requests wearing a new name.</p>
         <div class="net-diagram">
-
           <div>
-            <div class="net-stage-label">1 · Plain computing: client and server</div>
+            <div class="net-stage-label">The picture · part 1 of 3 — plain computing</div>
             <div class="net-scroll"><div class="net-row">
               <div class="net-node">
                 <div class="net-node-icon">💻</div>
@@ -10119,11 +10120,27 @@
                 <div class="net-node-sub">a computer that answers — its API is the menu</div>
               </div>
             </div></div>
-            <div class="net-caption">A request goes out, structured data comes back. This is most of the internet.</div>
+            <div class="net-caption">A request goes out, structured data comes back. This is most of the internet — and we'll add to this picture twice more as the tab goes on.</div>
+            <div class="net-legend">
+              <span><span class="swatch" style="border-top-color: var(--color-red);"></span>request</span>
+              <span><span class="swatch" style="border-top-color: var(--color-blue);"></span>response</span>
+            </div>
           </div>
+        </div>
+      </div>
 
+      <div class="concept-card">
+        <h4>🔧 Tool calling: the model asks, the software does</h4>
+        <p>Now connect the sealed box to that plumbing. A model can't actually check the weather or run code — it can only produce tokens. So tool use works like this:</p>
+        <ol class="concept-list">
+          <li>The model writes a specially-formatted request: <code>get_weather(city="Provo")</code>. This is called a <strong>tool call</strong>, and it's still just text.</li>
+          <li>The <strong>software around the model</strong> (not the model) actually runs that function — usually by making an API call to some server, exactly like the weather app above.</li>
+          <li>The result — <code>"38°F, snow"</code> — is pasted back into the context window as new tokens.</li>
+          <li>The model reads that result and keeps going.</li>
+        </ol>
+        <div class="net-diagram">
           <div>
-            <div class="net-stage-label">2 · Add an LLM: the model talks, the app calls</div>
+            <div class="net-stage-label">The picture · part 2 of 3 — an LLM joins</div>
             <div class="net-scroll"><div class="net-row">
               <div class="net-node">
                 <div class="net-node-icon">🧠</div>
@@ -10139,7 +10156,7 @@
               <div class="net-node">
                 <div class="net-node-icon">⚙️</div>
                 <div class="net-node-name">AI app</div>
-                <div class="net-node-sub">ordinary software — takes your computer's seat from stage 1</div>
+                <div class="net-node-sub">ordinary software — takes your computer's seat from part 1</div>
               </div>
               <div class="net-link">
                 <div class="net-msg">the same API request</div>
@@ -10153,58 +10170,39 @@
                 <div class="net-node-sub">unchanged — it can't tell an AI app from any other client</div>
               </div>
             </div></div>
-            <div class="net-caption">The model's half of the picture is pure text. The app watches for a tool call, makes the stage-1 API request on the model's behalf, and pastes the answer back into the context window.</div>
-          </div>
-
-          <div>
-            <div class="net-stage-label">3 · Add MCP: one port, many tool servers</div>
-            <div class="net-scroll"><div class="net-row">
-              <div class="net-node">
-                <div class="net-node-icon">⚙️</div>
-                <div class="net-node-name">AI app</div>
-                <div class="net-node-sub"><span class="net-chip">🧠 LLM inside</span></div>
-              </div>
-              <div class="net-port">MCP</div>
-              <div class="net-fan">
-                <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">⛅</div><div class="net-node-name">Weather tools</div><div class="net-node-sub">tool server</div></div>
-                </div>
-                <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">📬</div><div class="net-node-name">Email tools</div><div class="net-node-sub">tool server</div></div>
-                </div>
-                <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">🗄️</div><div class="net-node-name">Database tools</div><div class="net-node-sub">tool server</div></div>
-                </div>
-              </div>
-            </div></div>
-            <div class="net-caption">MCP is the yellow port: one standard way for the app to ask any tool server "what's on your menu?" and place an order. Build a tool server once, plug it into any compatible AI app.</div>
-          </div>
-
-          <div class="net-legend">
-            <span><span class="swatch" style="border-top-color: var(--color-red);"></span>request</span>
-            <span><span class="swatch" style="border-top-color: var(--color-blue);"></span>response</span>
+            <div class="net-caption">The model's half of the picture is pure text. The app watches for a tool call, makes the part-1 API request on the model's behalf, and pastes the answer back into the context window. The server can't tell the difference.</div>
           </div>
         </div>
-      </div>
-
-      <div class="concept-card">
-        <h4>🔧 Tool calling: the model asks, the software does</h4>
-        <p>A model can't actually check the weather or run code — it can only produce tokens. So tool use works like this:</p>
-        <ol class="concept-list">
-          <li>The model writes a specially-formatted request: <code>get_weather(city="Provo")</code>.</li>
-          <li>The <strong>software around the model</strong> (not the model) actually runs that function — usually by making an API call to some server, exactly like the weather app above.</li>
-          <li>The result — <code>"38°F, snow"</code> — is pasted back into the context window as new tokens.</li>
-          <li>The model reads that result and keeps going.</li>
-        </ol>
         <p>Tools are just <strong>context the model requests for itself</strong> — a direct extension of the context engineering from the <strong>Prompting</strong> tab.</p>
       </div>
 
       <div class="concept-card">
-        <h4>🔁 The agent loop</h4>
-        <p>Chain that together and you get an agent: <strong>goal → think → act → observe → repeat</strong>. It's the autoregressive loop from the Inference tab, one level up — instead of predicting the next token, it's choosing the next action.</p>
+        <h4>🔁 The agent loop — and the buzzword it decodes</h4>
+        <p>One tool call gets you a weather forecast. Real work takes many: check the forecast, <em>then</em> decide it's worth checking the hourly detail, <em>then</em> compare it against your calendar. So the app doesn't stop after one call — it lets the model keep going: <strong>goal → think → act → observe → repeat</strong>, until the model decides the job is done and writes its answer. It's the autoregressive loop from the Inference tab, one level up — instead of predicting the next token, it's choosing the next action.</p>
+        <p>That loop is the entire secret behind a word you now hear everywhere. When a product is advertised as <strong>"agentic AI,"</strong> nothing new has been invented — it means a language model, given tools, run in a loop until a goal is met. The differences you notice between products are mostly differences in degree:</p>
+        <div class="analogy-box">
+          <div class="analogy-item">
+            <span class="analogy-icon">🗣️</span>
+            <div>
+              <strong>A chatbot</strong>
+              <p>No tools. It answers from whatever it learned in training plus what you paste in. Sealed box.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">🔎</span>
+            <div>
+              <strong>A chatbot with search</strong>
+              <p>One tool, used once or twice: it looks something up, reads the result, and answers. The box has a mail slot.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">🤖</span>
+            <div>
+              <strong>An agent</strong>
+              <p>Many tools, many steps, and a goal. It plans, acts, checks its own results, and keeps going — sometimes for minutes or hours — before coming back to you.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Interactive: step-through agent trace -->
@@ -10232,8 +10230,43 @@
           <div class="card-sm"><strong>💻 Coding agents</strong><p class="text-sm">Claude Code, OpenAI Codex, and Cursor write, run, and debug code across many files in a loop.</p></div>
           <div class="card-sm"><strong>🔍 Deep research</strong><p class="text-sm">Agents that search, read, and synthesize dozens of sources into a cited report.</p></div>
           <div class="card-sm"><strong>🖥️ Computer use</strong><p class="text-sm">Agents that see the screen and click, type, and navigate like a person.</p></div>
-          <div class="card-sm"><strong>🔌 MCP</strong><p class="text-sm">The Model Context Protocol is a shared API standard for connecting models to tools — the same request-and-response idea from the top of this tab, standardized so any tool can plug into any model. A "USB-C port" for AI, governed by the Linux Foundation and supported across the major providers.</p></div>
+          <div class="card-sm"><strong>🗓️ Everyday assistants</strong><p class="text-sm">Assistants connected to your email, calendar, and files that can find things, draft replies, and schedule — asking you before anything consequential.</p></div>
         </div>
+      </div>
+
+      <div class="concept-card">
+        <h4>🔌 MCP: one plug for every tool</h4>
+        <p>Look back at those examples and a wiring problem appears. Every AI app wants tools, and every service you use — email, calendar, documents, music, your bank — could be one. If each app needed custom wiring for each service, ten apps × a hundred services would mean a thousand separate connections, and a tool built for one assistant would have to be rebuilt for the next. For a while, that's roughly how it was.</p>
+        <p>The industry's fix is the <strong>Model Context Protocol (MCP)</strong>: a single shared API — the menu idea from the top of this tab — that any tool can publish and any AI app can read. A <em>tool server</em> is a small program that answers two kinds of request: "what's on your menu?" and "do this one." Build it once, and it plugs into any compatible app. The common comparison is a <strong>USB-C port</strong>: one port, many devices, instead of a different cable for every combination.</p>
+        <div class="net-diagram">
+          <div>
+            <div class="net-stage-label">The picture · part 3 of 3 — MCP standardizes the plug</div>
+            <div class="net-scroll"><div class="net-row">
+              <div class="net-node">
+                <div class="net-node-icon">⚙️</div>
+                <div class="net-node-name">AI app</div>
+                <div class="net-node-sub"><span class="net-chip">🧠 LLM inside</span></div>
+              </div>
+              <div class="net-port">MCP</div>
+              <div class="net-fan">
+                <div class="net-fan-row">
+                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">⛅</div><div class="net-node-name">Weather tools</div><div class="net-node-sub">tool server</div></div>
+                </div>
+                <div class="net-fan-row">
+                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">📬</div><div class="net-node-name">Email tools</div><div class="net-node-sub">tool server</div></div>
+                </div>
+                <div class="net-fan-row">
+                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">🗄️</div><div class="net-node-name">Database tools</div><div class="net-node-sub">tool server</div></div>
+                </div>
+              </div>
+            </div></div>
+            <div class="net-caption">MCP is the yellow port: one standard way for the app to ask any tool server "what's on your menu?" and place an order. Build a tool server once, plug it into any compatible AI app.</div>
+          </div>
+        </div>
+        <p>You've probably already used MCP without knowing it. When an AI app's settings offer <strong>"connectors"</strong> or "integrations" — connect your Gmail, your calendar, your Drive — each one of those is a tool server plugging into the app's MCP port. <span class="text-sm text-muted">MCP is governed by the Linux Foundation and supported across the major AI providers.</span></p>
       </div>
 
       <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
@@ -10246,9 +10279,20 @@
         <p class="text-sm text-muted">Prompt injection is the #1 risk on the OWASP LLM Top 10. A real 2025 case (<a href="https://en.wikipedia.org/wiki/Prompt_injection" target="_blank" rel="noopener">"EchoLeak," CVE-2025-32711</a>) showed an AI assistant leaking data from a single crafted message. Always be cautious about what an agent is allowed to read and do.</p>
       </div>
 
+      <div class="concept-card">
+        <h4>🤝 The safety valve: agents ask permission</h4>
+        <p>Because of those risks, well-designed agents keep a <strong>human in the loop</strong> — and this is the one part of agent safety you personally operate. All those <em>"Allow this?"</em> prompts an AI app shows you aren't legal boilerplate; they're checkpoints. The agent pauses before a consequential action and shows you exactly what it wants to do, and nothing happens until you say yes. A few rules of thumb for deciding:</p>
+        <ul class="concept-list">
+          <li><strong>Reading is lower-stakes than acting.</strong> Letting an agent search the web or read a document is usually fine. Sending, posting, buying, and deleting are the moments that deserve your attention.</li>
+          <li><strong>Approve the action, not the vibe.</strong> The dialog tells you the specific thing about to happen — "send this email," "spend this amount." Read that line before clicking Allow; it's the whole point of the pause.</li>
+          <li><strong>Match trust to reversibility.</strong> A draft can be thrown away, so let it draft freely. A sent message, a payment, or a deleted file can't be un-done — those deserve the closest look.</li>
+        </ul>
+        <p class="text-sm text-muted">This is the checkpoint idea from the deep dive below in user-facing form: catching a mistake at the approval prompt costs one click; catching it after the fact can cost a lot more.</p>
+      </div>
+
       <div class="explanation">
         <h4>The through-line</h4>
-        <p>Nothing here breaks the model you've been building up. Tokenization, embeddings, attention, inference, the context window — an agent is all of that, wrapped in a loop that turns some tokens into actions and feeds the results back in as more tokens.</p>
+        <p>Nothing here breaks the model you've been building up. Tokenization, embeddings, attention, inference, the context window — an agent is all of that, wrapped in a loop that turns some tokens into API requests and feeds the results back in as more tokens. The intelligence is the model's; the hands belong to ordinary software, and the biggest decisions still route through you.</p>
       </div>
 
       <details class="deep-dive">
@@ -10907,9 +10951,9 @@ const TAB_FLOW = [
     'More thinking = more forward passes = more computation on your problem.',
     'It is trained by rewarding correct answers on checkable problems — and in 2026, thinking is a dial you control.' ]},
   { tab: 'agents', title: '10: Agents & Tools', recap: [
-    'An agent is a model in a loop: think → act → observe → repeat.',
     'Software talks to software through APIs — a tool call is the model asking for one of those requests, and software pastes the result back.',
-    'Acting raises the stakes — errors compound and prompt injection becomes dangerous.' ]},
+    'An agent is a model in a loop — think → act → observe → repeat — and MCP is the standard plug connecting apps to tools.',
+    'Acting raises the stakes — errors compound, injected text can trigger real actions — so good agents ask permission first.' ]},
   { tab: 'multimodal', title: '11: Images & Sound', recap: [
     'Images and audio become embeddings, just like text tokens.',
     'The pattern is always: divide → embed → attend.',
@@ -11045,6 +11089,10 @@ const QUIZ_DATA = {
       { text: 'The model executes the code itself', feedback: 'The model can only produce tokens — it can\'t run anything. Something else does.' },
       { text: 'The software around the model runs it, then feeds the result back as tokens', correct: true, feedback: 'Right — the model writes a request; the surrounding program executes it and pastes the result into the context.' },
       { text: 'The tool runs inside the neural network', feedback: 'Tools live outside the model entirely; only their text results re-enter the context window.' }]},
+    { q: 'What problem does MCP (the Model Context Protocol) solve?', options: [
+      { text: 'It makes the model itself smarter', feedback: 'MCP doesn\'t change the model at all — it standardizes how apps and tools connect to each other.' },
+      { text: 'It gives every AI app one standard way to connect to any tool', correct: true, feedback: 'Right — like USB-C: build a tool server once and it plugs into any compatible app, instead of custom wiring for every app-tool pair.' },
+      { text: 'It blocks prompt injection attacks', feedback: 'If anything, connecting more tools raises the stakes — safety comes from permission checkpoints, not from MCP itself.' }]},
     { q: 'Why is prompt injection more dangerous for an agent than for a chatbot?', options: [
       { text: 'Agents have larger context windows', feedback: 'Window size isn\'t the issue — the ability to take actions is.' },
       { text: 'An agent can act, so injected instructions can trigger real actions', correct: true, feedback: 'Right — a chatbot might say something wrong; an agent might send data or run a command based on hidden text it read.' },

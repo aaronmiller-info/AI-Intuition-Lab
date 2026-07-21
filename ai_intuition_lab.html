@@ -10019,11 +10019,46 @@
       </div>
 
       <div class="concept-card">
+        <h4>🖥️ First, some plain computing: how software talks to software</h4>
+        <p>Set AI aside for a moment, because agents are built on a piece of ordinary computing worth having in your pocket: <strong>most of what happens on the internet is one computer asking another computer for something.</strong> A <strong>server</strong> is simply a computer whose job is to answer requests — it <em>serves</em>. It usually sits in a data center, powered on all day, waiting for questions to arrive. Your phone and laptop are <strong>clients</strong>: they do the asking.</p>
+        <p>Your weather app doesn't know the weather. When you open it, it sends a request across the internet to a weather company's server, and the server sends structured data back:</p>
+        <div class="code-snippet">
+          your app → weather server: forecast for Provo, tomorrow?<br>
+          weather server → your app: {"high": 38, "conditions": "snow"}
+        </div>
+        <p>The rules for that conversation are called an <strong>API</strong> (Application Programming Interface): the published list of requests a server will answer, the exact format for asking, and the exact format of the reply. An API is what lets two programs written by different people, at different companies, in different programming languages work together without ever having met. A restaurant makes the pieces easy to keep straight:</p>
+        <div class="analogy-box">
+          <div class="analogy-item">
+            <span class="analogy-icon">🍽️</span>
+            <div>
+              <strong>The server is the kitchen</strong>
+              <p>It does the actual work, out of sight. You never go back there yourself — you make a request and a result comes out.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">📋</span>
+            <div>
+              <strong>The API is the menu</strong>
+              <p>It lists exactly what you can ask for and how to ask. Order something off-menu and the kitchen just says no.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">🧾</span>
+            <div>
+              <strong>The format is the order ticket</strong>
+              <p>Orders are written one standard way so the kitchen never guesses. Software is stricter still: requests and replies use rigid structured formats (like the JSON above) because programs can't handle ambiguity.</p>
+            </div>
+          </div>
+        </div>
+        <p>Nearly every app you use is assembled this way: maps, payments, messaging, and streaming apps are mostly making API calls to other companies' servers and arranging the answers on your screen. <strong>Hold onto this model</strong> — an AI "tool" is almost always one of these API requests wearing a new name, and MCP (coming up in this tab) is an API standard designed for AI.</p>
+      </div>
+
+      <div class="concept-card">
         <h4>🔧 Tool calling: the model asks, the software does</h4>
         <p>A model can't actually check the weather or run code — it can only produce tokens. So tool use works like this:</p>
         <ol class="concept-list">
           <li>The model writes a specially-formatted request: <code>get_weather(city="Provo")</code>.</li>
-          <li>The <strong>software around the model</strong> (not the model) actually runs that function.</li>
+          <li>The <strong>software around the model</strong> (not the model) actually runs that function — usually by making an API call to some server, exactly like the weather app above.</li>
           <li>The result — <code>"38°F, snow"</code> — is pasted back into the context window as new tokens.</li>
           <li>The model reads that result and keeps going.</li>
         </ol>
@@ -10060,7 +10095,7 @@
           <div class="card-sm"><strong>💻 Coding agents</strong><p class="text-sm">Claude Code, OpenAI Codex, and Cursor write, run, and debug code across many files in a loop.</p></div>
           <div class="card-sm"><strong>🔍 Deep research</strong><p class="text-sm">Agents that search, read, and synthesize dozens of sources into a cited report.</p></div>
           <div class="card-sm"><strong>🖥️ Computer use</strong><p class="text-sm">Agents that see the screen and click, type, and navigate like a person.</p></div>
-          <div class="card-sm"><strong>🔌 MCP</strong><p class="text-sm">The Model Context Protocol is a shared standard for connecting models to tools — a "USB-C port" for AI. Governed by the Linux Foundation and supported across the major providers.</p></div>
+          <div class="card-sm"><strong>🔌 MCP</strong><p class="text-sm">The Model Context Protocol is a shared API standard for connecting models to tools — the same request-and-response idea from the top of this tab, standardized so any tool can plug into any model. A "USB-C port" for AI, governed by the Linux Foundation and supported across the major providers.</p></div>
         </div>
       </div>
 
@@ -10099,7 +10134,7 @@
 
           <div class="concept-card">
             <h4>🔌 Why a shared standard for tools matters</h4>
-            <p>Every model provider could invent its own private format for describing tools, and for a while they mostly did — meaning a tool built for one assistant had to be rewritten for the next. The industry has converged on the <strong>Model Context Protocol (MCP)</strong> as a common interface, so a tool built once can be plugged into any compatible model — the "USB-C port" comparison from the card above captures the idea: one port, many devices, instead of a different cable for every combination.</p>
+            <p>MCP is exactly the kind of thing from the top of this tab: an API — a published, structured way for two programs to talk. Here the two programs are an AI application on one side and a <em>tool server</em> on the other: a small program that publishes a menu of tools ("search email," "query the database") and performs them on request. Every model provider could invent its own private menu format, and for a while they mostly did — meaning a tool built for one assistant had to be rewritten for the next. The industry has converged on the <strong>Model Context Protocol (MCP)</strong> as the common one, so a tool server built once can be plugged into any compatible model — the "USB-C port" comparison from the card above captures the idea: one port, many devices, instead of a different cable for every combination.</p>
           </div>
 
           <div class="concept-card">
@@ -10736,7 +10771,7 @@ const TAB_FLOW = [
     'It is trained by rewarding correct answers on checkable problems — and in 2026, thinking is a dial you control.' ]},
   { tab: 'agents', title: '10: Agents & Tools', recap: [
     'An agent is a model in a loop: think → act → observe → repeat.',
-    'Tool calls are just the model requesting context; software runs the tool and pastes the result back.',
+    'Software talks to software through APIs — a tool call is the model asking for one of those requests, and software pastes the result back.',
     'Acting raises the stakes — errors compound and prompt injection becomes dangerous.' ]},
   { tab: 'multimodal', title: '11: Images & Sound', recap: [
     'Images and audio become embeddings, just like text tokens.',

@@ -6582,10 +6582,11 @@
     .net-chip { display: inline-block; margin-top: 0.45rem; padding: 0.15rem 0.5rem;
       border: 1.5px solid var(--text-primary); border-radius: 999px;
       font-size: 0.7rem; font-weight: 700; background: var(--bg-elevated); }
-    .net-port { flex: 0 0 auto; margin-left: -0.85rem; padding: 0.3rem 0.4rem;
-      background: var(--color-yellow); border: 2px solid var(--text-primary);
-      border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.72rem;
-      font-weight: 700; writing-mode: vertical-rl; text-orientation: mixed; z-index: 1; }
+    /* Yellow pill riding each wire: the protocol is spoken on every connection,
+       it is not one box sitting in the middle */
+    .net-proto { align-self: center; padding: 0.12rem 0.5rem; background: var(--color-yellow);
+      border: 1.5px solid var(--text-primary); border-radius: 999px;
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em; }
     .net-link { flex: 1 1 0; min-width: 80px; display: flex; flex-direction: column;
       justify-content: center; gap: 0.4rem; }
     .net-msg { font-family: var(--font-mono); font-size: 0.66rem; text-align: center;
@@ -10252,38 +10253,68 @@
       </div>
 
       <div class="concept-card">
-        <h4>🔌 MCP: one plug for every tool</h4>
+        <h4>🔌 MCP and "connectors": how tools plug in</h4>
         <p>Look back at those examples and a wiring problem appears. Every AI app wants tools, and every service you use — email, calendar, documents, music, your bank — could be one. If each app needed custom wiring for each service, ten apps × a hundred services would mean a thousand separate connections, and a tool built for one assistant would have to be rebuilt for the next. For a while, that's roughly how it was.</p>
-        <p>The industry's fix is the <strong>Model Context Protocol (MCP)</strong>: a single shared API — the menu idea from the top of this tab — that any tool can publish and any AI app can read. A <em>tool server</em> is a small program that answers two kinds of request: "what's on your menu?" and "do this one." Build it once, and it plugs into any compatible app. The common comparison is a <strong>USB-C port</strong>: one port, many devices, instead of a different cable for every combination.</p>
+        <p>The industry's fix is the <strong>Model Context Protocol (MCP)</strong>. The word <em>protocol</em> is the important one: MCP isn't an app, a company, or a piece of software sitting between you and your tools. It's a <strong>published standard — an agreed-on language</strong> that any tool can speak and any AI app can understand. Nobody "runs MCP" any more than a website "runs English."</p>
+        <p>A tool that speaks it is called an <strong>MCP server</strong> — a small program answering two kinds of request: "what's on your menu?" and "do this one." There isn't <em>one</em> of these. There's one per tool: a Gmail MCP server, a calendar MCP server, one for your notes app, and your AI app opens a separate connection to each. USB-C makes the distinction clear: USB-C isn't a single cable somewhere in the world, it's a <em>shape everyone agreed on</em>, so every device and every charger fits together. MCP is the shape; each tool brings its own plug.</p>
         <div class="net-diagram">
           <div>
-            <div class="net-stage-label">The picture · part 3 of 3 — MCP standardizes the plug</div>
+            <div class="net-stage-label">The picture · part 3 of 3 — every tool is its own MCP server</div>
             <div class="net-scroll"><div class="net-row">
               <div class="net-node product">
                 <div class="net-node-icon">⚙️</div>
                 <div class="net-node-name">The AI app</div>
                 <div class="net-node-sub"><span class="net-chip">🧠 model inside</span></div>
               </div>
-              <div class="net-port">MCP</div>
               <div class="net-fan">
                 <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">⛅</div><div class="net-node-name">Weather tools</div><div class="net-node-sub">tool server</div></div>
+                  <div class="net-link"><div class="net-proto">speaks MCP</div><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">📬</div><div class="net-node-name">Gmail</div><div class="net-node-sub">its own MCP server</div></div>
                 </div>
                 <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">📬</div><div class="net-node-name">Email tools</div><div class="net-node-sub">tool server</div></div>
+                  <div class="net-link"><div class="net-proto">speaks MCP</div><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">🗓️</div><div class="net-node-name">Calendar</div><div class="net-node-sub">its own MCP server</div></div>
                 </div>
                 <div class="net-fan-row">
-                  <div class="net-link"><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
-                  <div class="net-node"><div class="net-node-icon">🗄️</div><div class="net-node-name">Database tools</div><div class="net-node-sub">tool server</div></div>
+                  <div class="net-link"><div class="net-proto">speaks MCP</div><div class="net-arrow req"></div><div class="net-arrow res"></div></div>
+                  <div class="net-node"><div class="net-node-icon">📁</div><div class="net-node-name">Your files</div><div class="net-node-sub">its own MCP server</div></div>
                 </div>
               </div>
             </div></div>
-            <div class="net-caption">MCP is the yellow port: one standard way for the app to ask any tool server "what's on your menu?" and place an order. Build a tool server once, plug it into any compatible AI app.</div>
+            <div class="net-caption">There's no single "MCP" box in this picture — MCP is the <em>language</em> spoken on each of these three separate connections. Each tool runs its own MCP server, and because they all speak the same language, the app can talk to a tool it has never seen before without any custom wiring.</div>
           </div>
         </div>
-        <p>You've probably already used MCP without knowing it. When an AI app's settings offer <strong>"connectors"</strong> or "integrations" — connect your Gmail, your calendar, your Drive — each one of those is a tool server plugging into the app's MCP port. <span class="text-sm text-muted">MCP is governed by the Linux Foundation and supported across the major AI providers.</span></p>
+        <div class="tools-insight">
+          <p><strong>👉 The word you'll actually see: "Connectors."</strong> Most user-facing AI software doesn't say "MCP server" anywhere in its interface — it says <strong>Connectors</strong>, or sometimes Integrations, Apps, or Extensions. When you open your assistant's settings and switch on Gmail, Google Drive, Slack, or Notion, you are connecting an MCP server, and each toggle is one of the wires in the diagram above. So if you remember one practical thing from this section: <em>connector</em> is the everyday word, <em>MCP server</em> is the same thing by its technical name.</p>
+        </div>
+        <p class="text-sm text-muted">MCP is governed by the Linux Foundation and supported across the major AI providers, which is why the same connector often works in more than one assistant.</p>
+      </div>
+
+      <div class="concept-card">
+        <h4>📚 Skills: teaching an agent how <em>you</em> want a job done</h4>
+        <p>Tools and connectors gave the agent hands. But hands aren't know-how. A general-purpose agent has no idea that your department's monthly report always opens with a one-paragraph summary, that the numbers come from the finance spreadsheet and not the dashboard, or that your team never sends a draft out without a second pair of eyes. Ask for that report and you'll get a generic one — so you explain your way of doing it, again, every single time.</p>
+        <p>A <strong>skill</strong> is that explanation, written down once. It's a set of instructions the agent can pull up when the job comes along — plain language, like a genuinely good how-to page — and it can carry supporting material with it: a template, a checklist, example documents that show what "good" looks like, sometimes a small script for a fiddly step. Crucially, <strong>writing a skill is writing instructions, not code</strong>, which makes it the main way a non-programmer customizes an agent.</p>
+        <div class="analogy-box">
+          <div class="analogy-item">
+            <span class="analogy-icon">🔑</span>
+            <div>
+              <strong>Connectors are the new hire's badge and logins</strong>
+              <p>They grant access — email, calendar, the shared drive. Necessary, but they say nothing about how your team works.</p>
+            </div>
+          </div>
+          <div class="analogy-item">
+            <span class="analogy-icon">📗</span>
+            <div>
+              <strong>Skills are the team handbook</strong>
+              <p>"Here's how we write the monthly report, here's the template, here's a good one from last quarter." A capable new hire with access but no handbook still does the job generically — for exactly the same reason.</p>
+            </div>
+          </div>
+        </div>
+        <p>There's one clever detail worth knowing, because it explains why an agent can have dozens of skills without drowning in them. The agent doesn't hold every skill in mind at once — that would fill the context window with instructions for jobs it isn't doing. Instead it sees only a list of names and one-line descriptions, and pulls the full text of a skill <em>only when a task matches it</em>. It's the difference between memorizing every binder on the shelf and reading the spines, then pulling down the one you need.</p>
+        <p>And notice what a skill is <em>not</em>: it isn't retraining, and it doesn't make the model smarter. It's context — the same lever as everything else in this tab and the whole <strong>Prompting</strong> tab. The model already knew how to write a report; it just didn't know how <em>you</em> write one. <span class="text-sm text-muted">As of <span data-fact-asof></span>, Anthropic's Claude popularized this pattern under the name "Agent Skills," and equivalent features have spread across the major agent tools.</span></p>
+        <div class="tools-insight">
+          <p><strong>Three words people mix up:</strong> <strong>Tools</strong> are what an agent <em>can do</em> (send an email, run a search). <strong>Skills</strong> are how to do a particular job <em>your way</em> (how we write the monthly report). <strong>MCP / connectors</strong> are how tools get plugged in (the shared language that lets your assistant reach Gmail at all).</p>
+        </div>
       </div>
 
       <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
@@ -10969,7 +11000,7 @@ const TAB_FLOW = [
     'It is trained by rewarding correct answers on checkable problems — and in 2026, thinking is a dial you control.' ]},
   { tab: 'agents', title: '10: Agents & Tools', recap: [
     'Software talks to software through APIs — a tool call is the model asking for one of those requests, and software pastes the result back.',
-    'An agent is a model in a loop — think → act → observe → repeat — and MCP is the standard plug connecting apps to tools.',
+    'An agent is a model in a loop — think → act → observe → repeat — where MCP is the shared language connecting tools and skills supply the know-how.',
     'Acting raises the stakes — errors compound, injected text can trigger real actions — so good agents ask permission first.' ]},
   { tab: 'multimodal', title: '11: Images & Sound', recap: [
     'Images and audio become embeddings, just like text tokens.',
@@ -11108,8 +11139,12 @@ const QUIZ_DATA = {
       { text: 'The tool runs inside the neural network', feedback: 'Tools live outside the model entirely; only their text results re-enter the context window.' }]},
     { q: 'What problem does MCP (the Model Context Protocol) solve?', options: [
       { text: 'It makes the model itself smarter', feedback: 'MCP doesn\'t change the model at all — it standardizes how apps and tools connect to each other.' },
-      { text: 'It gives every AI app one standard way to connect to any tool', correct: true, feedback: 'Right — like USB-C: build a tool server once and it plugs into any compatible app, instead of custom wiring for every app-tool pair.' },
+      { text: 'It gives every AI app one standard way to connect to any tool', correct: true, feedback: 'Right — like USB-C: build an MCP server once and it plugs into any compatible app, instead of custom wiring for every app-tool pair. In everyday settings menus these show up as "connectors."' },
       { text: 'It blocks prompt injection attacks', feedback: 'If anything, connecting more tools raises the stakes — safety comes from permission checkpoints, not from MCP itself.' }]},
+    { q: 'Your assistant can already access your email, but its draft replies don\'t sound like your team. What fixes that?', options: [
+      { text: 'A skill — written instructions and examples for how you want that job done', correct: true, feedback: 'Right — connectors grant access; skills supply the know-how. It\'s context, not retraining, and you write it in plain language.' },
+      { text: 'Another connector', feedback: 'It already has access. More connectors add reach, not judgment about how your team writes.' },
+      { text: 'Retraining the model on your emails', feedback: 'Far more expensive than needed — and unnecessary. The model can already write; it just needs your instructions in context.' }]},
     { q: 'Why is prompt injection more dangerous for an agent than for a chatbot?', options: [
       { text: 'Agents have larger context windows', feedback: 'Window size isn\'t the issue — the ability to take actions is.' },
       { text: 'An agent can act, so injected instructions can trigger real actions', correct: true, feedback: 'Right — a chatbot might say something wrong; an agent might send data or run a command based on hidden text it read.' },

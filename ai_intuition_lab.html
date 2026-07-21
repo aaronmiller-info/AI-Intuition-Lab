@@ -6572,6 +6572,7 @@
       text-transform: uppercase; color: var(--accent-primary); margin-bottom: 0.6rem; }
     .net-scroll { overflow-x: auto; }
     .net-row { display: flex; align-items: center; gap: 0.75rem; min-width: 620px; }
+    .net-row.wide { min-width: 700px; }
     .net-node { background: var(--bg-card); border: 2px solid var(--text-primary);
       border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; text-align: center;
       flex: 0 0 auto; width: 150px; }
@@ -6601,6 +6602,16 @@
     .net-fan-row .net-link { min-width: 60px; }
     .net-fan-row .net-node { width: 150px; padding: 0.5rem 0.6rem; }
     .net-fan-row .net-node-icon { font-size: 1.2rem; margin-bottom: 0.2rem; }
+    /* Dashed boundary = "the one app you're using", with the model inside it */
+    .net-group { flex: 0 0 auto; border: 2px dashed var(--accent-primary);
+      border-radius: var(--radius-sm); padding: 0.5rem 0.6rem 0.65rem; background: var(--primary-5); }
+    .net-group-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--accent-primary); text-align: center; margin-bottom: 0.5rem; }
+    .net-group-body { display: flex; align-items: center; gap: 0.5rem; }
+    .net-group .net-node { width: 138px; }
+    .net-group .net-link { flex: 0 0 auto; width: 118px; min-width: 0; }
+    .net-node.product { border-style: dashed; border-color: var(--accent-primary);
+      background: var(--primary-5); }
     .net-caption { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.6rem; max-width: 62ch; }
     .net-legend { display: flex; gap: 1.25rem; font-size: 0.72rem; color: var(--text-muted);
       font-family: var(--font-mono); margin-top: 0.25rem; }
@@ -10138,25 +10149,31 @@
           <li>The result — <code>"38°F, snow"</code> — is pasted back into the context window as new tokens.</li>
           <li>The model reads that result and keeps going.</li>
         </ol>
+        <p>Those are two parts of <strong>one product</strong>, not two things you juggle. When you use ChatGPT or Claude, the model and the app code around it are both inside the single window on your screen — the split below is an X-ray view of what's happening in there, not two apps.</p>
         <div class="net-diagram">
           <div>
             <div class="net-stage-label">The picture · part 2 of 3 — an LLM joins</div>
-            <div class="net-scroll"><div class="net-row">
-              <div class="net-node">
-                <div class="net-node-icon">🧠</div>
-                <div class="net-node-name">LLM</div>
-                <div class="net-node-sub">only reads &amp; writes tokens — never touches the internet</div>
-              </div>
-              <div class="net-link">
-                <div class="net-msg">tool call (just text)</div>
-                <div class="net-arrow req"></div>
-                <div class="net-arrow res"></div>
-                <div class="net-msg">result pasted into context</div>
-              </div>
-              <div class="net-node">
-                <div class="net-node-icon">⚙️</div>
-                <div class="net-node-name">AI app</div>
-                <div class="net-node-sub">ordinary software — takes your computer's seat from part 1</div>
+            <div class="net-scroll"><div class="net-row wide">
+              <div class="net-group">
+                <div class="net-group-label">💬 The one app you're using — ChatGPT, Claude…</div>
+                <div class="net-group-body">
+                  <div class="net-node">
+                    <div class="net-node-icon">🧠</div>
+                    <div class="net-node-name">The model</div>
+                    <div class="net-node-sub">the thinking — only reads &amp; writes tokens</div>
+                  </div>
+                  <div class="net-link">
+                    <div class="net-msg">tool call</div>
+                    <div class="net-arrow req"></div>
+                    <div class="net-arrow res"></div>
+                    <div class="net-msg">result back</div>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon">⚙️</div>
+                    <div class="net-node-name">App code</div>
+                    <div class="net-node-sub">the hands — takes your computer's seat from part 1</div>
+                  </div>
+                </div>
               </div>
               <div class="net-link">
                 <div class="net-msg">the same API request</div>
@@ -10170,7 +10187,7 @@
                 <div class="net-node-sub">unchanged — it can't tell an AI app from any other client</div>
               </div>
             </div></div>
-            <div class="net-caption">The model's half of the picture is pure text. The app watches for a tool call, makes the part-1 API request on the model's behalf, and pastes the answer back into the context window. The server can't tell the difference.</div>
+            <div class="net-caption">Both halves live inside the <em>single</em> app on your screen — you never see the dashed line. The model does the thinking and writes a tool call; the app code has the hands and makes the part-1 API request on the model's behalf, then pastes the answer back into the context window. The weather server can't tell the difference.</div>
           </div>
         </div>
         <p>Tools are just <strong>context the model requests for itself</strong> — a direct extension of the context engineering from the <strong>Prompting</strong> tab.</p>
@@ -10242,10 +10259,10 @@
           <div>
             <div class="net-stage-label">The picture · part 3 of 3 — MCP standardizes the plug</div>
             <div class="net-scroll"><div class="net-row">
-              <div class="net-node">
+              <div class="net-node product">
                 <div class="net-node-icon">⚙️</div>
-                <div class="net-node-name">AI app</div>
-                <div class="net-node-sub"><span class="net-chip">🧠 LLM inside</span></div>
+                <div class="net-node-name">The AI app</div>
+                <div class="net-node-sub"><span class="net-chip">🧠 model inside</span></div>
               </div>
               <div class="net-port">MCP</div>
               <div class="net-fan">

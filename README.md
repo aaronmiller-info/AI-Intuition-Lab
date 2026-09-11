@@ -15,11 +15,15 @@ AI Intuition Lab is an interactive educational resource designed to help people 
 5. **Attention** – How models focus on relevant context
 6. **Pre-Training** – How models learn from massive datasets
 7. **Fine-Tuning** – How models are adapted for specific tasks
-8. **Prompting** – How to communicate effectively with AI
+8. **Prompting & Context** – How instructions, summaries, and retrieved information shape answers
 9. **Reasoning** – How models "think" before answering
 10. **Agents & Tools** – How models take actions and use tools
 11. **Images & Sound** – How AI handles multimodal content
-12. **Limitations** – What AI can't do (yet)
+12. **Limitations** – Where answers go wrong and how to check them
+
+A final **TL;DR** tab collects practical takeaways and links back to the relevant lessons. Optional experiments let you try context choices, thinking strategies, and agent decisions with immediate feedback and no scores or required sequence.
+
+Model examples were checked September 10, 2026. Sources and qualifications are embedded in the TL;DR tab.
 
 ## Who Is This For?
 
@@ -29,7 +33,7 @@ AI Intuition Lab is an interactive educational resource designed to help people 
 
 ## Getting Started
 
-AI Intuition Lab is a single HTML file with no dependencies. Just open it in a browser.
+AI Intuition Lab is a single HTML file. Just open it in a browser. All experiments run locally as scripted illustrations; they do not call AI services. The lessons work offline, with system-font fallbacks. Opening external sources requires internet access.
 
 1. Download `ai_intuition_lab.html`
 2. Open it in any modern web browser

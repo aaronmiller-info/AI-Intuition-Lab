@@ -5,6 +5,6 @@ import { extract, assertEq, assertTrue, done } from './harness.mjs';
 // test single-file, dependency-free JS embedded in the app without a bundler.
 const TAB_FLOW = eval(`(() => { ${extract('// @tab-flow-start', '// @tab-flow-end')}; return TAB_FLOW; })()`);
 assertEq(TAB_FLOW[0].tab, 'tokens', 'flow starts at tokens');
-assertEq(TAB_FLOW[TAB_FLOW.length - 1].tab, 'limitations', 'flow ends at limitations');
+assertEq(TAB_FLOW[TAB_FLOW.length - 1].tab, 'tldr', 'flow ends at TL;DR');
 assertTrue(TAB_FLOW.every(t => t.recap.length === 3), 'every tab has 3 recap bullets');
 done();

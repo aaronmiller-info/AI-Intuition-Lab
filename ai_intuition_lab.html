@@ -6562,7 +6562,7 @@
       </div>
 
       <div class="concept-card">
-        <h4>It's like the difference between the point-and-shoot vs the Pro</h4>
+        <h4>It's like the difference between a point-and-shoot and a pro</h4>
         <div class="grid grid-2-col gap-15 mt-1">
           <div class="card-sm">
             <div class="text-accent bold mb-05">The Point-and-Shoot User</div>
@@ -6648,7 +6648,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Tokenization</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding tokenization</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>Why not just use letters?</h4>
@@ -6726,7 +6726,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Why token iDs are just numbers</h4>
+          <h4>Why token IDs are just numbers</h4>
           <p>The model never sees the actual text "hello"—it sees a number like <code>15339</code>. This number is just an index into a lookup table, like if the words in a dictionary were numbered so you could look for word #15339 and find "hello":</p>
           <div class="vocab-table">
             <div class="vocab-row">
@@ -6805,7 +6805,7 @@
     <section id="tab-embed" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">02 · Input &amp; output</span>
-        <h2>Embedding Space</h2>
+        <h2>Embeddings</h2>
         <p>How do we turn words into something a computer can calculate?</p>
       </div>
 
@@ -6987,7 +6987,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Going Deeper on Embeddings</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Going deeper on embeddings</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>From tokens to vectors</h4>
@@ -7081,7 +7081,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>How "Similarity" works</h4>
+          <h4>How "similarity" works</h4>
           <p>When we say two words are "similar", we mean their vectors (shown here as arrows) point in similar directions. Imagine standing at the origin and pointing toward each word:</p>
           <div class="similarity-visual">
             <div class="sim-example">
@@ -7346,7 +7346,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Inference</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding inference</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The core loop</h4>
@@ -7440,7 +7440,7 @@
     <section id="tab-nn" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">04 · Architecture</span>
-        <h2>Neural Networks</h2>
+        <h2>Neural networks</h2>
         <p>See inside the "black box"—how vectors flow through layers and become predictions</p>
       </div>
 
@@ -7492,11 +7492,11 @@
                 <div class="nn-legend">
                   <div class="legend-item">
                     <div class="legend-line positive thick"></div>
-                    <span>Strong positive</span>
+                    <span>Pushes with the signal</span>
                   </div>
                   <div class="legend-item">
                     <div class="legend-line negative thick"></div>
-                    <span>Strong negative</span>
+                    <span>Pushes against it</span>
                   </div>
                   <div class="legend-item">
                     <div class="legend-circle active"></div>
@@ -7562,12 +7562,12 @@
 
       <div class="explanation">
         <h4>What's happening?</h4>
-        <p>Each connection has a <strong>weight</strong> that multiplies the incoming signal—these are a big share of the "parameters" that get learned during training. The hidden layer neurons combine their inputs to detect patterns: one might activate for "royalty + masculine," another for "military context." The output layer combines these patterns to predict which token comes next. Line thickness shows weight magnitude (green = positive, red = negative). Node brightness shows activation strength.</p>
+        <p>Each connection has a <strong>weight</strong> that multiplies the incoming signal—these are a big share of the "parameters" that get learned during training. The hidden layer neurons combine their inputs to detect patterns: one might activate for "royalty + masculine," another for "military context." The output layer combines these patterns to predict which token comes next. Line thickness shows weight size (black = pushes with the signal, red = pushes against it). Node brightness shows activation strength.</p>
       </div>
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Neural Networks</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding neural networks</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The big picture</h4>
@@ -7810,7 +7810,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Attention</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding attention</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The core intuition</h4>
@@ -7831,7 +7831,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Attention as "Soft" lookup</h4>
+          <h4>Attention as "soft" lookup</h4>
           <p>Think of attention like a Google search, but fuzzy:</p>
           <div class="analogy-box">
             <div class="analogy-item">
@@ -7853,7 +7853,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Query, key, value—The three roles</h4>
+          <h4>Query, key, value: the three roles</h4>
           <p>Every word plays three roles simultaneously:</p>
           <div class="qkv-explanation">
             <div class="qkv-role">
@@ -7885,7 +7885,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Multi-Head attention</h4>
+          <h4>Multi-head attention</h4>
           <p>Real transformers don't use just one attention pattern—they use many in parallel:</p>
           <div class="multihead-visual">
             <div class="head-example">
@@ -8069,7 +8069,7 @@
     <section id="tab-training" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">06 · Training LLMs</span>
-        <h2>Pre-Training</h2>
+        <h2>Pre-training</h2>
         <p>How billions of random numbers become an LLM that reflects the world</p>
       </div>
 
@@ -8358,7 +8358,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Pre-Training</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding pre-training</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>What pre-training achieves</h4>
@@ -8511,7 +8511,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Pre-Training at scale</h4>
+          <h4>Pre-training at scale</h4>
           <p>The demo above trains 2 parameters. For a disclosed historical comparison, here is Llama 3.1 405B (2024):</p>
           <div class="scale-comparison">
             <div class="scale-item">
@@ -8567,7 +8567,7 @@
     <section id="tab-finetuning" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">07 · Training LLMs</span>
-        <h2>Fine-Tuning</h2>
+        <h2>Fine-tuning</h2>
         <p>How a text predictor becomes a helpful, harmless, and honest assistant</p>
       </div>
 
@@ -8805,7 +8805,7 @@
 
       <!-- Deep Dive Section -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Understanding Fine-Tuning</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Understanding fine-tuning</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The three stages of creating an AI assistant</h4>
@@ -9039,7 +9039,7 @@
     <section id="tab-prompting" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">08 · In practice</span>
-        <h2>Prompting &amp; Context</h2>
+        <h2>Prompting &amp; context</h2>
         <p>How a user shapes what the model does—and why context windows matter</p>
       </div>
 
@@ -9272,12 +9272,12 @@
 
       <!-- Deep Dive -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Prompt Engineering Techniques</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Prompt engineering techniques</summary>
         <div class="deep-dive-body">
         <p style="margin-bottom: 1.5rem;"><strong>Prompt engineering</strong> is the craft of writing effective inputs to get better outputs from AI models.</p>
         
         <div class="concept-card">
-          <h4>Zero-Shot vs few-shot prompting</h4>
+          <h4>Zero-shot vs few-shot prompting</h4>
           <p><strong>Zero-shot:</strong> Just ask the question with no examples. Works for simple, common tasks.</p>
           <p><strong>Few-shot:</strong> Provide 2-5 examples of the format you want. The model recognizes the pattern and continues it.</p>
           <div class="system-example">
@@ -9292,7 +9292,7 @@
         </div>
 
         <div class="concept-card">
-          <h4>Chain-of-Thought prompting</h4>
+          <h4>Chain-of-thought prompting</h4>
           <p>For complex problems, asking the model to "think step by step" often improves results. The phrase "Let's think step by step" has been shown in research to significantly improve performance on math and reasoning problems—it's one of the most studied prompt engineering techniques. Why does it work?</p>
           <ul style="margin: 0.75rem 0; padding-left: 1.5rem; font-size: 0.85rem;">
             <li>Each reasoning step becomes input for the next step</li>
@@ -9337,12 +9337,12 @@
       </details>
 
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Context Engineering Techniques</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Context engineering techniques</summary>
         <div class="deep-dive-body">
         <p style="margin-bottom: 1.5rem;">Context engineering focuses on <em>what information the AI model "sees"</em>. In production AI tools, much of the context window is filled programmatically—not typed by users.</p>
 
         <div class="concept-card">
-          <h4>Retrieval-Augmented generation (RAG)</h4>
+          <h4>Retrieval-augmented generation (RAG)</h4>
           <p>Instead of hoping the model "knows" something from training, <strong>you can retrieve (or ask it to retrieve) relevant information</strong> and include it in the context window.</p>
           <div class="system-example">
             <div class="system-example-label">RAG Flow</div>
@@ -9486,7 +9486,7 @@
     <section id="tab-agents" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">10 · In practice</span>
-        <h2>Agents & Tools</h2>
+        <h2>Agents & tools</h2>
         <p>How a model that can only write text learns to <em>act</em> — without ever leaving the token loop</p>
       </div>
       <div class="intuition-callout">
@@ -9777,7 +9777,7 @@
       </div>
 
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Inside the Agent Loop</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Inside the agent loop</summary>
         <div class="deep-dive-body">
           <div class="concept-card">
             <h4>What a tool call actually looks like on the wire</h4>
@@ -9817,7 +9817,7 @@
     <section id="tab-multimodal" class="tab-section">
       <div class="section-header">
         <span class="eyebrow">11 · In practice</span>
-        <h2>Images & Sound</h2>
+        <h2>Images & sound</h2>
         <p>How AI models see, hear, and generate media beyond text</p>
       </div>
 
@@ -9999,7 +9999,7 @@
 
       <!-- Deep Dive -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Image and Audio Generation</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Image and audio generation</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>Diffusion models for generation</h4>
@@ -10223,7 +10223,7 @@
 
       <!-- Deep Dive -->
       <details class="deep-dive">
-        <summary class="deep-dive-summary">Go deeper (optional): Going Deeper on Limitations</summary>
+        <summary class="deep-dive-summary">Go deeper (optional): Going deeper on limitations</summary>
         <div class="deep-dive-body">
         <div class="concept-card">
           <h4>The calibration problem</h4>

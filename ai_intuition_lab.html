@@ -6427,6 +6427,57 @@
     .response-badge.good { color: var(--positive); }
     .response-badge.bad { color: var(--ink-3); }
     .teaches-content h4 { text-transform: none; }
+
+    /* ─── QA pass: spacing, alignment, leftovers ─── */
+    [class$="-icon"]:empty { display: none; }
+    .tab-section > .section-header + .concept-card > h4:first-child, .tab-section > .section-header + .concept-card > h3:first-child { border-top: 0; padding-top: 0; }
+    .tab-section > .section-header + .concept-card { margin-top: 0.4rem; }
+    /* tier-2 tiles: room below the text before the next row's hairline */
+    .card-sm, .analogy-item, .teaches-card, .prompt-reason, .reason-card, .tool-card, .limitation-card, .approach-card, .challenge-item, .emerges-item, .rlhf-step, .intro-step, .qkv-role, .head-example, .sim-example, .dim-example, .scale-item, .backprop-stage, .stage-block, .token-type-card, .gap-side, .box-side, .timeline-item, .tradeoff-item, .why-point, .cost-item, .change-item, .pipeline-step, .does, .doesnt { padding-bottom: 0.75rem; }
+    .analogy-box { margin-bottom: 1rem; }
+    .concept-card > div + p, .explanation > div + p, .concept-card > div + .text-sm, .concept-card > .analogy-box + h4 { margin-top: 1rem; }
+    .net-caption { margin-bottom: 1rem; }
+    .reward-model-visual { margin: 1rem 0; }
+    .rlhf-repeat { text-align: left; }
+    .key-insight-box, .tools-insight, .backprop-key-insight { max-width: var(--prose); }
+    .deep-dive-body > .tools-insight { margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+    .explanation ul, .concept-card ul:not(.concept-list), .note-box ul { padding-left: 1.2rem; margin: 0.5rem 0 0; }
+    .does-header, .doesnt-header { color: var(--ink); }
+    .pretrain-mindblown { margin-top: 2.6rem; }
+    .mindblown-content h4 { font-size: 1.25rem; font-weight: 600; border-top: 1px solid var(--rule); padding-top: 1rem; margin-bottom: 0.6rem; }
+    .experiment-box { margin-top: 0; }
+    .experiment-box > p:first-child { margin-top: 0; }
+    /* embeddings: keep the similarity table the height of the map */
+    .interactive-well .flex-1.overflow-y-auto { max-height: 600px; overflow-y: auto; background: transparent !important; border: 1px solid var(--rule) !important; border-radius: 0 !important; }
+    /* inference: prompt and probabilities side by side, pipeline full width below */
+    .inference-main { display: contents; }
+    .inference-prompt-area { order: 1; }
+    .inference-probs { order: 2; }
+    .inference-flow { grid-column: 1 / -1; order: 3; margin-top: 0.25rem; }
+    .pipeline-box { white-space: nowrap; }
+    .pipeline-label { white-space: normal; }
+    /* gradient-descent strip: one row, left-aligned, no wrapping buttons */
+    .mini-training-controls { flex-direction: row; justify-content: flex-start; text-align: left; }
+    .mini-btn { flex: 0 0 auto; white-space: nowrap; font-size: 0.92rem; }
+    .interactive-well .mini-demo-note { text-align: left; }
+    /* limitations: two columns so the example fits */
+    .limitations-grid { grid-template-columns: 1fr 1fr; }
+    /* TL;DR: no dead band under the header */
+    .tldr-grid { margin-top: 0.5rem; row-gap: 1.5rem; }
+    .tldr-grid > .tldr-card { margin-top: 0; }
+
+    /* ─── QA pass 2 ─── */
+    .pretrain-mindblown { display: block; }
+    .mindblown-content h4 { max-width: var(--prose); }
+    .discovery .discovery-label { display: block; margin-top: 1rem; }
+    .discovery .discovery-label:first-child, .discovery-result .discovery-label:first-child { margin-top: 0; }
+    .discovery-result { margin-top: 1rem; }
+    .discovery-actions + .discovery-label { margin-top: 1.2rem; }
+    .agent-trace-steps:empty::before { content: 'Nothing yet. Press Next step.'; color: var(--ink-3); font-size: 0.85rem; }
+    .key-insight-box, .tools-insight, .backprop-key-insight { margin-top: 1.2rem; }
+    .interactive-well .loop-stats strong { margin: 0 0.15rem; }
+    @media (max-width: 700px) { .limitations-grid { grid-template-columns: 1fr; } .inference-flow { display: none; } }
+    @media (max-width: 900px) { .ctl-strip .slider-inline { flex-wrap: wrap; } .ctl-strip .slider-inline .slider-desc { flex-basis: 100%; } }
   </style>
 </head>
 <body>
@@ -8522,8 +8573,8 @@
                 <li>Writing styles</li>
               </ul>
             </div>
-            <div class="doesnt" style="background: var(--secondary-10); border-color: var(--secondary-30);">
-              <div class="doesnt-header" style="color: var(--accent-secondary);">✗ Requires Additional Training</div>
+            <div class="doesnt">
+              <div class="doesnt-header">✗ Requires Additional Training</div>
               <ul>
                 <li>Following instructions</li>
                 <li>Being helpful and harmless</li>
@@ -8734,7 +8785,7 @@
 
       <!-- Interactive Demo: Be the Rater -->
       <div class="rater-demo-section">
-        <h3>Try it: be the human rater</h3>
+        <h3>Be the human rater</h3>
         <p>Experience how human preferences become training signal. Pick which response is better:</p>
         
         <div class="interactive-well">
@@ -9708,10 +9759,11 @@
         <p>A <strong>skill</strong> is that explanation, written down once. It's a set of instructions the agent can pull up when the job comes along — plain language, like a genuinely good how-to page — and it can carry supporting material with it: a template, a checklist, example documents that show what "good" looks like, sometimes a small script for a fiddly step. Crucially, <strong>writing a skill is writing instructions, not code</strong>, which makes it the main way a non-programmer customizes an agent.</p>
         <p>The distinction is access versus know-how. Connectors grant access to email, calendar, and the shared drive, and say nothing about how your team works. A skill supplies the how: here is the report we write, here is the template, here is a good one from last quarter.</p>
         <p>An agent with dozens of skills is not holding all of them in mind. It sees only their names and one-line descriptions, and pulls up the full text of a skill when a task matches it, so the context window stays clear for the job at hand.</p>
-        <p>And notice what a skill is <em>not</em>: it isn't retraining, and it doesn't make the model smarter. It's context — the same lever as everything else in this tab and the whole <strong>Prompting</strong> tab. The model already knew how to write a report; it just didn't know how <em>you</em> write one. <span class="text-sm text-muted">As of <span data-fact-asof></span>, Anthropic's Claude popularized this pattern under the name "Agent Skills," and equivalent features have spread across the major agent tools.</span></p>
+        <p>And notice what a skill is <em>not</em>: it isn't retraining, and it doesn't make the model smarter. It's context — the same lever as everything else in this tab and the whole <strong>Prompting</strong> tab. The model already knew how to write a report; it just didn't know how <em>you</em> write one.</p>
+        <p class="text-sm text-muted">As of <span data-fact-asof></span>, Anthropic's Claude popularized this pattern under the name "Agent Skills," and equivalent features have spread across the major agent tools.</p>
         </div>
 
-      <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
+      <div class="concept-card">
         <h4>Why agents raise the stakes</h4>
         <p>When a model can only talk, a mistake is a bad sentence. When it can act, a mistake takes actions.</p>
         <ul class="concept-list">
@@ -9874,7 +9926,7 @@
 
       <!-- Patch Grid Interactive -->
       <div class="patch-demo interactive-well">
-        <div class="card-header"><h3>Try it: an image becomes patches</h3>
+        <div class="card-header"><h3>An image becomes patches</h3>
           <span class="badge">Pick a patch: sky, sun, or ground?</span></div>
         <div class="patch-demo-grid">
           <canvas role="img" aria-label="An illustrated landscape divided into 64 patches. Use the patch selector to explore the same values." id="patch-canvas" width="320" height="320" style="max-width:100%; cursor: crosshair;"></canvas>
@@ -9939,32 +9991,32 @@
       </div>
 
       <!-- The Realism Warning -->
-      <div class="concept-card" style="border-color: var(--negative-30); background: var(--negative-8);">
+      <div class="concept-card">
         <h3>The realism warning</h3>
         <p>AI-generated media has become remarkably convincing. This creates real risks:</p>
         
         <div class="grid grid-2-col gap-1 mt-1">
-          <div class="card-sm" style="background: var(--bg-card);">
+          <div class="card-sm">
             <strong class="text-negative">Generated Images</strong>
             <p class="mt-05 text-sm">Can be indistinguishable from photographs. Fake "photos" of events that never happened, people who don't exist, or documents that were never created.</p>
           </div>
-          <div class="card-sm" style="background: var(--bg-card);">
+          <div class="card-sm">
             <strong class="text-negative">Voice Cloning</strong>
             <p class="mt-05 text-sm">A few seconds of audio can clone someone's voice convincingly. Enables impersonation, fake phone calls, or fabricated audio "evidence."</p>
           </div>
-          <div class="card-sm" style="background: var(--bg-card);">
+          <div class="card-sm">
             <strong class="text-negative">Synthetic Video</strong>
             <p class="mt-05 text-sm">Deepfakes can put words in people's mouths. Video generation is rapidly improving. Soon, "seeing is believing" won't apply.</p>
           </div>
-          <div class="card-sm" style="background: var(--bg-card);">
+          <div class="card-sm">
             <strong class="text-negative">Misinformation</strong>
             <p class="mt-05 text-sm">Convincing fake media can spread faster than fact-checks. The cost of creating disinformation has dropped dramatically.</p>
           </div>
         </div>
         
-        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-card); border-radius: var(--radius-sm);">
+        <div class="note-box mt-1">
           <strong>How to stay skeptical:</strong>
-          <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.85rem;">
+          <ul class="mt-05">
             <li>Consider the source—is it from a verified account or publication?</li>
             <li>Look for context—does this make sense? Can you find corroborating reports?</li>
             <li>Check for artifacts—unusual hands, text, physics, backgrounds, or audio glitches</li>
@@ -11229,7 +11281,7 @@ function setupInference() {
   // Update the loop visualization
   function updateLoopVisualization() {
     const steps = [
-      { label: "Input prompt", tokens: `"${basePrompt}"`, isBase: true }
+      { label: "Input prompt", tokens: basePrompt, isBase: true }
     ];
     
     let accumulated = basePrompt;

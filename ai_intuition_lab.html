@@ -6496,6 +6496,14 @@
     .concept-card > .grid:last-child, .concept-card > .analogy-box:last-child, .concept-card > .why-prompts-matter:last-child, .concept-card > .teaches-grid:last-child, .concept-card > .tools-grid:last-child, .concept-card > .limitations-grid:last-child, .concept-card > .emerges-grid:last-child, .concept-card > .approaches-grid:last-child, .concept-card > .challenges-list:last-child, .concept-card > .hallucination-reasons:last-child, .concept-card > .multihead-visual:last-child, .concept-card > .qkv-explanation:last-child, .concept-card > .scale-comparison:last-child, .concept-card > .does-doesnt:last-child { margin-bottom: 0.9rem; }
     /* A heading that follows content inside the same section gets the same rhythm as a new section */
     .concept-card > :not(h3):not(h4) + h4, .concept-card > :not(h3):not(h4) + h3, .explanation > :not(h4) + h4, .deep-dive-body > :not(h4) + h4 { margin-top: 2.4rem; }
+    /* Before/after comparison cards on Fine-tuning are diagram boxes, not text tiles: keep their fill and give them a real inset */
+    .gap-side, .gap-side.pretrained, .gap-side.finetuned { padding: 1.5rem 1.75rem 1.6rem; border-top-width: 1px; border-radius: 0; }
+    .gap-side .gap-list { margin: 0.9rem 0 0; }
+    .gap-side .gap-list li { padding-left: 1.4rem; text-align: left; }
+    /* One left rule per quotation: an example box that sits inside another example box goes flat */
+    .ft-prompt .prompt-text, .example-q .prompt-text, .rater-prompt .prompt-text, .loop-prompt .prompt-text, .system-example .prompt-text, .step-example .prompt-text, .training-example .prompt-text { border-left: 0; background: transparent; padding: 0; }
+    /* Numbered circles: one size everywhere, and actually round */
+    .step-number, .rlhf-step .step-number { width: 28px; height: 28px; min-width: 28px; flex: 0 0 28px; line-height: 1; padding: 0; aspect-ratio: 1; }
   </style>
 </head>
 <body>

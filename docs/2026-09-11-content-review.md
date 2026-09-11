@@ -1,5 +1,7 @@
 # Content pass: where a learner would stall
 
+**Status (2026-09-11, later the same day):** Aaron approved all items. Every item below is applied in the commit that follows, with two judgment calls: 3.6 took the lighter option (the "Agents in the wild" list and the three-words box moved into the deep dive; no tab split), and 3.8 moved the dated model-examples note below each tab's recap rather than deleting it.
+
 Reviewed 2026-09-11 by reading all 14 tabs in order, including every optional
 "Go deeper" section, the quizzes, and the recaps, the way a first-time learner
 would. About 17,000 words. This is a findings document; nothing in the app was

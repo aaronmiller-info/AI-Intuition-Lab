@@ -6504,6 +6504,9 @@
     .ft-prompt .prompt-text, .example-q .prompt-text, .rater-prompt .prompt-text, .loop-prompt .prompt-text, .system-example .prompt-text, .step-example .prompt-text, .training-example .prompt-text { border-left: 0; background: transparent; padding: 0; }
     /* Numbered circles: one size everywhere, and actually round */
     .step-number, .rlhf-step .step-number { width: 28px; height: 28px; min-width: 28px; flex: 0 0 28px; line-height: 1; padding: 0; aspect-ratio: 1; }
+    /* Client/server diagrams: don't stretch the wires across the whole column */
+    .net-row { max-width: 860px; }
+    .net-link { flex: 1 1 0; max-width: 340px; }
   </style>
 </head>
 <body>

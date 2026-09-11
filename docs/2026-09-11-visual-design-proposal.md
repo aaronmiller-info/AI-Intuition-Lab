@@ -74,3 +74,13 @@ Do **A** as the base, borrow two things from **B** (figures wider than prose; as
 - Screenshots: 14 tabs at 1440px, 5 at 390px, before; 10 views after with the overlay. Stored in the session scratchpad, not in the repo.
 - The overlay is a screenshot aid, not shippable CSS. It uses `!important` throughout and misses some tab-specific wrappers (e.g. the "Autoregressive loop" card, the inference settings panel).
 - No tests were run; no application code changed.
+
+## Implementation note (2026-09-11)
+
+Direction A, with the two borrowings from B, was applied across all 14 tabs on the
+branch `design/edited-swiss`. The stylesheet gained a design layer at the end
+(search for "DESIGN LAYER") that restyles the shared chrome and the interactives;
+185 rules the redesign made dead were pruned. Markup changes: numbered
+sentence-case nav without emoji, section headers with an eyebrow, the Inference
+and Pre-training figures restructured around a bottom control strip, and an
+emoji sweep across headings, labels, and buttons. All 13 tests pass.
